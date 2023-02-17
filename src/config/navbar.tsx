@@ -2,11 +2,16 @@ import { NavbarItem } from '@kasif/managers/navbar';
 import { prebuiltViews } from '@kasif/config/view';
 import { getIcon } from '@kasif/util/icon';
 import { IconHome, IconPuzzle, IconSettings, IconShoppingBag, IconUser } from '@tabler/icons';
+import { ContentView } from '@kasif/components/View/ContentView';
 import { app } from './app';
 
 function folderIcon(Icon: Awaited<ReturnType<typeof getIcon>>) {
   return () => <Icon width={22} />;
 }
+
+const icon = {
+  downloads: folderIcon(await getIcon('downloads', 'folder')),
+};
 
 export const initialTopItems: NavbarItem[] = [
   {
@@ -17,8 +22,15 @@ export const initialTopItems: NavbarItem[] = [
   },
   {
     id: 'downloads',
-    icon: folderIcon(await getIcon('downloads', 'folder')),
+    icon: icon.downloads,
     label: 'Downloads',
+    onClick: () =>
+      app.viewManager.pushView({
+        id: 'downloads',
+        title: 'Downloads',
+        icon: <icon.downloads />,
+        render: ContentView,
+      }),
   },
   {
     id: 'documents',

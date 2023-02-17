@@ -1,4 +1,5 @@
 import { useCaptureField, useCapture } from '@kasif/util/capture-react';
+import { Box } from '@mantine/core';
 import { useEffect } from 'react';
 
 export function ContentView() {
@@ -15,5 +16,9 @@ export function ContentView() {
     setSource(ref.current);
   }, [ref.current]);
 
-  return <div>content view</div>;
+  return (
+    <Box ref={ref} sx={{ height: '100%' }} p="sm">
+      content view
+    </Box>
+  );
 }

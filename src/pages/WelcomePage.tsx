@@ -23,7 +23,6 @@ import {
   IconPinned,
   IconShoppingBag,
 } from '@tabler/icons';
-// import { useState } from 'react';
 
 const useStyles = createStyles((theme) => ({
   card: {
@@ -31,7 +30,6 @@ const useStyles = createStyles((theme) => ({
     display: 'flex',
     flexDirection: 'column',
     gap: 36,
-    height: '100%',
     transition: 'transform 200ms ease-in-out, opacity 80ms ease-in-out',
   },
 

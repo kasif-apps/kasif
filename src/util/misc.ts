@@ -1,3 +1,4 @@
+import { CSSObject } from '@emotion/react';
 import { OS } from '@mantine/hooks';
 
 export function getCssVar(varaible: string): string {
@@ -72,4 +73,20 @@ export function createShortcutLabel(...keys: string[]): string {
   }
 
   return result.map((key) => key.toUpperCase()).join(' + ');
+}
+
+export function createGlobalStyles(): CSSObject {
+  return {
+    '*': {
+      userSelect: 'none',
+    },
+
+    'html, body': {
+      overflow: 'hidden',
+    },
+
+    'main .mantine-ScrollArea-viewport > div': {
+      height: '100%',
+    },
+  };
 }

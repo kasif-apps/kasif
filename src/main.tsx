@@ -1,5 +1,5 @@
 import ReactDOM from 'react-dom/client';
-import { MantineProvider } from '@mantine/core';
+import { CSSObject, MantineProvider, MantineTheme } from '@mantine/core';
 import { Layout } from '@kasif/pages/Layout';
 import { NotificationsProvider } from '@mantine/notifications';
 import { useState, useEffect } from 'react';
@@ -10,6 +10,7 @@ import { SpotlightProvider } from '@mantine/spotlight';
 import { IconSearch } from '@tabler/icons';
 import { createPaneStyles } from '@kasif/util/pane';
 import { useHotkeys } from '@mantine/hooks';
+import { createGlobalStyles } from '@kasif/util/misc';
 import { ActionComponent, actions, SpotlightControl } from './components/Overlay/Spotlight';
 
 function Wrapper() {
@@ -39,14 +40,10 @@ function Wrapper() {
       withNormalizeCSS
       theme={{
         ...theme.ui,
-        globalStyles: (t) => ({
-          'html, body': {
-            userSelect: 'none',
-            overflow: 'hidden',
-          },
-
+        globalStyles: ((t) => ({
+          ...createGlobalStyles(),
           ...createPaneStyles(t),
-        }),
+        })) as (theme: MantineTheme) => CSSObject,
       }}
     >
       <NotificationsProvider target="#notifications" position="bottom-right" zIndex={9999}>

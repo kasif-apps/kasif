@@ -123,20 +123,6 @@ export function useCaptureField() {
     }
   };
 
-  useEffect(() => {
-    const style = {
-      position: 'absolute',
-      pointerEvents: 'none',
-      zIndex: '99999',
-      border: '1px solid',
-      borderRadius: `${theme.radius.xs}px`,
-      backgroundColor: theme.fn.rgba(theme.colors[theme.primaryColor][5], 0.1),
-      borderColor: theme.fn.rgba(theme.colors[theme.primaryColor][5], 0.2),
-    };
-
-    Object.assign(ref.current.style, style);
-  }, []);
-
   const onCaptureTick = useCallback(
     (event: CustomEvent<CaptureTickEvent>) => {
       if (ref.current && event.detail.updated) {
@@ -158,6 +144,17 @@ export function useCaptureField() {
   );
 
   const onCaptureStart = useCallback(() => {
+    const style = {
+      position: 'absolute',
+      pointerEvents: 'none',
+      zIndex: '99999',
+      border: '1px solid',
+      borderRadius: `${theme.radius.xs}px`,
+      backgroundColor: theme.fn.rgba(theme.colors[theme.primaryColor][5], 0.1),
+      borderColor: theme.fn.rgba(theme.colors[theme.primaryColor][5], 0.2),
+    };
+
+    Object.assign(ref.current.style, style);
     root.style.cursor = 'crosshair';
   }, [ref.current]);
 
@@ -168,9 +165,10 @@ export function useCaptureField() {
         top: '0px',
         width: '0px',
         height: '0px',
-        cursor: 'auto',
+        border: 'none',
       };
 
+      root.style.cursor = 'auto';
       Object.assign(ref.current.style, style);
     }
   }, [ref.current]);
