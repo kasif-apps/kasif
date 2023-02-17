@@ -10,7 +10,8 @@
     "preview": "vite preview",
     "tauri:dev": "tauri dev",
     "tauri:build": "tauri build",
-    "lint": "eslint --ext .ts,.tsx src"
+    "lint": "eslint --ext .ts,.tsx src",
+    "prepare": "husky install"
   },
   "dependencies": {
     "@dnd-kit/core": "^6.0.6",
@@ -33,6 +34,8 @@
     "vite-plugin-svgr": "^2.4.0"
   },
   "devDependencies": {
+    "@commitlint/cli": "^17.4.4",
+    "@commitlint/config-conventional": "^17.4.4",
     "@tauri-apps/cli": "^1.2.2",
     "@types/node": "^18.11.14",
     "@types/react": "^18.0.26",
@@ -48,6 +51,7 @@
     "eslint-plugin-react": "^7.31.11",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-testing-library": "^5.9.1",
+    "husky": "^8.0.0",
     "typescript": "^4.9.3",
     "vite": "^4.0.0"
   }
