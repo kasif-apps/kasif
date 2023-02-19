@@ -1,5 +1,7 @@
 import { NotificationProps, showNotification } from '@mantine/notifications';
 import { BaseManager } from '@kasif/managers/base';
+import { IconAlertTriangle, IconX } from '@tabler/icons';
+import React from 'react';
 
 export class NotificationManager extends BaseManager {
   error(
@@ -10,6 +12,7 @@ export class NotificationManager extends BaseManager {
     showNotification({
       ...options,
       title: title || 'An error occurred.',
+      icon: React.createElement(IconX, { size: 20 }),
       message,
       color: 'red',
     });
@@ -26,6 +29,7 @@ export class NotificationManager extends BaseManager {
       ...options,
       title,
       message,
+      icon: React.createElement(IconAlertTriangle, { size: 20 }),
       color: 'orange',
     });
 

@@ -68,6 +68,7 @@ export function BaseViewItem(props: BaseViewItemProps) {
 
 export function BaseView(props: { children: React.ReactNode; items: string[] }) {
   const { onCaptureEnd, onCaptureStart, onCaptureTick, setSource } = useCaptureField();
+  const selection = useSlice(app.contentManager.selection);
 
   useHotkeys([
     [
@@ -86,6 +87,18 @@ export function BaseView(props: { children: React.ReactNode; items: string[] }) 
       'mod+x',
       () => {
         app.contentManager.cutSelection();
+      },
+    ],
+    [
+      'mod+c',
+      () => {
+        app.contentManager.copySelection();
+      },
+    ],
+    [
+      'mod+v',
+      () => {
+        app.contentManager.paste();
       },
     ],
   ]);
@@ -114,7 +127,12 @@ export function BaseView(props: { children: React.ReactNode; items: string[] }) 
     onCaptureEnd: handleCaptureEnd,
     onCaptureTick,
     constrain: true,
+    manuelCommit: true,
   });
+
+  useEffect(() => {
+    ref.current?.dispatchEvent(new CustomEvent('capture-commit'));
+  }, [selection]);
 
   useEffect(() => {
     setSource(ref.current);

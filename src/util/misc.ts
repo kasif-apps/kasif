@@ -98,3 +98,39 @@ export const reorder = (list: any[], startIndex: number, endIndex: number) => {
 
   return result;
 };
+
+export function createFallDown(amount: number, max: number) {
+  return {
+    in: { opacity: 1, transform: 'translateY(0)' },
+    out: {
+      opacity: 0,
+      transform: `translateY(-${((amount * 100) / max) * 2}%)`,
+    },
+    common: { transformOrigin: 'top' },
+    transitionProperty: 'transform, opacity',
+  };
+}
+
+export function createSlideIn(amount: number, max: number) {
+  return {
+    in: { opacity: 1, transform: 'translateX(0)' },
+    out: {
+      opacity: 0,
+      transform: `translateX(-${((amount * 100) / max) * 2}%)`,
+    },
+    common: { transformOrigin: 'left' },
+    transitionProperty: 'transform, opacity',
+  };
+}
+
+export function createScale() {
+  return {
+    in: { opacity: 1, transform: 'scale(1)' },
+    out: {
+      opacity: 0,
+      transform: 'scale(0.8)',
+    },
+    common: { transformOrigin: 'center' },
+    transitionProperty: 'transform, opacity',
+  };
+}

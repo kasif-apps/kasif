@@ -8,6 +8,7 @@ import {
   createStyles,
   Group,
   Stack,
+  Sx,
   Text,
   Tooltip,
   UnstyledButton,
@@ -23,6 +24,9 @@ import {
   IconPinned,
   IconShoppingBag,
 } from '@tabler/icons';
+import { TransitionWrapper, useTransition } from '@kasif/components/Transition/TransitionWrapper';
+import { createScale } from '@kasif/util/misc';
+import { useState } from 'react';
 
 const useStyles = createStyles((theme) => ({
   card: {
@@ -104,170 +108,178 @@ function QuickItem() {
 
 export function WelcomePage() {
   const { classes } = useStyles();
-  // const [moreVisible, setMoreVisible] = useState(true);
+  const [moreVisible, setMoreVisible] = useState(true);
   const mantineTheme = useMantineTheme();
+  const { mounted, unMount } = useTransition();
 
   return (
     <Stack p="sm" spacing="sm" pt={0} sx={{ maxWidth: 1400, margin: 'auto', height: '100%' }}>
-      <Card radius="md" p="xl" className={classes.card}>
-        <Stack>
-          <CtaText>Get Started</CtaText>
-          <Stack spacing="lg">
-            <Stack spacing={4}>
-              <Group spacing={4}>
-                <IconPinned
-                  size={14}
-                  color={
-                    mantineTheme.colorScheme === 'dark'
-                      ? mantineTheme.colors.dark[2]
-                      : mantineTheme.colors.gray[6]
-                  }
-                />
-                <Text size="xs" color="dimmed">
-                  Pinned
-                </Text>
-              </Group>
-              <Group spacing="xs">
-                <QuickItem />
-                <QuickItem />
-                <QuickItem />
-              </Group>
+      <TransitionWrapper transition="fade">
+        {(styles) => (
+          <Card radius="md" p="xl" className={classes.card} sx={styles as Sx}>
+            <Stack>
+              <CtaText>Get Started</CtaText>
+              <Stack spacing="lg">
+                <Stack spacing={4}>
+                  <Group spacing={4}>
+                    <IconPinned
+                      size={14}
+                      color={
+                        mantineTheme.colorScheme === 'dark'
+                          ? mantineTheme.colors.dark[2]
+                          : mantineTheme.colors.gray[6]
+                      }
+                    />
+                    <Text size="xs" color="dimmed">
+                      Pinned
+                    </Text>
+                  </Group>
+                  <Group spacing="xs">
+                    <QuickItem />
+                    <QuickItem />
+                    <QuickItem />
+                  </Group>
+                </Stack>
+                <Stack spacing={4}>
+                  <Group spacing={4}>
+                    <IconClock
+                      size={14}
+                      color={
+                        mantineTheme.colorScheme === 'dark'
+                          ? mantineTheme.colors.dark[2]
+                          : mantineTheme.colors.gray[6]
+                      }
+                    />
+                    <Text size="xs" color="dimmed">
+                      Recent
+                    </Text>
+                  </Group>
+                  <Group spacing="xs">
+                    <QuickItem />
+                    <QuickItem />
+                    <QuickItem />
+                    <QuickItem />
+                    <QuickItem />
+                    <QuickItem />
+                  </Group>
+                </Stack>
+              </Stack>
             </Stack>
-            <Stack spacing={4}>
-              <Group spacing={4}>
-                <IconClock
-                  size={14}
-                  color={
-                    mantineTheme.colorScheme === 'dark'
-                      ? mantineTheme.colors.dark[2]
-                      : mantineTheme.colors.gray[6]
-                  }
-                />
-                <Text size="xs" color="dimmed">
-                  Recent
+          </Card>
+        )}
+      </TransitionWrapper>
+      {moreVisible && (
+        <TransitionWrapper mounted={mounted} transition={createScale()}>
+          {(styles) => (
+            <Card radius="md" p="xl" className={classes.card} sx={styles as Sx}>
+              <div className={classes.dismiss}>
+                <Text
+                  onClick={() => unMount().then(() => setMoreVisible(false))}
+                  role="button"
+                  size="xs"
+                  color="dimmed"
+                >
+                  Dismiss
                 </Text>
-              </Group>
-              <Group spacing="xs">
-                <QuickItem />
-                <QuickItem />
-                <QuickItem />
-                <QuickItem />
-                <QuickItem />
-                <QuickItem />
-              </Group>
-            </Stack>
-          </Stack>
-        </Stack>
-      </Card>
-      <Card
-        radius="md"
-        p="xl"
-        className={classes.card}
-        // sx={{
-        //   transform: moreVisible ? 'scale(1)' : 'scale(0)',
-        //   opacity: moreVisible ? 1 : 0,
-        // }}
-      >
-        {/* <div className={classes.dismiss}>
-          <Text onClick={() => setMoreVisible(false)} role="button" size="xs" color="dimmed">
-            Dismiss
-          </Text>
-        </div> */}
-        <Stack>
-          <CtaText>Discover</CtaText>
-          <Text size="sm" color="dimmed">
-            Lorem ipsum, dolor sit amet consectetur adipisicing elit. At, corporis, dolorem commodi
-            sequi.
-          </Text>
-          <Group>
-            <Button
-              variant="light"
-              leftIcon={<IconShoppingBag stroke={1.5} size={20} />}
-              onClick={() => app.viewManager.pushView(prebuiltViews.store)}
-            >
-              Go To The Store
-            </Button>
-          </Group>
-        </Stack>
-        <Stack>
-          <CtaText>Community</CtaText>
-          <Text size="sm" color="dimmed">
-            Lorem ipsum, dolor sit amet consectetur adipisicing elit. At, corporis, dolorem commodi
-            sequi velit quam nisi enim blanditiis optio sed delectus dicta omnis inventore labore,
-            fugiat iusto mollitia odit fuga.
-          </Text>
-          <Avatar.Group spacing="md">
-            <Tooltip label="Name">
-              <Avatar size="lg" src="https://picsum.photos/200" radius="xl" />
-            </Tooltip>
-            <Tooltip label="Name">
-              <Avatar size="lg" src="https://picsum.photos/200" radius="xl" />
-            </Tooltip>
-            <Tooltip label="Name">
-              <Avatar size="lg" src="https://picsum.photos/200" radius="xl" />
-            </Tooltip>
-            <Tooltip label="Name">
-              <Avatar size="lg" src="https://picsum.photos/200" radius="xl" />
-            </Tooltip>
-            <Tooltip label="Name">
-              <Avatar size="lg" src="https://picsum.photos/200" radius="xl" />
-            </Tooltip>
-          </Avatar.Group>
-          <Group>
-            <Button
-              leftIcon={<IconBrandDiscord stroke={1.5} size={20} />}
-              sx={(theme) => ({
-                backgroundColor: theme.colorScheme === 'dark' ? '#5865F2' : '#5865F2',
-                '&:hover': {
-                  backgroundColor:
-                    theme.colorScheme === 'dark'
-                      ? theme.fn.lighten('#5865F2', 0.05)
-                      : theme.fn.darken('#5865F2', 0.05),
-                },
-              })}
-            >
-              Join Our Discord Server
-            </Button>
-            <Button
-              leftIcon={<IconBrandGithub stroke={1.5} size={20} />}
-              sx={(theme) => ({
-                backgroundColor: theme.colors.dark[theme.colorScheme === 'dark' ? 9 : 6],
-                color: '#fff',
-                '&:hover': {
-                  backgroundColor: theme.colors.dark[theme.colorScheme === 'dark' ? 9 : 6],
-                },
-              })}
-            >
-              See Us On Github
-            </Button>
-          </Group>
-        </Stack>
-        <Stack>
-          <CtaText>Help</CtaText>
-          <Text size="sm" color="dimmed">
-            Lorem ipsum, dolor sit amet consectetur adipisicing elit. At, corporis, dolorem commodi
-            sequi.
-          </Text>
-          <Group>
-            <Button
-              leftIcon={<IconBrandGithub stroke={1.5} size={20} />}
-              sx={(theme) => ({
-                backgroundColor: theme.colors.dark[theme.colorScheme === 'dark' ? 9 : 6],
-                color: '#fff',
-                '&:hover': {
-                  backgroundColor: theme.colors.dark[theme.colorScheme === 'dark' ? 9 : 6],
-                },
-              })}
-            >
-              Contribute
-            </Button>
-            <Button leftIcon={<IconCoffee stroke={1.5} size={20} />}>Donate</Button>
-          </Group>
-        </Stack>
-        <Text mt="xl" size="xs" color="dimmed" className={classes.note}>
-          Made with <IconHeart fill="red" color="red" size={18} /> in İstanbul
-        </Text>
-      </Card>
+              </div>
+              <Stack>
+                <CtaText>Discover</CtaText>
+                <Text size="sm" color="dimmed">
+                  Lorem ipsum, dolor sit amet consectetur adipisicing elit. At, corporis, dolorem
+                  commodi sequi.
+                </Text>
+                <Group>
+                  <Button
+                    variant="light"
+                    leftIcon={<IconShoppingBag stroke={1.5} size={20} />}
+                    onClick={() => app.viewManager.pushView(prebuiltViews.store)}
+                  >
+                    Go To The Store
+                  </Button>
+                </Group>
+              </Stack>
+              <Stack>
+                <CtaText>Community</CtaText>
+                <Text size="sm" color="dimmed">
+                  Lorem ipsum, dolor sit amet consectetur adipisicing elit. At, corporis, dolorem
+                  commodi sequi velit quam nisi enim blanditiis optio sed delectus dicta omnis
+                  inventore labore, fugiat iusto mollitia odit fuga.
+                </Text>
+                <Avatar.Group spacing="md">
+                  <Tooltip label="Name">
+                    <Avatar size="lg" src="https://picsum.photos/200" radius="xl" />
+                  </Tooltip>
+                  <Tooltip label="Name">
+                    <Avatar size="lg" src="https://picsum.photos/200" radius="xl" />
+                  </Tooltip>
+                  <Tooltip label="Name">
+                    <Avatar size="lg" src="https://picsum.photos/200" radius="xl" />
+                  </Tooltip>
+                  <Tooltip label="Name">
+                    <Avatar size="lg" src="https://picsum.photos/200" radius="xl" />
+                  </Tooltip>
+                  <Tooltip label="Name">
+                    <Avatar size="lg" src="https://picsum.photos/200" radius="xl" />
+                  </Tooltip>
+                </Avatar.Group>
+                <Group>
+                  <Button
+                    leftIcon={<IconBrandDiscord stroke={1.5} size={20} />}
+                    sx={(theme) => ({
+                      backgroundColor: theme.colorScheme === 'dark' ? '#5865F2' : '#5865F2',
+                      '&:hover': {
+                        backgroundColor:
+                          theme.colorScheme === 'dark'
+                            ? theme.fn.lighten('#5865F2', 0.05)
+                            : theme.fn.darken('#5865F2', 0.05),
+                      },
+                    })}
+                  >
+                    Join Our Discord Server
+                  </Button>
+                  <Button
+                    leftIcon={<IconBrandGithub stroke={1.5} size={20} />}
+                    sx={(theme) => ({
+                      backgroundColor: theme.colors.dark[theme.colorScheme === 'dark' ? 9 : 6],
+                      color: '#fff',
+                      '&:hover': {
+                        backgroundColor: theme.colors.dark[theme.colorScheme === 'dark' ? 9 : 6],
+                      },
+                    })}
+                  >
+                    See Us On Github
+                  </Button>
+                </Group>
+              </Stack>
+              <Stack>
+                <CtaText>Help</CtaText>
+                <Text size="sm" color="dimmed">
+                  Lorem ipsum, dolor sit amet consectetur adipisicing elit. At, corporis, dolorem
+                  commodi sequi.
+                </Text>
+                <Group>
+                  <Button
+                    leftIcon={<IconBrandGithub stroke={1.5} size={20} />}
+                    sx={(theme) => ({
+                      backgroundColor: theme.colors.dark[theme.colorScheme === 'dark' ? 9 : 6],
+                      color: '#fff',
+                      '&:hover': {
+                        backgroundColor: theme.colors.dark[theme.colorScheme === 'dark' ? 9 : 6],
+                      },
+                    })}
+                  >
+                    Contribute
+                  </Button>
+                  <Button leftIcon={<IconCoffee stroke={1.5} size={20} />}>Donate</Button>
+                </Group>
+              </Stack>
+              <Text mt="xl" size="xs" color="dimmed" className={classes.note}>
+                Made with <IconHeart fill="red" color="red" size={18} /> in İstanbul
+              </Text>
+            </Card>
+          )}
+        </TransitionWrapper>
+      )}
     </Stack>
   );
 }

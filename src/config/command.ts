@@ -22,7 +22,7 @@ export function initCommands() {
         app.paneManager.pushPane(pane);
         app.viewManager.removeView(view);
       } else {
-        app.notificationManager.warn('No view is selected');
+        app.notificationManager.error('Select a view to create a pane', 'No view is selected');
       }
     },
   });

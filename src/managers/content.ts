@@ -51,4 +51,11 @@ export class FolderContentManager extends BaseManager {
 
     this.dispatchEvent(new CustomEvent('copy', { detail: items }));
   }
+
+  paste() {
+    this.clipboard.set([]);
+    this.cut.set([]);
+
+    this.dispatchEvent(new CustomEvent('paste', { detail: this.clipboard.get() }));
+  }
 }
