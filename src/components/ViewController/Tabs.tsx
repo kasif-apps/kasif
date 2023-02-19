@@ -1,15 +1,12 @@
 import { Group } from '@mantine/core';
 import { app } from '@kasif/config/app';
-import { createSlice } from '@kasif-apps/cinq';
 import { useSlice } from '@kasif/util/cinq-react';
 import { Droppable, Draggable, DroppableProvided, DraggableProvided } from 'react-beautiful-dnd';
 import { TabItem } from './TabItem';
 
-export const draggedItem = createSlice<string | null>(null, { key: 'dragged-item' });
-
 export function Tabs() {
   const [{ views: items, currentView }] = useSlice(app.viewManager.store);
-  const [draggedItemId] = useSlice(draggedItem);
+  const [draggedItemId] = useSlice(app.dndManager.draggedItem);
 
   return (
     <Group

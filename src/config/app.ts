@@ -7,6 +7,8 @@ import { ThemeManager } from '@kasif/managers/theme';
 import { ViewManager } from '@kasif/managers/view';
 import { useSlice } from '@kasif/util/cinq-react';
 import { BaseManager } from '@kasif/managers/base';
+import { FolderContentManager } from '@kasif/managers/content';
+import { DndManager } from '@kasif/managers/dnd';
 
 export class App {
   viewManager = new ViewManager();
@@ -16,6 +18,8 @@ export class App {
   navbarManager = new NavbarManager();
   paneManager = new PaneManager();
   commandManager = new CommandManager();
+  contentManager = new FolderContentManager();
+  dndManager = new DndManager();
   contextMenuManager = null;
 
   customManagers: Map<string, BaseManager> = new Map();

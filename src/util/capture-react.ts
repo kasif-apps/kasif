@@ -16,12 +16,6 @@ export interface ReactCaptureOptions extends CaptureOptions {
   onCaptureStart?: (event: CustomEvent<CaptureEdgeEvent>) => void;
 }
 
-function getCssVar(varaible: string) {
-  const root = document.querySelector(':root')!;
-  const style = getComputedStyle(root);
-  return style.getPropertyValue(varaible);
-}
-
 export function useCapture<T extends HTMLElement>(options: ReactCaptureOptions) {
   const [ref, rect] = useResizeObserver<T>();
   const cancel = useRef<() => void>(() => {});
@@ -97,28 +91,30 @@ export const CaptureTarget: React.FC<{
 export function useCaptureField() {
   const theme = useMantineTheme();
   const ref = useRef<HTMLDivElement>(document.createElement('div'));
-  const root = document.querySelector('body div#root') as HTMLElement;
+  const source = useRef<HTMLElement | null>(null);
 
-  const setSource = (source: HTMLElement | null) => {
-    if (source) {
+  const setSource = (src: HTMLElement | null) => {
+    if (src) {
       const handleCaptureStart = (() => {
-        if (source && ref.current) {
-          source.appendChild(ref.current);
+        if (src && ref.current) {
+          src.appendChild(ref.current);
         }
       }) as EventListener;
 
       const handleCaptureEnd = (() => {
-        if (source && ref.current) {
+        if (src && ref.current) {
           // source.removeChild(ref.current);
         }
       }) as EventListener;
 
-      source.addEventListener('capture-start', handleCaptureStart);
-      source.addEventListener('capture-end', handleCaptureEnd);
+      src.addEventListener('capture-start', handleCaptureStart);
+      src.addEventListener('capture-end', handleCaptureEnd);
+
+      source.current = src;
 
       return () => {
-        source.removeEventListener('capture-start', handleCaptureStart);
-        source.removeEventListener('capture-end', handleCaptureEnd);
+        src.removeEventListener('capture-start', handleCaptureStart);
+        src.removeEventListener('capture-end', handleCaptureEnd);
       };
     }
   };
@@ -126,13 +122,12 @@ export function useCaptureField() {
   const onCaptureTick = useCallback(
     (event: CustomEvent<CaptureTickEvent>) => {
       if (ref.current && event.detail.updated) {
-        const leftBuffer = parseInt(getCssVar('--mantine-navbar-width'), 10);
-        const topBuffer = parseInt(getCssVar('--mantine-header-height'), 10);
+        const rect = source.current?.getBoundingClientRect() || { left: 0, top: 0 };
 
         const { area } = event.detail;
         const style = {
-          left: `${area.topLeft.x - leftBuffer}px`,
-          top: `${area.topLeft.y - topBuffer}px`,
+          left: `${area.topLeft.x - rect.left}px`,
+          top: `${area.topLeft.y - rect.top}px`,
           width: `${area.width}px`,
           height: `${area.height}px`,
         };
@@ -155,8 +150,7 @@ export function useCaptureField() {
     };
 
     Object.assign(ref.current.style, style);
-    root.style.cursor = 'crosshair';
-  }, [ref.current]);
+  }, [ref.current, theme]);
 
   const onCaptureEnd = useCallback(() => {
     if (ref.current) {
@@ -168,7 +162,6 @@ export function useCaptureField() {
         border: 'none',
       };
 
-      root.style.cursor = 'auto';
       Object.assign(ref.current.style, style);
     }
   }, [ref.current]);

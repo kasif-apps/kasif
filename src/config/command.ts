@@ -9,4 +9,21 @@ export function initCommands() {
       app.paneManager.removeAllPanes();
     },
   });
+
+  app.commandManager.defineCommand({
+    id: 'creaete-pane',
+    title: 'Create Pane From View',
+    shortCut: 'mod+P',
+    onTrigger: () => {
+      const view = app.viewManager.store.get().currentView;
+
+      if (view) {
+        const pane = app.paneManager.createPaneFromView(view)!;
+        app.paneManager.pushPane(pane);
+        app.viewManager.removeView(view);
+      } else {
+        app.notificationManager.warn('No view is selected');
+      }
+    },
+  });
 }

@@ -33,8 +33,8 @@ function Wrapper() {
   }, [themeSetting.value]);
 
   useEffect(() => {
-    initPlugins(app);
     initCommands();
+    initPlugins(app);
   }, []);
 
   return (
@@ -50,13 +50,14 @@ function Wrapper() {
       }}
     >
       <SpotlightProvider
+        topOffset={10}
         actions={actions}
         searchIcon={<IconSearch size={18} />}
         searchPlaceholder="Jump..."
         actionComponent={ActionComponent}
         overlayBlur={0}
         overlayOpacity={0}
-        shortcut="mod+p"
+        shortcut="mod+alt+p"
         shadow="xl"
         nothingFoundMessage="Nothing found..."
       >

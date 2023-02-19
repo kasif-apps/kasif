@@ -7,7 +7,6 @@ import SplitPane from 'react-split-pane';
 import { Pane } from '@kasif/managers/pane';
 import { useHover } from '@mantine/hooks';
 import { Droppable, DroppableProvided } from 'react-beautiful-dnd';
-import { isDraggingStore } from '@kasif/config/dnd';
 import { IconX } from '@tabler/icons';
 
 const useStyles = createStyles((theme, { isDragging }: { isDragging: boolean }) => ({
@@ -20,12 +19,14 @@ const useStyles = createStyles((theme, { isDragging }: { isDragging: boolean }) 
     pointerEvents: isDragging ? 'auto' : 'none',
     backgroundColor: 'transparent',
 
-    '& .content': {
+    '& .overlay': {
       pointerEvents: isDragging ? 'auto' : 'none',
       backgroundColor: 'transparent',
       width: '100%',
       height: '100%',
       transition: 'background-color 300ms ease',
+      position: 'relative',
+      zIndex: 999,
 
       '&.active': {
         backgroundColor: theme.fn.rgba(theme.colors[theme.primaryColor][5], 0.2),
@@ -37,9 +38,14 @@ const useStyles = createStyles((theme, { isDragging }: { isDragging: boolean }) 
     width: '100%',
     height: '100%',
 
-    '& .content': {
+    '& .overlay': {
+      width: '100%',
+      height: '100%',
       backgroundColor: 'transparent',
       transition: 'background-color 300ms ease',
+      position: 'absolute',
+      top: 0,
+      left: 0,
 
       '&.active': {
         backgroundColor: theme.fn.rgba(theme.colors[theme.primaryColor][5], 0.2),
@@ -78,7 +84,7 @@ const CustomScrollArea = (props: ScrollAreaProps) => (
 );
 
 const PaneItem = (props: { children: React.ReactNode; id: string; droppable: boolean }) => {
-  const [isDragging] = useSlice(isDraggingStore);
+  const [isDragging] = useSlice(app.dndManager.isDragging);
   const { classes, cx } = useStyles({ isDragging });
   const { hovered, ref: paneDropAreaRef } = useHover();
 
@@ -103,9 +109,12 @@ const PaneItem = (props: { children: React.ReactNode; id: string; droppable: boo
               <IconX size={16} />
             </ActionIcon>
           </div>
-          <div ref={paneDropAreaRef} className={cx('content', isDragging && hovered && 'active')}>
-            {props.children}
-          </div>
+          {props.children}
+          <div
+            style={{ zIndex: isDragging ? 99 : -1 }}
+            ref={paneDropAreaRef}
+            className={cx('overlay', isDragging && hovered && 'active')}
+          />
         </div>
       )}
     </Droppable>
@@ -113,7 +122,7 @@ const PaneItem = (props: { children: React.ReactNode; id: string; droppable: boo
 };
 
 export function Layout() {
-  const [isDragging] = useSlice(isDraggingStore);
+  const [isDragging] = useSlice(app.dndManager.isDragging);
   const { classes, cx } = useStyles({ isDragging });
   const [{ currentView }] = useSlice(app.viewManager.store);
   const { hovered, ref: paneDropAreaRef } = useHover();
@@ -164,7 +173,7 @@ export function Layout() {
           >
             <div
               ref={paneDropAreaRef}
-              className={cx('content', isDragging && hovered && 'active')}
+              className={cx('overlay', isDragging && hovered && 'active')}
             />
           </div>
         )}
