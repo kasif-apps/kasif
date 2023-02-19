@@ -1,13 +1,13 @@
 import { ActionIcon, createStyles, Sx, Tooltip, UnstyledButton } from '@mantine/core';
 import { IconX } from '@tabler/icons';
-import { CSS } from '@dnd-kit/utilities';
 
-import { useSortable } from '@dnd-kit/sortable';
 import { app } from '@kasif/config/app';
 import { useEffect, useRef } from 'react';
 import { useMergedRef } from '@mantine/hooks';
 
-const useStyles = createStyles((theme, _, getRef) => ({
+import { DraggableProvided } from 'react-beautiful-dnd';
+
+const useStyles = createStyles((theme, { dragging }: { dragging: boolean }, getRef) => ({
   tab: {
     height: '100%',
     display: 'flex',
@@ -26,7 +26,7 @@ const useStyles = createStyles((theme, _, getRef) => ({
     '&::after': {
       content: '""',
       width: 1,
-      display: 'inline-block',
+      display: dragging ? 'none' : 'inline-block',
       marginLeft: 4,
       backgroundColor: 'transparent',
     },
@@ -40,9 +40,11 @@ const useStyles = createStyles((theme, _, getRef) => ({
       padding: `0 4px 0 ${theme.spacing.xs}px`,
       borderRadius: theme.radius.sm,
       transition: 'background-color 200ms ease',
+      backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[8] : theme.colors.gray[0],
       maxWidth: 400,
       overflow: 'hidden',
       textOverflow: 'ellipsis',
+      cursor: 'initial',
 
       '&.active': {
         ref: getRef('active'),
@@ -64,16 +66,16 @@ export interface TabItemProps {
   title: string;
   icon: React.ReactNode;
   active?: boolean;
+  dragging?: boolean;
   beforeActive?: boolean;
-  preview?: boolean;
-  onClick?: (id: TabItemProps['id']) => void;
+  provided: DraggableProvided;
 }
 
-export function TabItem({ id, title, icon, active, beforeActive, onClick, preview }: TabItemProps) {
-  const { classes, cx } = useStyles();
-  const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id });
+export function TabItem(props: TabItemProps) {
+  const { id, title, icon, active, beforeActive, provided, dragging } = props;
+  const { classes, cx } = useStyles({ dragging: Boolean(dragging) });
   const ref = useRef<HTMLButtonElement>(null);
-  const mergedRef = useMergedRef(ref, setNodeRef);
+  const mergedRef = useMergedRef(ref, provided.innerRef);
 
   const handleClose = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.stopPropagation();
@@ -87,21 +89,19 @@ export function TabItem({ id, title, icon, active, beforeActive, onClick, previe
   }, [active]);
 
   const style: Sx = {
-    transform: CSS.Transform.toString(transform),
-    transition,
+    ...provided.draggableProps.style,
     zIndex: 99,
     position: 'relative',
-    opacity: preview ? 0.5 : 1,
   };
 
   return (
     <UnstyledButton
       // @ts-ignore
       ref={mergedRef}
-      {...attributes}
-      {...listeners}
+      {...provided.draggableProps}
+      {...provided.dragHandleProps}
       sx={style}
-      onClick={() => onClick?.(id)}
+      onClick={() => app.viewManager.setCurrentView(id)}
       component="div"
       className={cx(classes.tab, active && 'active', beforeActive && 'before-active')}
     >

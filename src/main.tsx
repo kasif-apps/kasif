@@ -13,8 +13,6 @@ import { useHotkeys } from '@mantine/hooks';
 import { createGlobalStyles } from '@kasif/util/misc';
 import { ActionComponent, actions } from './components/Overlay/Spotlight';
 
-let initialRender = true;
-
 function Wrapper() {
   const [ready, setReady] = useState(false);
   const [themeID, setThemeID] = useState('default-light');
@@ -33,10 +31,7 @@ function Wrapper() {
   }, [themeSetting.value]);
 
   useEffect(() => {
-    if (initialRender) {
-      initPlugins(app);
-    }
-    initialRender = false;
+    initPlugins(app);
   }, []);
 
   return (
@@ -72,9 +67,9 @@ function Wrapper() {
 
 function App() {
   return (
-    <React.StrictMode>
-      <Wrapper />
-    </React.StrictMode>
+    // <React.StrictMode>
+    <Wrapper />
+    // </React.StrictMode>
   );
 }
 
