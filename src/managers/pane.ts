@@ -1,5 +1,7 @@
 import { createRecordSlice } from '@kasif-apps/cinq';
+import { app } from '@kasif/config/app';
 import { BaseManager } from '@kasif/managers/base';
+import { View } from '@kasif/managers/view';
 
 export interface Pane {
   id: string;
@@ -49,5 +51,28 @@ export class PaneManager extends BaseManager {
 
   getPane(paneId: Pane['id']) {
     return this.store.get().panes.find((pane) => pane.id === paneId);
+  }
+
+  createPaneFromView(viewId: View['id']): Pane | undefined {
+    const instance = app.viewManager.store.get();
+    const view = instance.views.find((v) => v.id === viewId);
+    if (!view) {
+      return;
+    }
+
+    const component = app.viewManager.getViewComponent(view.id);
+
+    return {
+      id: viewId,
+      render: component,
+    };
+  }
+
+  replacePane(paneId: Pane['id'], pane: Pane) {
+    this.store.upsert((oldState) => ({
+      panes: (oldState as PaneStore).panes.map((p) => (p.id === paneId ? pane : p)),
+    }));
+
+    this.dispatchEvent(new CustomEvent('replace-pane', { detail: pane }));
   }
 }

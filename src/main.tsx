@@ -11,6 +11,7 @@ import { IconSearch } from '@tabler/icons';
 import { createPaneStyles } from '@kasif/util/pane';
 import { useHotkeys } from '@mantine/hooks';
 import { createGlobalStyles } from '@kasif/util/misc';
+import { DndProvider } from '@kasif/config/dnd';
 import { ActionComponent, actions } from './components/Overlay/Spotlight';
 
 function Wrapper() {
@@ -58,7 +59,7 @@ function Wrapper() {
         nothingFoundMessage="Nothing found..."
       >
         <NotificationsProvider target="#notifications" position="bottom-right" zIndex={9999}>
-          {ready && <Layout />}
+          <DndProvider>{ready && <Layout />}</DndProvider>
         </NotificationsProvider>
       </SpotlightProvider>
     </MantineProvider>

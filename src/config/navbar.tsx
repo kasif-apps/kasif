@@ -11,6 +11,12 @@ function folderIcon(Icon: Awaited<ReturnType<typeof getIcon>>) {
 
 const icon = {
   downloads: folderIcon(await getIcon('downloads', 'folder')),
+  documents: folderIcon(await getIcon('documents', 'folder')),
+  music: folderIcon(await getIcon('music', 'folder')),
+  pictures: folderIcon(await getIcon('pictures', 'folder')),
+  videos: folderIcon(await getIcon('videos', 'folder')),
+  applications: folderIcon(await getIcon('apps', 'folder')),
+  desktop: folderIcon(await getIcon('desktop', 'folder')),
 };
 
 export const initialTopItems: NavbarItem[] = [
@@ -36,16 +42,37 @@ export const initialTopItems: NavbarItem[] = [
     id: 'documents',
     icon: folderIcon(await getIcon('documents', 'folder')),
     label: 'Documents',
+    onClick: () =>
+      app.viewManager.pushView({
+        id: 'documents',
+        title: 'Documents',
+        icon: <icon.documents />,
+        render: ContentView,
+      }),
   },
   {
     id: 'applications',
     icon: folderIcon(await getIcon('apps', 'folder')),
     label: 'Applications',
+    onClick: () =>
+      app.viewManager.pushView({
+        id: 'applications',
+        title: 'Applications',
+        icon: <icon.applications />,
+        render: ContentView,
+      }),
   },
   {
     id: 'desktop',
     icon: folderIcon(await getIcon('desktop', 'folder')),
     label: 'Desktop',
+    onClick: () =>
+      app.viewManager.pushView({
+        id: 'desktop',
+        title: 'Desktop',
+        icon: <icon.desktop />,
+        render: ContentView,
+      }),
   },
 ];
 

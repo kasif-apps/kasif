@@ -1,10 +1,51 @@
+import React from 'react';
 import { KasifHeader, KasifNavbar, KasifFooter } from '@kasif/components/Navigation';
-import { AppShell, ScrollArea, ScrollAreaProps } from '@mantine/core';
+import { AppShell, createStyles, ScrollArea, ScrollAreaProps } from '@mantine/core';
 import { app } from '@kasif/config/app';
 import { useSlice } from '@kasif/util/cinq-react';
 import SplitPane from 'react-split-pane';
 import { Pane } from '@kasif/managers/pane';
-import React from 'react';
+import { useHover } from '@mantine/hooks';
+import { Droppable, DroppableProvided } from 'react-beautiful-dnd';
+import { isDraggingStore } from '@kasif/config/dnd';
+
+const useStyles = createStyles((theme, { isDragging }: { isDragging: boolean }) => ({
+  paneFreeDropArea: {
+    position: 'absolute',
+    top: 'var(--mantine-header-height)',
+    right: 0,
+    width: 140,
+    height: 'calc(100vh - var(--mantine-header-height) - var(--mantine-footer-height))',
+    pointerEvents: isDragging ? 'auto' : 'none',
+    backgroundColor: 'transparent',
+
+    '& .content': {
+      pointerEvents: isDragging ? 'auto' : 'none',
+      backgroundColor: 'transparent',
+      width: '100%',
+      height: '100%',
+      transition: 'background-color 300ms ease',
+
+      '&.active': {
+        backgroundColor: theme.fn.rgba(theme.colors[theme.primaryColor][5], 0.2),
+      },
+    },
+  },
+
+  paneBusyDropArea: {
+    width: '100%',
+    height: '100%',
+
+    '& .content': {
+      backgroundColor: 'transparent',
+      transition: 'background-color 300ms ease',
+
+      '&.active': {
+        backgroundColor: theme.fn.rgba(theme.colors.blue[5], 0.2),
+      },
+    },
+  },
+}));
 
 const CustomScrollArea = (props: ScrollAreaProps) => (
   <ScrollArea
@@ -18,8 +59,37 @@ const CustomScrollArea = (props: ScrollAreaProps) => (
   </ScrollArea>
 );
 
+const PaneItem = (props: { children: React.ReactNode; id: string; droppable: boolean }) => {
+  const [isDragging] = useSlice(isDraggingStore);
+  const { classes, cx } = useStyles({ isDragging });
+  const { hovered, ref: paneDropAreaRef } = useHover();
+
+  if (!props.droppable) {
+    return <>{props.children}</>;
+  }
+
+  return (
+    <Droppable droppableId={`busy-pane-id:${props.id}`}>
+      {(provided: DroppableProvided) => (
+        <div
+          className={cx(classes.paneBusyDropArea)}
+          ref={provided.innerRef}
+          {...provided.droppableProps}
+        >
+          <div ref={paneDropAreaRef} className={cx('content', isDragging && hovered && 'active')}>
+            {props.children}
+          </div>
+        </div>
+      )}
+    </Droppable>
+  );
+};
+
 export function Layout() {
+  const [isDragging] = useSlice(isDraggingStore);
+  const { classes, cx } = useStyles({ isDragging });
   const [{ currentView }] = useSlice(app.viewManager.store);
+  const { hovered, ref: paneDropAreaRef } = useHover();
   const [paneStore] = useSlice(app.paneManager.store);
 
   const Component = app.viewManager.getViewComponent(currentView);
@@ -43,12 +113,13 @@ export function Layout() {
     >
       {panes.length > 1 ? (
         // @ts-ignore
-        <SplitPane size="60%" split="vertical">
-          {panes.map((pane) => (
-            // @ts-ignore
-            <CustomScrollArea>
-              {React.createElement(pane.render, { key: pane.id })}
-            </CustomScrollArea>
+        <SplitPane size="50%" split="vertical">
+          {panes.map((pane, index) => (
+            <PaneItem droppable={index !== 0} id={pane.id} key={pane.id}>
+              <CustomScrollArea>
+                {React.createElement(pane.render, { key: pane.id })}
+              </CustomScrollArea>
+            </PaneItem>
           ))}
         </SplitPane>
       ) : (
@@ -56,6 +127,21 @@ export function Layout() {
           <Component />
         </CustomScrollArea>
       )}
+
+      <Droppable droppableId="free-pane">
+        {(provided: DroppableProvided) => (
+          <div
+            className={cx(classes.paneFreeDropArea)}
+            ref={provided.innerRef}
+            {...provided.droppableProps}
+          >
+            <div
+              ref={paneDropAreaRef}
+              className={cx('content', isDragging && hovered && 'active')}
+            />
+          </div>
+        )}
+      </Droppable>
     </AppShell>
   );
 }

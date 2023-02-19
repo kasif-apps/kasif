@@ -47,24 +47,6 @@ const dummyPlugin = {
         }),
     });
 
-    app.commandManager.defineCommand({
-      id: 'push-pane',
-      title: 'Push Pane',
-      shortCut: 'mod+u',
-      onTrigger: () =>
-        app.paneManager.pushPane({
-          id: 'custom',
-          render: () => React.createElement('p', null, `custom-${Date.now()}`),
-        }),
-    });
-
-    app.commandManager.defineCommand({
-      id: 'remove-pane',
-      title: 'Remove Pane',
-      shortCut: 'mod+shift+u',
-      onTrigger: () => app.paneManager.removePane('custom'),
-    });
-
     app.themeManager.defineTheme({
       id: 'blue',
       title: 'Blue',
