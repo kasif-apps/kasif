@@ -1,5 +1,6 @@
 import { createShortcutLabel } from '@kasif/util/misc';
 import { registerSpotlightActions } from '@mantine/spotlight';
+import { BaseManager } from '@kasif/managers/base';
 
 export interface Command {
   id: string;
@@ -8,7 +9,7 @@ export interface Command {
   onTrigger: () => void;
 }
 
-export class CommandManager extends EventTarget {
+export class CommandManager extends BaseManager {
   commands: Command[] = [];
 
   defineCommand(command: Command) {

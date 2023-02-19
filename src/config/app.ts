@@ -6,8 +6,9 @@ import { SettingsItem, SettingsManager } from '@kasif/managers/settings';
 import { ThemeManager } from '@kasif/managers/theme';
 import { ViewManager } from '@kasif/managers/view';
 import { useSlice } from '@kasif/util/cinq-react';
+import { BaseManager } from '@kasif/managers/base';
 
-export class AppManager {
+export class App {
   viewManager = new ViewManager();
   settingsManager = new SettingsManager();
   themeManager = new ThemeManager();
@@ -16,9 +17,19 @@ export class AppManager {
   paneManager = new PaneManager();
   commandManager = new CommandManager();
   contextMenuManager = null;
+
+  customManagers: Map<string, BaseManager> = new Map();
+
+  defineCustomManager(id: string, manager: BaseManager) {
+    this.customManagers.set(id, manager);
+  }
+
+  getCustomManager<T extends BaseManager>(id: string): T {
+    return this.customManagers.get(id) as T;
+  }
 }
 
-export const app = new AppManager();
+export const app = new App();
 
 export function useSetting<T>(id: SettingsItem<T>['id']): [SettingsItem<T>, (value: T) => void] {
   const controller = app.settingsManager.getSettingController<T>(id)!;

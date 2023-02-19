@@ -1,4 +1,5 @@
 import { createRecordSlice } from '@kasif-apps/cinq';
+import { BaseManager } from '@kasif/managers/base';
 
 export interface Pane {
   id: string;
@@ -9,7 +10,7 @@ export interface PaneStore {
   panes: Pane[];
 }
 
-export class PaneManager extends EventTarget {
+export class PaneManager extends BaseManager {
   store = createRecordSlice<PaneStore>(
     {
       panes: [],

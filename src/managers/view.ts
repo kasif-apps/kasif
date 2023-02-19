@@ -1,6 +1,7 @@
 import React from 'react';
 import { createRecordSlice } from '@kasif-apps/cinq';
 import { WelcomePage } from '@kasif/pages/WelcomePage';
+import { BaseManager } from '@kasif/managers/base';
 
 export interface View {
   id: string;
@@ -14,7 +15,7 @@ export interface ViewStore {
   currentView: View['id'] | null;
 }
 
-export class ViewManager extends EventTarget {
+export class ViewManager extends BaseManager {
   store = createRecordSlice<ViewStore>(
     {
       views: [],

@@ -1,6 +1,7 @@
 import { NotificationProps, showNotification } from '@mantine/notifications';
+import { BaseManager } from '@kasif/managers/base';
 
-export class NotificationManager extends EventTarget {
+export class NotificationManager extends BaseManager {
   error(
     message: string,
     title?: string,

@@ -1,6 +1,7 @@
 import React from 'react';
 import { createRecordSlice, RecordSlice, StorageTransactor } from '@kasif-apps/cinq';
 import { initialSettings } from '@kasif/config/settings';
+import { BaseManager } from '@kasif/managers/base';
 
 export interface SettingCategory {
   id: string;
@@ -38,7 +39,7 @@ export interface SettingsStore {
   items: SettingsItem<any>[];
 }
 
-export class SettingsManager extends EventTarget {
+export class SettingsManager extends BaseManager {
   controllers: SettingController<any>[] = [];
   categories: SettingCategory[] = [
     {

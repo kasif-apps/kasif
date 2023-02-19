@@ -1,6 +1,7 @@
 import { createRecordSlice } from '@kasif-apps/cinq';
 import { initialBottomItems, initialTopItems } from '@kasif/config/navbar';
 import React from 'react';
+import { BaseManager } from '@kasif/managers/base';
 
 export interface NavbarItem {
   id: string;
@@ -14,7 +15,7 @@ export interface NavbarStore {
   bottomItems: NavbarItem[];
 }
 
-export class NavbarManager extends EventTarget {
+export class NavbarManager extends BaseManager {
   store = createRecordSlice<NavbarStore>(
     { topItems: initialTopItems, bottomItems: initialBottomItems },
     { key: 'navbar-store' }

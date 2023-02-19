@@ -1,10 +1,10 @@
 import React from 'react';
-import { AppManager } from '@kasif/config/app';
+import { App } from '@kasif/config/app';
 import { IconAdjustments } from '@tabler/icons';
 import { BooleanAction } from '@kasif/config/settings';
 
 const dummyPlugin = {
-  init(app: AppManager) {
+  init(app: App) {
     app.settingsManager.defineCategory({
       id: 'custom',
       title: 'Custom',
@@ -131,6 +131,6 @@ const dummyPlugin = {
 
 const plugins = [dummyPlugin];
 
-export function initPlugins(manager: AppManager) {
-  plugins.forEach((plugin) => plugin.init(manager));
+export function initPlugins(app: App) {
+  plugins.forEach((plugin) => plugin.init(app));
 }

@@ -1,5 +1,6 @@
 import { app } from '@kasif/config/app';
 import { MantineProviderProps } from '@mantine/core';
+import { BaseManager } from '@kasif/managers/base';
 
 export interface ThemeOption {
   id: string;
@@ -10,7 +11,7 @@ export interface ThemeOption {
   };
 }
 
-export class ThemeManager extends EventTarget {
+export class ThemeManager extends BaseManager {
   commonTheme: MantineProviderProps['theme'] = {
     primaryColor: 'kasif',
     colors: {
