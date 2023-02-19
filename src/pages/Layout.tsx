@@ -1,6 +1,6 @@
 import React from 'react';
 import { KasifHeader, KasifNavbar, KasifFooter } from '@kasif/components/Navigation';
-import { AppShell, createStyles, ScrollArea, ScrollAreaProps } from '@mantine/core';
+import { ActionIcon, AppShell, createStyles, ScrollArea, ScrollAreaProps } from '@mantine/core';
 import { app } from '@kasif/config/app';
 import { useSlice } from '@kasif/util/cinq-react';
 import SplitPane from 'react-split-pane';
@@ -8,6 +8,7 @@ import { Pane } from '@kasif/managers/pane';
 import { useHover } from '@mantine/hooks';
 import { Droppable, DroppableProvided } from 'react-beautiful-dnd';
 import { isDraggingStore } from '@kasif/config/dnd';
+import { IconX } from '@tabler/icons';
 
 const useStyles = createStyles((theme, { isDragging }: { isDragging: boolean }) => ({
   paneFreeDropArea: {
@@ -41,8 +42,25 @@ const useStyles = createStyles((theme, { isDragging }: { isDragging: boolean }) 
       transition: 'background-color 300ms ease',
 
       '&.active': {
-        backgroundColor: theme.fn.rgba(theme.colors.blue[5], 0.2),
+        backgroundColor: theme.fn.rgba(theme.colors[theme.primaryColor][5], 0.2),
       },
+    },
+  },
+
+  paneCloser: {
+    position: 'absolute',
+    top: 0,
+    right: theme.spacing.sm,
+    zIndex: 99,
+    width: 40,
+    height: 40,
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    opacity: 0,
+
+    '&:hover': {
+      opacity: 1,
     },
   },
 }));
@@ -76,6 +94,15 @@ const PaneItem = (props: { children: React.ReactNode; id: string; droppable: boo
           ref={provided.innerRef}
           {...provided.droppableProps}
         >
+          <div data-non-drag-source className={classes.paneCloser}>
+            <ActionIcon
+              onClick={() => app.paneManager.removePane(props.id)}
+              radius="xl"
+              variant="light"
+            >
+              <IconX size={16} />
+            </ActionIcon>
+          </div>
           <div ref={paneDropAreaRef} className={cx('content', isDragging && hovered && 'active')}>
             {props.children}
           </div>

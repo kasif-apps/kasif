@@ -13,6 +13,7 @@ import { useHotkeys } from '@mantine/hooks';
 import { createGlobalStyles } from '@kasif/util/misc';
 import { DndProvider } from '@kasif/config/dnd';
 import { ActionComponent, actions } from './components/Overlay/Spotlight';
+import { initCommands } from './config/command';
 
 function Wrapper() {
   const [ready, setReady] = useState(false);
@@ -33,6 +34,7 @@ function Wrapper() {
 
   useEffect(() => {
     initPlugins(app);
+    initCommands();
   }, []);
 
   return (

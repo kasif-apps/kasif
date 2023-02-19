@@ -21,32 +21,20 @@ export class PaneManager extends BaseManager {
   );
 
   pushPane(pane: Pane) {
-    // const paneExists = this.store.get().panes.some((p) => p.id === pane.id);
-
-    // if (paneExists) {
-    //   this.store.setKey('currentPane', pane.id);
-    //   return;
-    // }
-
-    // this.store.upsert((oldState) => ({
-    //   panes: [...(oldState as PaneStore).panes, pane],
-    //   currentPane: pane.id,
-    // }));
-
-    // this.dispatchEvent(new CustomEvent('push-pane', { detail: pane }));
-    // this.dispatchEvent(new CustomEvent('set-pane', { detail: pane.id }));
     this.store.upsert(() => ({
       panes: [pane],
     }));
   }
 
   removePane(paneId: Pane['id']) {
-    // this.store.upsert((oldState) => ({
-    //   panes: (oldState as PaneStore).panes.filter((pane) => pane.id !== paneId),
-    // }));
     this.store.setKey('panes', []);
 
     this.dispatchEvent(new CustomEvent('remove-pane', { detail: paneId }));
+  }
+
+  removeAllPanes() {
+    this.store.setKey('panes', []);
+    this.dispatchEvent(new CustomEvent('remove-all-panes'));
   }
 
   getPane(paneId: Pane['id']) {
