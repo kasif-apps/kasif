@@ -1,24 +1,7 @@
 import React from 'react';
 import { getIcon } from '@kasif/util/icon';
-import {
-  Group,
-  Button,
-  UnstyledButton,
-  Badge,
-  Text,
-  createStyles,
-  Kbd,
-  Center,
-} from '@mantine/core';
-import { openSpotlight, SpotlightAction, SpotlightActionProps } from '@mantine/spotlight';
-
-export function SpotlightControl() {
-  return (
-    <Group position="center">
-      <Button onClick={() => openSpotlight()}>Open spotlight</Button>
-    </Group>
-  );
-}
+import { Group, UnstyledButton, Badge, Text, createStyles, Kbd, Center } from '@mantine/core';
+import { SpotlightAction, SpotlightActionProps } from '@mantine/spotlight';
 
 const useStyles = createStyles((theme) => ({
   action: {

@@ -1,8 +1,8 @@
+import React, { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom/client';
 import { CSSObject, MantineProvider, MantineTheme } from '@mantine/core';
 import { Layout } from '@kasif/pages/Layout';
 import { NotificationsProvider } from '@mantine/notifications';
-import { useState, useEffect } from 'react';
 import { app, useSetting } from '@kasif/config/app';
 import { ThemeSetting } from '@kasif//config/settings';
 import { initPlugins } from '@kasif/managers/plugin';
@@ -11,7 +11,9 @@ import { IconSearch } from '@tabler/icons';
 import { createPaneStyles } from '@kasif/util/pane';
 import { useHotkeys } from '@mantine/hooks';
 import { createGlobalStyles } from '@kasif/util/misc';
-import { ActionComponent, actions, SpotlightControl } from './components/Overlay/Spotlight';
+import { ActionComponent, actions } from './components/Overlay/Spotlight';
+
+let initialRender = true;
 
 function Wrapper() {
   const [ready, setReady] = useState(false);
@@ -31,7 +33,10 @@ function Wrapper() {
   }, [themeSetting.value]);
 
   useEffect(() => {
-    initPlugins(app);
+    if (initialRender) {
+      initPlugins(app);
+    }
+    initialRender = false;
   }, []);
 
   return (
@@ -46,9 +51,6 @@ function Wrapper() {
         })) as (theme: MantineTheme) => CSSObject,
       }}
     >
-      <NotificationsProvider target="#notifications" position="bottom-right" zIndex={9999}>
-        {ready && <Layout />}
-      </NotificationsProvider>
       <SpotlightProvider
         actions={actions}
         searchIcon={<IconSearch size={18} />}
@@ -56,10 +58,13 @@ function Wrapper() {
         actionComponent={ActionComponent}
         overlayBlur={0}
         overlayOpacity={0}
+        shortcut="mod+p"
         shadow="xl"
         nothingFoundMessage="Nothing found..."
       >
-        <SpotlightControl />
+        <NotificationsProvider target="#notifications" position="bottom-right" zIndex={9999}>
+          {ready && <Layout />}
+        </NotificationsProvider>
       </SpotlightProvider>
     </MantineProvider>
   );
@@ -67,9 +72,9 @@ function Wrapper() {
 
 function App() {
   return (
-    // <React.StrictMode>
-    <Wrapper />
-    // </React.StrictMode>
+    <React.StrictMode>
+      <Wrapper />
+    </React.StrictMode>
   );
 }
 
