@@ -10,22 +10,13 @@ export interface SettingCategory {
   color?: string;
 }
 
-export interface ExtensionRenderer {
-  type: 'extension';
-  render: () => HTMLElement;
-}
-
-export function isExtensionRenderer(renderer: any): renderer is ExtensionRenderer {
-  return renderer.type === 'extension';
-}
-
 export interface SettingsItem<T> {
   id: string;
   category: SettingCategory['id'];
   title: string;
   description: string;
   value: T;
-  action: React.FC | ExtensionRenderer;
+  render: React.FC;
 }
 
 export interface SettingController<T> {

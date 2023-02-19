@@ -18,7 +18,7 @@ const dummyPlugin = {
       description: 'Custom setting.',
       category: 'custom',
       value: false,
-      action: () => React.createElement(BooleanAction, { id: 'custom' }),
+      render: () => React.createElement(BooleanAction, { id: 'custom' }),
     });
 
     app.commandManager.defineCommand({
@@ -54,7 +54,7 @@ const dummyPlugin = {
       onTrigger: () =>
         app.paneManager.pushPane({
           id: 'custom',
-          Component: () => React.createElement('p', null, `custom-${Date.now()}`),
+          render: () => React.createElement('p', null, `custom-${Date.now()}`),
         }),
     });
 

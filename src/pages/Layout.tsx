@@ -3,6 +3,8 @@ import { AppShell, ScrollArea, ScrollAreaProps } from '@mantine/core';
 import { app } from '@kasif/config/app';
 import { useSlice } from '@kasif/util/cinq-react';
 import SplitPane from 'react-split-pane';
+import { Pane } from '@kasif/managers/pane';
+import React from 'react';
 
 const CustomScrollArea = (props: ScrollAreaProps) => (
   <ScrollArea
@@ -21,7 +23,7 @@ export function Layout() {
   const [paneStore] = useSlice(app.paneManager.store);
 
   const Component = app.viewManager.getViewComponent(currentView);
-  const panes = [{ id: '0', Component }, ...paneStore.panes];
+  const panes: Pane[] = [{ id: '0', render: Component }, ...paneStore.panes];
 
   return (
     <AppShell
@@ -45,7 +47,7 @@ export function Layout() {
           {panes.map((pane) => (
             // @ts-ignore
             <CustomScrollArea>
-              <pane.Component />
+              {React.createElement(pane.render, { key: pane.id })}
             </CustomScrollArea>
           ))}
         </SplitPane>

@@ -3,7 +3,7 @@ import { BaseManager } from '@kasif/managers/base';
 
 export interface Pane {
   id: string;
-  Component: React.FC;
+  render: React.FC;
 }
 
 export interface PaneStore {

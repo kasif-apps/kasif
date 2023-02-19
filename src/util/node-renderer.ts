@@ -12,3 +12,7 @@ export function NodeRenderer({ node }: { node: HTMLElement }) {
 
   return React.createElement('div', { ref });
 }
+
+export interface RenderableNode {
+  display(): HTMLElement;
+}

@@ -105,7 +105,7 @@ export namespace ThemeSetting {
     title: 'Theme',
     description: 'Change the theme of the app.',
     value: 'default-light',
-    action: Render,
+    render: Render,
   };
 }
 
@@ -119,7 +119,7 @@ export namespace FontSetting {
     title: 'Font',
     description: 'Change the font of the app.',
     value: 'open-sans',
-    action: () => (
+    render: () => (
       <SelectAction
         id={id}
         data={[
@@ -143,7 +143,7 @@ export namespace LanguageSetting {
     title: 'Language',
     description: 'Change the display language of the app.',
     value: 'en',
-    action: () => (
+    render: () => (
       <SelectAction
         id={id}
         data={[

@@ -1,6 +1,4 @@
 import { app } from '@kasif/config/app';
-import { isExtensionRenderer } from '@kasif/managers/settings';
-import { NodeRenderer } from '@kasif/util/node-renderer';
 import { createStyles, Card, Group, Text, Box } from '@mantine/core';
 
 const useStyles = createStyles((theme) => ({
@@ -63,11 +61,7 @@ export function SettingsPage() {
                 {item.description}
               </Text>
             </div>
-            {isExtensionRenderer(item.action) ? (
-              <NodeRenderer node={item.action.render()} />
-            ) : (
-              <item.action />
-            )}
+            <item.render />
           </Group>
         );
       });
