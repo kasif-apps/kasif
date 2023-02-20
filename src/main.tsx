@@ -35,6 +35,10 @@ function Wrapper() {
   useEffect(() => {
     initCommands();
     initPlugins(app);
+
+    return () => {
+      app.networkManager.kill();
+    };
   }, []);
 
   return (

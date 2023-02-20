@@ -40,9 +40,9 @@ export class SettingsManager extends BaseManager {
       color: 'orange',
     },
     {
-      id: 'layout',
-      title: 'Layout',
-      description: 'Change the basic layout of the app.',
+      id: 'behavior',
+      title: 'Behavior',
+      description: 'Basic & advanced behaviour related settings.',
       color: 'cyan',
     },
   ];

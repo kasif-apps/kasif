@@ -3,7 +3,7 @@ import { app } from '@kasif/config/app';
 import { NotificationType } from '@kasif/managers/notification';
 import { useSlice } from '@kasif/util/cinq-react';
 import { animations } from '@kasif/util/misc';
-import { Box, Card, createStyles, Notification, Stack, Text } from '@mantine/core';
+import { Box, Card, Center, createStyles, Notification, Stack, Text } from '@mantine/core';
 import { IconAlertTriangle, IconCheck, IconInfoCircle, IconX } from '@tabler/icons';
 
 const useStyles = createStyles((theme) => ({
@@ -29,6 +29,12 @@ const useStyles = createStyles((theme) => ({
     lineHeight: 1,
     marginTop: 4,
     marginBottom: 4,
+  },
+
+  emptyMessage: {
+    textTransform: 'uppercase',
+    fontWeight: 300,
+    marginTop: theme.spacing.xl,
   },
 }));
 
@@ -69,6 +75,13 @@ export function LogsPage() {
           <Text size="xl" className={classes.title} weight={800}>
             Logs
           </Text>
+          {logs.length === 0 && (
+            <Center>
+              <Text className={classes.emptyMessage} color="dimmed" size="xl">
+                No Logs Yet
+              </Text>
+            </Center>
+          )}
           <Stack spacing={4}>
             {logs.reverse().map((log, i) => (
               <Transition delay={200} transition={animations.fallDown(i, logs.length)}>

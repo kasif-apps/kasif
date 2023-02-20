@@ -7,6 +7,7 @@ import {
 } from '@kasif-apps/capture';
 import { useResizeObserver } from '@mantine/hooks';
 import { useMantineTheme } from '@mantine/core';
+import { setCssVar } from './misc';
 
 type CaptureOptions = Parameters<typeof createCapturer>[1];
 
@@ -150,6 +151,7 @@ export function useCaptureField() {
     };
 
     Object.assign(ref.current.style, style);
+    setCssVar('--app-pointer-events', 'none');
   }, [ref.current, theme]);
 
   const onCaptureEnd = useCallback(() => {
@@ -163,6 +165,7 @@ export function useCaptureField() {
       };
 
       Object.assign(ref.current.style, style);
+      setCssVar('--app-pointer-events', 'auto');
     }
   }, [ref.current]);
 

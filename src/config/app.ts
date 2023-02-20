@@ -9,6 +9,7 @@ import { useSlice } from '@kasif/util/cinq-react';
 import { BaseManager } from '@kasif/managers/base';
 import { FolderContentManager } from '@kasif/managers/content';
 import { DndManager } from '@kasif/managers/dnd';
+import { NetworkManager } from '@kasif/managers/network';
 
 export class App {
   viewManager = new ViewManager();
@@ -20,6 +21,7 @@ export class App {
   commandManager = new CommandManager();
   contentManager = new FolderContentManager();
   dndManager = new DndManager();
+  networkManager = new NetworkManager();
   contextMenuManager = null;
 
   customManagers: Map<string, BaseManager> = new Map();

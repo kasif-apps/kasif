@@ -156,8 +156,23 @@ export namespace LanguageSetting {
   };
 }
 
+export namespace AnimationSetting {
+  export type Type = boolean;
+  const id = 'enable-animations';
+
+  export const definition: SettingsItem<Type> = {
+    id,
+    category: 'behavior',
+    title: 'Animations',
+    description: 'Enable the animations througout the app.',
+    value: true,
+    render: () => <BooleanAction id={id} />,
+  };
+}
+
 export const initialSettings: Array<SettingsItem<any>> = [
   ThemeSetting.definition,
   FontSetting.definition,
   LanguageSetting.definition,
+  AnimationSetting.definition,
 ];

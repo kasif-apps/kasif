@@ -7,6 +7,11 @@ export function getCssVar(varaible: string): string {
   return style.getPropertyValue(varaible);
 }
 
+export function setCssVar(variable: string, value: string) {
+  const root = document.querySelector(':root')! as HTMLElement;
+  root.style.setProperty(variable, value);
+}
+
 function getOS(): OS {
   const { userAgent } = window.navigator;
   const macosPlatforms = /(Macintosh)|(MacIntel)|(MacPPC)|(Mac68K)/i;
@@ -79,6 +84,10 @@ export function createGlobalStyles(): CSSObject {
   return {
     '*': {
       userSelect: 'none',
+    },
+
+    "button, input, textarea, select, a[href], [tabindex='0'], [role='button']": {
+      pointerEvents: 'var(--app-pointer-events, auto)' as 'auto' | 'none',
     },
 
     'html, body': {

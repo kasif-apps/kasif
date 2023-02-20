@@ -50,6 +50,13 @@ const items: FolderContentItem[] = [
   { id: '3', label: 'item 3', icon: () => <FolderIcon height={20} /> },
   { id: '4', label: 'item 4', icon: () => <FolderIcon height={20} /> },
   { id: '5', label: 'item 5', icon: () => <FolderIcon height={20} /> },
+  { id: '6', label: 'item 6', icon: () => <FolderIcon height={20} /> },
+  { id: '7', label: 'item 7', icon: () => <FolderIcon height={20} /> },
+  { id: '8', label: 'item 8', icon: () => <FolderIcon height={20} /> },
+  { id: '9', label: 'item 9', icon: () => <FolderIcon height={20} /> },
+  { id: '10', label: 'item 10', icon: () => <FolderIcon height={20} /> },
+  { id: '11', label: 'item 11', icon: () => <FolderIcon height={20} /> },
+  { id: '12', label: 'item 12', icon: () => <FolderIcon height={20} /> },
 ];
 
 export function ListView() {

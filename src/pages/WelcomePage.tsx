@@ -28,6 +28,19 @@ import {
   useTransitionController,
 } from '@kasif/components/Transition/TransitionWrapper';
 import { animations } from '@kasif/util/misc';
+import { createSlice, StorageTransactor } from '@kasif-apps/cinq';
+import { useSlice } from '@kasif/util/cinq-react';
+import { useEffect } from 'react';
+
+const moreViewDismissed = createSlice(false, { key: 'more-view-dismissed' });
+const transactor = new StorageTransactor({
+  key: 'welcome-page',
+  slice: moreViewDismissed,
+  type: 'localStorage',
+  model: StorageTransactor.Boolean,
+});
+
+transactor.init();
 
 const useStyles = createStyles((theme) => ({
   card: {
@@ -111,6 +124,13 @@ export function WelcomePage() {
   const { classes } = useStyles();
   const mantineTheme = useMantineTheme();
   const controller = useTransitionController(100);
+  const [dismissed] = useSlice(moreViewDismissed);
+
+  useEffect(() => {
+    if (dismissed) {
+      controller.unMount();
+    }
+  });
 
   return (
     <Stack p="sm" spacing="sm" pt={0} sx={{ maxWidth: 1400, margin: 'auto', height: '100%' }}>
@@ -169,7 +189,15 @@ export function WelcomePage() {
       <Transition controller={controller} transition={animations.scale}>
         <Card radius="md" p="xl" className={classes.card}>
           <div className={classes.dismiss}>
-            <Text onClick={() => controller.unMount()} role="button" size="xs" color="dimmed">
+            <Text
+              onClick={() => {
+                controller.unMount();
+                moreViewDismissed.set(true);
+              }}
+              role="button"
+              size="xs"
+              color="dimmed"
+            >
               Dismiss
             </Text>
           </div>

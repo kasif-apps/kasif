@@ -109,12 +109,12 @@ const PaneItem = (props: { children: React.ReactNode; id: string; droppable: boo
               <IconX size={16} />
             </ActionIcon>
           </div>
-          {props.children}
           <div
             style={{ zIndex: isDragging ? 99 : -1 }}
             ref={paneDropAreaRef}
             className={cx('overlay', isDragging && hovered && 'active')}
           />
+          {props.children}
         </div>
       )}
     </Droppable>

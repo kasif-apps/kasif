@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { MantineTransition, Transition as MantineTransitionComponent } from '@mantine/core';
 import { useReducedMotion } from '@mantine/hooks';
+import { useSetting } from '@kasif/config/app';
 
 export interface TransitionController {
   mounted: boolean;
@@ -11,11 +12,12 @@ export interface TransitionController {
 export function useTransitionController(delay = 0): TransitionController {
   const [mounted, setMounted] = useState(false);
   const onUnMountCallback = useRef<() => void>(() => {});
+  const computedDelay = useSetting('enable-animations')[0].value ? delay : 0;
 
   useEffect(() => {
     setTimeout(() => {
       setMounted(true);
-    }, delay);
+    }, computedDelay);
 
     return () => {
       setMounted(false);
@@ -28,7 +30,7 @@ export function useTransitionController(delay = 0): TransitionController {
       setTimeout(() => {
         onUnMountCallback.current();
         resolve(true);
-      }, delay * 2);
+      }, computedDelay * 2);
     });
 
   const onUnmount = (callbackFn: () => void) => {
@@ -50,6 +52,7 @@ export function Transition(props: TransitionProps) {
   const reducedMotion = useReducedMotion();
   const defaultController = useTransitionController(props.delay);
   const [shown, setShown] = useState(true);
+  const [enableAnimations] = useSetting('enable-animations');
 
   useEffect(() => {
     const controller = props.controller || defaultController;
@@ -62,7 +65,7 @@ export function Transition(props: TransitionProps) {
     return null;
   }
 
-  if (reducedMotion) {
+  if (reducedMotion || !enableAnimations.value) {
     return props.children;
   }
 
