@@ -1,4 +1,5 @@
-import { app } from './app';
+import { app } from '@kasif/config/app';
+import { prebuiltViews } from '@kasif/config/view';
 
 export function initCommands() {
   app.commandManager.defineCommand({
@@ -24,6 +25,15 @@ export function initCommands() {
       } else {
         app.notificationManager.error('Select a view to create a pane', 'No view is selected');
       }
+    },
+  });
+
+  app.commandManager.defineCommand({
+    id: 'open-logs',
+    title: 'Open Logs',
+    shortCut: 'mod+Shift+L',
+    onTrigger: () => {
+      app.viewManager.pushView(prebuiltViews.logs);
     },
   });
 }

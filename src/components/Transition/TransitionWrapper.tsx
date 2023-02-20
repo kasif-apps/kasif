@@ -8,26 +8,19 @@ export interface TransitionController {
   onUnmount: (callbackFn: () => void) => void;
 }
 
-export function useTransitionController(amount = 50, id = ''): TransitionController {
+export function useTransitionController(delay = 0): TransitionController {
   const [mounted, setMounted] = useState(false);
   const onUnMountCallback = useRef<() => void>(() => {});
 
   useEffect(() => {
     setTimeout(() => {
       setMounted(true);
-    }, amount);
+    }, delay);
 
     return () => {
       setMounted(false);
     };
   }, []);
-
-  useEffect(() => {
-    setMounted(false);
-    setTimeout(() => {
-      setMounted(true);
-    }, amount);
-  }, [id]);
 
   const unMount = () =>
     new Promise((resolve) => {
@@ -35,7 +28,7 @@ export function useTransitionController(amount = 50, id = ''): TransitionControl
       setTimeout(() => {
         onUnMountCallback.current();
         resolve(true);
-      }, amount * 2);
+      }, delay * 2);
     });
 
   const onUnmount = (callbackFn: () => void) => {
@@ -50,11 +43,12 @@ export interface TransitionProps {
   transition: MantineTransition;
   duration?: number;
   controller?: TransitionController;
+  delay?: number;
 }
 
 export function Transition(props: TransitionProps) {
   const reducedMotion = useReducedMotion();
-  const defaultController = useTransitionController();
+  const defaultController = useTransitionController(props.delay);
   const [shown, setShown] = useState(true);
 
   useEffect(() => {

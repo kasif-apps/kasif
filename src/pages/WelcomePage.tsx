@@ -110,7 +110,7 @@ function QuickItem() {
 export function WelcomePage() {
   const { classes } = useStyles();
   const mantineTheme = useMantineTheme();
-  const controller = useTransitionController();
+  const controller = useTransitionController(100);
 
   return (
     <Stack p="sm" spacing="sm" pt={0} sx={{ maxWidth: 1400, margin: 'auto', height: '100%' }}>
