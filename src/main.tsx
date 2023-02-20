@@ -70,11 +70,7 @@ function Wrapper() {
 }
 
 function App() {
-  return (
-    // <React.StrictMode>
-    <Wrapper />
-    // </React.StrictMode>
-  );
+  return <Wrapper />;
 }
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);

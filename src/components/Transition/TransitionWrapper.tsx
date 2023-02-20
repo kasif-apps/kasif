@@ -1,12 +1,18 @@
-import * as React from 'react';
-
-import { MantineTransition, Transition } from '@mantine/core';
+import React, { useEffect, useRef, useState } from 'react';
+import { MantineTransition, Transition as MantineTransitionComponent } from '@mantine/core';
 import { useReducedMotion } from '@mantine/hooks';
 
-export function useTransition(amount = 50, id = '') {
-  const [mounted, setMounted] = React.useState(false);
+export interface TransitionController {
+  mounted: boolean;
+  unMount: () => Promise<unknown>;
+  onUnmount: (callbackFn: () => void) => void;
+}
 
-  React.useEffect(() => {
+export function useTransitionController(amount = 50, id = ''): TransitionController {
+  const [mounted, setMounted] = useState(false);
+  const onUnMountCallback = useRef<() => void>(() => {});
+
+  useEffect(() => {
     setTimeout(() => {
       setMounted(true);
     }, amount);
@@ -16,7 +22,7 @@ export function useTransition(amount = 50, id = '') {
     };
   }, []);
 
-  React.useEffect(() => {
+  useEffect(() => {
     setMounted(false);
     setTimeout(() => {
       setMounted(true);
@@ -26,38 +32,57 @@ export function useTransition(amount = 50, id = '') {
   const unMount = () =>
     new Promise((resolve) => {
       setMounted(false);
-      setTimeout(() => resolve(true), amount * 2);
+      setTimeout(() => {
+        onUnMountCallback.current();
+        resolve(true);
+      }, amount * 2);
     });
 
-  return { mounted, unMount };
+  const onUnmount = (callbackFn: () => void) => {
+    onUnMountCallback.current = callbackFn;
+  };
+
+  return { mounted, unMount, onUnmount };
 }
 
-export function TransitionWrapper({
-  children,
-  transition,
-  duration = 200,
-  mounted = undefined,
-}: {
-  children(styles?: React.CSSProperties): React.ReactElement;
+export interface TransitionProps {
+  children: React.ReactElement;
   transition: MantineTransition;
   duration?: number;
-  mounted?: boolean;
-}) {
-  const { mounted: m } = useTransition();
-  const reducedMotion = useReducedMotion();
+  controller?: TransitionController;
+}
 
-  if (reducedMotion) {
-    return children();
+export function Transition(props: TransitionProps) {
+  const reducedMotion = useReducedMotion();
+  const defaultController = useTransitionController();
+  const [shown, setShown] = useState(true);
+
+  useEffect(() => {
+    const controller = props.controller || defaultController;
+    controller.onUnmount(() => {
+      setShown(false);
+    });
+  }, []);
+
+  if (!shown) {
+    return null;
   }
 
+  if (reducedMotion) {
+    return props.children;
+  }
+
+  const clone = (styles: React.CSSProperties) =>
+    React.cloneElement(props.children, { ...props.children.props, style: styles });
+
   return (
-    <Transition
-      mounted={mounted ?? m}
-      transition={transition}
-      duration={duration}
+    <MantineTransitionComponent
+      mounted={props.controller?.mounted ?? defaultController.mounted}
+      transition={props.transition}
+      duration={props.duration}
       timingFunction="ease-in-out"
     >
-      {(styles) => children(styles)}
-    </Transition>
+      {(styles) => clone(styles)}
+    </MantineTransitionComponent>
   );
 }

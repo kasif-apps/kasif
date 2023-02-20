@@ -1,7 +1,7 @@
 import { app } from '@kasif/config/app';
-import { TransitionWrapper } from '@kasif/components/Transition/TransitionWrapper';
-import { createStyles, Card, Group, Text, Box, Sx } from '@mantine/core';
-import { createScale } from '@kasif/util/misc';
+import { Transition } from '@kasif/components/Transition/TransitionWrapper';
+import { createStyles, Card, Group, Text, Box } from '@mantine/core';
+import { animations } from '@kasif/util/misc';
 
 const useStyles = createStyles((theme) => ({
   card: {
@@ -96,17 +96,15 @@ export function SettingsPage() {
   });
 
   return (
-    <TransitionWrapper transition={createScale()}>
-      {(styles) => (
-        <Box p="sm" pt={0} sx={{ maxWidth: 1400, margin: 'auto', ...(styles as Sx) }}>
-          <Card data-non-capture-source radius="md" p="xl" className={classes.card}>
-            <Text size="xl" className={classes.title} weight={800}>
-              Settings
-            </Text>
-            {categories}
-          </Card>
-        </Box>
-      )}
-    </TransitionWrapper>
+    <Transition transition={animations.scale}>
+      <Box p="sm" pt={0} sx={{ maxWidth: 1400, margin: 'auto' }}>
+        <Card data-non-capture-source radius="md" p="xl" className={classes.card}>
+          <Text size="xl" className={classes.title} weight={800}>
+            Settings
+          </Text>
+          {categories}
+        </Card>
+      </Box>
+    </Transition>
   );
 }

@@ -24,6 +24,18 @@ export class ViewManager extends BaseManager {
     { key: 'view-store' }
   );
 
+  // constructor() {
+  //   super();
+
+  // const transactor = new StorageTransactor({
+  //   key: 'view-store',
+  //   slice: this.store,
+  //   type: 'localStorage',
+  // });
+
+  // transactor.init();
+  // }
+
   pushView(view: View) {
     const viewExists = this.store.get().views.some((v) => v.id === view.id);
 
