@@ -1,6 +1,6 @@
 import React from 'react';
 import { App } from '@kasif/config/app';
-import { IconAdjustments } from '@tabler/icons';
+import { IconAdjustments, IconBrandVscode, IconTerminal2 } from '@tabler/icons';
 import { BooleanAction } from '@kasif/config/settings';
 
 const dummyPlugin = {
@@ -45,6 +45,22 @@ const dummyPlugin = {
           icon: () => React.createElement(IconAdjustments, { size: 20, stroke: 1.5 }),
           onClick: () => app.notificationManager.warn('Message from navbar item', 'Look at me!'),
         }),
+    });
+
+    app.contentManager.defineToolbarItem({
+      id: 'open-vs-code',
+      label: 'Open VS Code Here',
+      icon: () => React.createElement(IconBrandVscode, { size: 20, stroke: 1.5 }),
+      onClick: () => {},
+      placement: 'custom',
+    });
+
+    app.contentManager.defineToolbarItem({
+      id: 'open-terminal',
+      label: 'Open Terminal Here',
+      icon: () => React.createElement(IconTerminal2, { size: 20, stroke: 1.5 }),
+      onClick: () => {},
+      placement: 'custom',
     });
 
     app.themeManager.defineTheme({

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { forwardRef, useEffect, useRef, useState } from 'react';
 import { MantineTransition, Transition as MantineTransitionComponent } from '@mantine/core';
 import { useReducedMotion } from '@mantine/hooks';
 import { useSetting } from '@kasif/config/app';
@@ -7,11 +7,13 @@ export interface TransitionController {
   mounted: boolean;
   unMount: () => Promise<unknown>;
   onUnmount: (callbackFn: () => void) => void;
+  onMount: (callbackFn: () => void) => void;
 }
 
 export function useTransitionController(delay = 0): TransitionController {
   const [mounted, setMounted] = useState(false);
   const onUnMountCallback = useRef<() => void>(() => {});
+  const onMountCallback = useRef<() => void>(() => {});
   const computedDelay = useSetting('enable-animations')[0].value ? delay : 0;
 
   useEffect(() => {
@@ -23,6 +25,12 @@ export function useTransitionController(delay = 0): TransitionController {
       setMounted(false);
     };
   }, []);
+
+  useEffect(() => {
+    if (mounted) {
+      onMountCallback.current();
+    }
+  }, [mounted]);
 
   const unMount = () =>
     new Promise((resolve) => {
@@ -37,7 +45,11 @@ export function useTransitionController(delay = 0): TransitionController {
     onUnMountCallback.current = callbackFn;
   };
 
-  return { mounted, unMount, onUnmount };
+  const onMount = (callbackFn: () => void) => {
+    onMountCallback.current = callbackFn;
+  };
+
+  return { mounted, unMount, onUnmount, onMount };
 }
 
 export interface TransitionProps {
@@ -48,7 +60,7 @@ export interface TransitionProps {
   delay?: number;
 }
 
-export function Transition(props: TransitionProps) {
+export const Transition = forwardRef((props: TransitionProps, ref) => {
   const reducedMotion = useReducedMotion();
   const defaultController = useTransitionController(props.delay);
   const [shown, setShown] = useState(true);
@@ -70,7 +82,15 @@ export function Transition(props: TransitionProps) {
   }
 
   const clone = (styles: React.CSSProperties) =>
-    React.cloneElement(props.children, { ...props.children.props, style: styles });
+    React.cloneElement(
+      props.children,
+      {
+        ...props.children.props,
+        style: { ...(props.children.props.style || {}), ...styles },
+        ref,
+      },
+      props.children.props.children
+    );
 
   return (
     <MantineTransitionComponent
@@ -82,4 +102,4 @@ export function Transition(props: TransitionProps) {
       {(styles) => clone(styles)}
     </MantineTransitionComponent>
   );
-}
+});

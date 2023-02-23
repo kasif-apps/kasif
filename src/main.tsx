@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom/client';
 import { CSSObject, MantineProvider, MantineTheme } from '@mantine/core';
 import { Layout } from '@kasif/pages/Layout';

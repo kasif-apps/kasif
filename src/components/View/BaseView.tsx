@@ -1,10 +1,11 @@
+import React, { useEffect } from 'react';
 import { CaptureEdgeEvent, getCapturedTargets } from '@kasif-apps/capture';
 import { app } from '@kasif/config/app';
 import { useCaptureField, useCapture, CaptureTarget } from '@kasif/util/capture-react';
 import { useSlice } from '@kasif/util/cinq-react';
-import { Box, createStyles, UnstyledButton } from '@mantine/core';
+import { Box, createStyles, Stack, UnstyledButton } from '@mantine/core';
 import { useHotkeys } from '@mantine/hooks';
-import React, { useEffect } from 'react';
+import { Toolbar } from '@kasif/components/View/Toolbar';
 
 const useStyles = createStyles((theme) => ({
   item: {
@@ -66,7 +67,7 @@ export function BaseViewItem(props: BaseViewItemProps) {
   );
 }
 
-export function BaseView(props: { children: React.ReactNode; items: string[] }) {
+export function BaseView(props: { children: React.ReactElement; items: string[] }) {
   const { onCaptureEnd, onCaptureStart, onCaptureTick, setSource } = useCaptureField();
   const selection = useSlice(app.contentManager.selection);
 
@@ -74,7 +75,7 @@ export function BaseView(props: { children: React.ReactNode; items: string[] }) 
     [
       'mod+a',
       () => {
-        app.contentManager.selectMultiple(props.items);
+        app.contentManager.selectAll(props.items);
       },
     ],
     [
@@ -101,6 +102,7 @@ export function BaseView(props: { children: React.ReactNode; items: string[] }) 
         app.contentManager.paste();
       },
     ],
+    ['mod+s', () => {}],
   ]);
 
   const handleCaptureStart = (e: CustomEvent<CaptureEdgeEvent>) => {
@@ -139,11 +141,21 @@ export function BaseView(props: { children: React.ReactNode; items: string[] }) 
   }, [ref.current]);
 
   return (
-    <Box
-      ref={ref}
-      sx={{ height: '100%', maxWidth: 'calc(100vw - var(--mantine-navbar-width))', width: 'auto' }}
-    >
-      {props.children}
-    </Box>
+    <Stack sx={{ height: '100%' }} spacing="sm">
+      <Toolbar />
+      <Box
+        ref={ref}
+        sx={{
+          flex: 1,
+          maxWidth: 'calc(100vw - var(--mantine-navbar-width))',
+          width: 'auto',
+          position: 'relative',
+        }}
+      >
+        {/* this doesn't work with refs */}
+        {/* <Transition transition="fade">{props.children}</Transition> */}
+        {props.children}
+      </Box>
+    </Stack>
   );
 }

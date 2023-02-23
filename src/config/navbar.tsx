@@ -2,7 +2,6 @@ import { NavbarItem } from '@kasif/managers/navbar';
 import { prebuiltViews } from '@kasif/config/view';
 import { getIcon } from '@kasif/util/icon';
 import { IconHome, IconPuzzle, IconSettings, IconShoppingBag, IconUser } from '@tabler/icons';
-import { ContentView } from '@kasif/components/View/ContentView';
 import { ListView } from '@kasif/components/View/ListView';
 import { app } from './app';
 
@@ -48,7 +47,7 @@ export const initialTopItems: NavbarItem[] = [
         id: 'documents',
         title: 'Documents',
         icon: <icon.documents />,
-        render: ContentView,
+        render: ListView,
       }),
   },
   {
@@ -60,7 +59,7 @@ export const initialTopItems: NavbarItem[] = [
         id: 'applications',
         title: 'Applications',
         icon: <icon.applications />,
-        render: ContentView,
+        render: ListView,
       }),
   },
   {
@@ -72,7 +71,7 @@ export const initialTopItems: NavbarItem[] = [
         id: 'desktop',
         title: 'Desktop',
         icon: <icon.desktop />,
-        render: ContentView,
+        render: ListView,
       }),
   },
 ];

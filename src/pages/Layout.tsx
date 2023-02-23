@@ -1,13 +1,12 @@
 import React from 'react';
 import { KasifHeader, KasifNavbar, KasifFooter } from '@kasif/components/Navigation';
-import { ActionIcon, AppShell, createStyles, ScrollArea, ScrollAreaProps } from '@mantine/core';
+import { AppShell, createStyles, ScrollArea, ScrollAreaProps } from '@mantine/core';
 import { app } from '@kasif/config/app';
 import { useSlice } from '@kasif/util/cinq-react';
 import SplitPane from 'react-split-pane';
 import { Pane } from '@kasif/managers/pane';
 import { useHover } from '@mantine/hooks';
 import { Droppable, DroppableProvided } from 'react-beautiful-dnd';
-import { IconX } from '@tabler/icons';
 
 const useStyles = createStyles((theme, { isDragging }: { isDragging: boolean }) => ({
   paneFreeDropArea: {
@@ -52,23 +51,6 @@ const useStyles = createStyles((theme, { isDragging }: { isDragging: boolean }) 
       },
     },
   },
-
-  paneCloser: {
-    position: 'absolute',
-    top: 0,
-    right: theme.spacing.sm,
-    zIndex: 99,
-    width: 40,
-    height: 40,
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    opacity: 0,
-
-    '&:hover': {
-      opacity: 1,
-    },
-  },
 }));
 
 const CustomScrollArea = (props: ScrollAreaProps) => (
@@ -100,15 +82,6 @@ const PaneItem = (props: { children: React.ReactNode; id: string; droppable: boo
           ref={provided.innerRef}
           {...provided.droppableProps}
         >
-          <div data-non-drag-source className={classes.paneCloser}>
-            <ActionIcon
-              onClick={() => app.paneManager.removePane(props.id)}
-              radius="xl"
-              variant="light"
-            >
-              <IconX size={16} />
-            </ActionIcon>
-          </div>
           <div
             style={{ zIndex: isDragging ? 99 : -1 }}
             ref={paneDropAreaRef}

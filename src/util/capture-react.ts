@@ -48,7 +48,7 @@ export function useCapture<T extends HTMLElement>(options: ReactCaptureOptions) 
         }
       };
     }
-  }, [ref, rect]);
+  }, [ref.current, rect]);
 
   useEffect(() => {
     cancel.current();
@@ -128,7 +128,7 @@ export function useCaptureField() {
         const { area } = event.detail;
         const style = {
           left: `${area.topLeft.x - rect.left}px`,
-          top: `${area.topLeft.y - rect.top}px`,
+          top: `${area.topLeft.y - rect.top - 4}px`,
           width: `${area.width}px`,
           height: `${area.height}px`,
         };
@@ -157,7 +157,7 @@ export function useCaptureField() {
   const onCaptureEnd = useCallback(() => {
     if (ref.current) {
       const style = {
-        lefy: '0px',
+        left: '0px',
         top: '0px',
         width: '0px',
         height: '0px',

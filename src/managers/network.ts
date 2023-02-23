@@ -14,10 +14,16 @@ interface NetworkStatus {
 export class NetworkManager extends BaseManager {
   store = createSlice<NetworkStatus>(this.getConnection(), { key: 'network-store' });
 
+  private getConnectionInstance() {
+    const _navigator = navigator as any;
+    const connection: any =
+      _navigator.connection || _navigator.mozConnection || _navigator.webkitConnection;
+
+    return connection;
+  }
+
   constructor() {
     super();
-    const _navigator = navigator as any;
-
     window.addEventListener('online', () => {
       this.store.set({ ...this.getConnection(), online: true });
       this.dispatchEvent(new CustomEvent('online'));
@@ -27,7 +33,10 @@ export class NetworkManager extends BaseManager {
       this.dispatchEvent(new CustomEvent('offline'));
     });
 
-    _navigator.connection.addEventListener('change', this.handleConnectionChange);
+    const connection = this.getConnectionInstance();
+    if (typeof connection !== 'undefined') {
+      connection.addEventListener('change', this.handleConnectionChange);
+    }
   }
 
   handleConnectionChange() {
@@ -36,9 +45,7 @@ export class NetworkManager extends BaseManager {
   }
 
   getConnection(): NetworkStatus {
-    const _navigator = navigator as any;
-    const connection: any =
-      _navigator.connection || _navigator.mozConnection || _navigator.webkitConnection;
+    const connection = this.getConnectionInstance();
 
     if (!connection) {
       return {} as NetworkStatus;
@@ -56,7 +63,10 @@ export class NetworkManager extends BaseManager {
   }
 
   kill() {
-    const _navigator = navigator as any;
-    _navigator.connection.removeEventListener('change', this.handleConnectionChange);
+    const connection = this.getConnectionInstance();
+
+    if (connection) {
+      connection.removeEventListener('change', this.handleConnectionChange);
+    }
   }
 }

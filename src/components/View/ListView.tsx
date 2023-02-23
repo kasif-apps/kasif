@@ -1,6 +1,8 @@
 import { createStyles, Stack } from '@mantine/core';
 import { ReactComponent as FolderIcon } from '@kasif/assets/icons/folder.svg';
 import { BaseView, BaseViewItem } from '@kasif/components/View/BaseView';
+import { Transition } from '@kasif/components/Transition/TransitionWrapper';
+import { animations } from '@kasif/util/misc';
 
 const useStyles = createStyles((theme) => ({
   item: {
@@ -63,8 +65,10 @@ export function ListView() {
   return (
     <BaseView items={items.map((item) => item.id)}>
       <Stack px="sm" spacing={2}>
-        {items.map((item) => (
-          <ListViewItem {...item} key={item.id} />
+        {items.map((item, i) => (
+          <Transition key={item.id} transition={animations.fallDown(i, items.length)}>
+            <ListViewItem {...item} />
+          </Transition>
         ))}
       </Stack>
     </BaseView>
