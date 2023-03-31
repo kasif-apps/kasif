@@ -17,7 +17,6 @@ export class DndManager extends BaseManager {
 
     if (result.source.droppableId === 'tabs') {
       this.handleTabDragEnd(result);
-      return;
     }
 
     this.dispatchEvent(new CustomEvent('drag-end', { detail: result }));

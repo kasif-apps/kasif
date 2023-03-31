@@ -1,5 +1,4 @@
 import React from 'react';
-import { getIcon } from '@kasif/util/icon';
 import { Group, UnstyledButton, Badge, Text, createStyles, Kbd, Center } from '@mantine/core';
 import { SpotlightAction, SpotlightActionProps } from '@mantine/spotlight';
 
@@ -17,29 +16,7 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
-export const actions: SpotlightAction[] = [
-  {
-    title: 'Splash.tsx',
-    description: '/Users/muhammedalican/Documents/repos/kasif/src/pages/Splash.tsx',
-    icon: React.createElement(await getIcon('Splash.tsx', 'file'), { width: 28 }),
-    group: 'Files & Folders',
-    onTrigger: () => {},
-  },
-  {
-    title: 'Kasif',
-    description: '/Users/muhammedalican/Documents/repos/kasif/',
-    icon: React.createElement(await getIcon('kasif', 'folder'), { width: 28 }),
-    group: 'Files & Folders',
-    onTrigger: () => {},
-  },
-  {
-    title: '.editorconfig',
-    description: '/Users/muhammedalican/Documents/repos/kasif/.editorconfig',
-    icon: React.createElement(await getIcon('.editorconfig', 'file'), { width: 28 }),
-    group: 'Files & Folders',
-    onTrigger: () => {},
-  },
-];
+export const actions: SpotlightAction[] = [];
 
 export function ActionComponent({
   action,

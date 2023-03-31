@@ -41,6 +41,7 @@ export class ViewManager extends BaseManager {
 
     if (viewExists) {
       this.store.setKey('currentView', view.id);
+      this.dispatchEvent(new CustomEvent('set-view', { detail: view.id }));
       return;
     }
 
