@@ -7,6 +7,7 @@ import SplitPane from 'react-split-pane';
 import { Pane } from '@kasif/managers/pane';
 import { useHover } from '@mantine/hooks';
 import { Droppable, DroppableProvided } from 'react-beautiful-dnd';
+import { DisplayRenderableNode } from '@kasif/util/node-renderer';
 
 const useStyles = createStyles((theme, { isDragging }: { isDragging: boolean }) => ({
   paneFreeDropArea: {
@@ -126,14 +127,14 @@ export function Layout() {
           {panes.map((pane, index) => (
             <PaneItem droppable={index !== 0} id={pane.id} key={pane.id}>
               <CustomScrollArea>
-                {React.createElement(pane.render, { key: pane.id })}
+                <DisplayRenderableNode node={pane.render} />
               </CustomScrollArea>
             </PaneItem>
           ))}
         </SplitPane>
       ) : (
         <CustomScrollArea>
-          <Component />
+          <DisplayRenderableNode node={Component} />
         </CustomScrollArea>
       )}
 

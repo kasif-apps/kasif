@@ -1,10 +1,21 @@
 import { app } from '@kasif/config/app';
 import { prebuiltViews } from '@kasif/config/view';
-import { Avatar, Button, Card, createStyles, Group, Stack, Text, Tooltip } from '@mantine/core';
+import {
+  Avatar,
+  Button,
+  Card,
+  createStyles,
+  Group,
+  Stack,
+  Text,
+  Tooltip,
+  UnstyledButton,
+} from '@mantine/core';
 import {
   IconArrowNarrowRight,
   IconBrandDiscord,
   IconBrandGithub,
+  IconClock,
   IconCoffee,
   IconHeart,
   IconShoppingBag,
@@ -93,21 +104,21 @@ function CtaText({ children }: { children: React.ReactNode }) {
   );
 }
 
-// function QuickItem() {
-//   const { classes } = useStyles();
+function QuickItem() {
+  const { classes } = useStyles();
 
-//   return (
-//     <UnstyledButton className={classes.quickItem}>
-//       {/* <Folder height={36} /> */}f
-//       <Text color="dimmed" size="xs">
-//         kasif
-//       </Text>
-//     </UnstyledButton>
-//   );
-// }
+  return (
+    <UnstyledButton className={classes.quickItem}>
+      <Avatar>K</Avatar>
+      <Text color="dimmed" size="xs">
+        kasif
+      </Text>
+    </UnstyledButton>
+  );
+}
 
 export function WelcomePage() {
-  const { classes } = useStyles();
+  const { classes, theme } = useStyles();
   const controller = useTransitionController(100);
   const [dismissed] = useSlice(moreViewDismissed);
 
@@ -119,49 +130,24 @@ export function WelcomePage() {
 
   return (
     <Stack p="sm" spacing="sm" pt={0} sx={{ maxWidth: 1400, margin: 'auto', height: '100%' }}>
-      {/* <Transition transition="fade">
+      <Transition transition="fade">
         <Card radius="md" p="xl" className={classes.card}>
           <Stack>
             <CtaText>Get Started</CtaText>
             <Stack spacing="lg">
               <Stack spacing={4}>
                 <Group spacing={4}>
-                  <IconPinned
-                    size={14}
-                    color={
-                      mantineTheme.colorScheme === 'dark'
-                        ? mantineTheme.colors.dark[2]
-                        : mantineTheme.colors.gray[6]
-                    }
-                  />
-                  <Text size="xs" color="dimmed">
-                    Pinned
-                  </Text>
-                </Group>
-                <Group spacing="xs">
-                  <QuickItem />
-                  <QuickItem />
-                  <QuickItem />
-                </Group>
-              </Stack>
-              <Stack spacing={4}>
-                <Group spacing={4}>
                   <IconClock
                     size={14}
                     color={
-                      mantineTheme.colorScheme === 'dark'
-                        ? mantineTheme.colors.dark[2]
-                        : mantineTheme.colors.gray[6]
+                      theme.colorScheme === 'dark' ? theme.colors.dark[2] : theme.colors.gray[6]
                     }
                   />
                   <Text size="xs" color="dimmed">
-                    Recent
+                    Recent Items
                   </Text>
                 </Group>
                 <Group spacing="xs">
-                  <QuickItem />
-                  <QuickItem />
-                  <QuickItem />
                   <QuickItem />
                   <QuickItem />
                   <QuickItem />
@@ -170,7 +156,7 @@ export function WelcomePage() {
             </Stack>
           </Stack>
         </Card>
-      </Transition> */}
+      </Transition>
       <Transition controller={controller} transition={animations.scale}>
         <Card radius="md" p="xl" className={classes.card}>
           <div className={classes.dismiss}>
@@ -229,12 +215,12 @@ export function WelcomePage() {
             <Group>
               <Button
                 leftIcon={<IconBrandDiscord stroke={1.5} size={20} />}
-                sx={(theme) => ({
-                  backgroundColor: theme.colorScheme === 'dark' ? '#5865F2' : '#5865F2',
+                sx={(th) => ({
+                  backgroundColor: th.colorScheme === 'dark' ? '#5865F2' : '#5865F2',
                   '&:hover': {
                     backgroundColor:
-                      theme.colorScheme === 'dark'
-                        ? theme.fn.lighten('#5865F2', 0.05)
+                      th.colorScheme === 'dark'
+                        ? th.fn.lighten('#5865F2', 0.05)
                         : theme.fn.darken('#5865F2', 0.05),
                   },
                 })}
@@ -243,11 +229,11 @@ export function WelcomePage() {
               </Button>
               <Button
                 leftIcon={<IconBrandGithub stroke={1.5} size={20} />}
-                sx={(theme) => ({
-                  backgroundColor: theme.colors.dark[theme.colorScheme === 'dark' ? 9 : 6],
+                sx={(th) => ({
+                  backgroundColor: th.colors.dark[th.colorScheme === 'dark' ? 9 : 6],
                   color: '#fff',
                   '&:hover': {
-                    backgroundColor: theme.colors.dark[theme.colorScheme === 'dark' ? 9 : 6],
+                    backgroundColor: th.colors.dark[th.colorScheme === 'dark' ? 9 : 6],
                   },
                 })}
               >
@@ -264,11 +250,11 @@ export function WelcomePage() {
             <Group>
               <Button
                 leftIcon={<IconBrandGithub stroke={1.5} size={20} />}
-                sx={(theme) => ({
-                  backgroundColor: theme.colors.dark[theme.colorScheme === 'dark' ? 9 : 6],
+                sx={(th) => ({
+                  backgroundColor: th.colors.dark[th.colorScheme === 'dark' ? 9 : 6],
                   color: '#fff',
                   '&:hover': {
-                    backgroundColor: theme.colors.dark[theme.colorScheme === 'dark' ? 9 : 6],
+                    backgroundColor: th.colors.dark[th.colorScheme === 'dark' ? 9 : 6],
                   },
                 })}
               >

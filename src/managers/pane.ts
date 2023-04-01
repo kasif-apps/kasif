@@ -2,10 +2,11 @@ import { createRecordSlice } from '@kasif-apps/cinq';
 import { app } from '@kasif/config/app';
 import { BaseManager } from '@kasif/managers/base';
 import { View } from '@kasif/managers/view';
+import { RenderableNode } from '@kasif/util/node-renderer';
 
 export interface Pane {
   id: string;
-  render: React.FC;
+  render: React.FC | RenderableNode;
 }
 
 export interface PaneStore {

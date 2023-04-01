@@ -2,6 +2,7 @@ import { app } from '@kasif/config/app';
 import { Transition } from '@kasif/components/Transition/TransitionWrapper';
 import { createStyles, Card, Group, Text, Box } from '@mantine/core';
 import { animations } from '@kasif/util/misc';
+import { DisplayRenderableNode } from '@kasif/util/node-renderer';
 
 const useStyles = createStyles((theme) => ({
   card: {
@@ -63,7 +64,7 @@ export function SettingsPage() {
                 {item.description}
               </Text>
             </div>
-            <item.render />
+            <DisplayRenderableNode node={item.render} />
           </Group>
         );
       });

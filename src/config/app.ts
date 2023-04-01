@@ -11,7 +11,15 @@ import { FolderContentManager } from '@kasif/managers/content';
 import { DndManager } from '@kasif/managers/dnd';
 import { NetworkManager } from '@kasif/managers/network';
 
+export const nexus = {
+  id: 'nexus@v0.0.1',
+  name: 'Nexus',
+  version: '0.0.1',
+};
+
 export class App {
+  id: string;
+  name: string;
   viewManager = new ViewManager();
   settingsManager = new SettingsManager();
   themeManager = new ThemeManager();
@@ -25,6 +33,11 @@ export class App {
   contextMenuManager = null;
 
   customManagers: Map<string, BaseManager> = new Map();
+
+  constructor() {
+    this.id = nexus.id;
+    this.name = nexus.name;
+  }
 
   defineCustomManager(id: string, manager: BaseManager) {
     this.customManagers.set(id, manager);

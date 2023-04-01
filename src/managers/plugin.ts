@@ -1,134 +1,70 @@
-import React from 'react';
-import { App } from '@kasif/config/app';
-import { IconAdjustments, IconBrandVscode, IconTerminal2 } from '@tabler/icons';
-import { BooleanAction } from '@kasif/config/settings';
+// import React from 'react';
+import { App, nexus } from '@kasif/config/app';
 
-const dummyPlugin = {
-  init(app: App) {
-    app.settingsManager.defineCategory({
-      id: 'custom',
-      title: 'Custom',
-      description: 'Custom settings.',
-      color: 'red',
-    });
-
-    app.settingsManager.defineSetting({
-      id: 'custom',
-      title: 'Custom',
-      description: 'Custom setting.',
-      category: 'custom',
-      value: false,
-      render: () => React.createElement(BooleanAction, { id: 'custom' }),
-    });
-
-    app.commandManager.defineCommand({
-      id: 'push-view',
-      title: 'Push View',
-      shortCut: 'mod+shift+o',
-      onTrigger: () =>
-        app.viewManager.pushView({
-          id: `custom-${Date.now()}`,
-          title:
-            'Lorem Ipsum Dolor Sit Amet Consectetur Adipiscing Elit Sed Do Eiusmod Tempor Incididunt Ut Labore Et Dolore Magna Aliqua Ut Enim Ad Minim Veniam',
-          icon: React.createElement('p', null, 'H'),
-          render: () => React.createElement('p', null, `custom-${Date.now()}`),
-        }),
-    });
-
-    app.commandManager.defineCommand({
-      id: 'add-navbar-item',
-      title: 'Add Navbar Item',
-      onTrigger: () =>
-        app.navbarManager.pushTopItem({
-          id: 'custom',
-          label: 'Custom',
-          icon: () => React.createElement(IconAdjustments, { size: 20, stroke: 1.5 }),
-          onClick: () => app.notificationManager.warn('Message from navbar item', 'Look at me!'),
-        }),
-    });
-
-    app.contentManager.defineToolbarItem({
-      id: 'open-vs-code',
-      label: 'Open VS Code Here',
-      icon: () => React.createElement(IconBrandVscode, { size: 20, stroke: 1.5 }),
-      onClick: () => {},
-      placement: 'custom',
-    });
-
-    app.contentManager.defineToolbarItem({
-      id: 'open-terminal',
-      label: 'Open Terminal Here',
-      icon: () => React.createElement(IconTerminal2, { size: 20, stroke: 1.5 }),
-      onClick: () => {},
-      placement: 'custom',
-    });
-
-    app.themeManager.defineTheme({
-      id: 'blue',
-      title: 'Blue',
-      description: 'Custom theme.',
-      theme: {
-        ui: {
-          primaryColor: 'blue',
-          colorScheme: 'light',
-        },
-      },
-    });
-
-    app.themeManager.defineTheme({
-      id: 'blue-dark',
-      title: 'Blue Dark',
-      description: 'Custom theme.',
-      theme: {
-        ui: {
-          primaryColor: 'blue',
-          colorScheme: 'dark',
-        },
-      },
-    });
-
-    app.themeManager.defineTheme({
-      id: 'dracula',
-      title: 'Dracula',
-      description: 'Unoffical dracula theme.',
-      theme: {
-        ui: {
-          primaryColor: 'indigo',
-          colorScheme: 'dark',
-          colors: {
-            dark: [
-              '#f8f8f2',
-              '#f8f8f2',
-              '#889acf',
-              '#6272a4',
-              '#6272a4',
-              '#44475a',
-              '#343745',
-              '#282a36',
-              '#1d1f29',
-              '#20222b',
-            ],
-            red: [
-              '#FFF5F5',
-              '#FFE3E3',
-              '#FFC9C9',
-              '#FFA8A8',
-              '#FF8787',
-              '#ff5555',
-              '#FA5252',
-              '#F03E3E',
-              '#E03131',
-              '#C92A2A',
-            ],
-          },
-        },
-      },
-    });
+const pluginImports = [
+  {
+    name: 'Test',
+    id: 'test@v0.0.1',
+    path: 'test',
   },
-};
+  {
+    name: 'Another',
+    id: 'another@v0.0.1',
+    path: 'another',
+  },
+];
 
-const plugins = [dummyPlugin];
+function importModules(app: App): Promise<{ file: { init: (app: App) => void }; id: string }[]> {
+  const files: { file: any; id: string }[] = [];
+  return new Promise((resolve) => {
+    pluginImports.forEach((mod, index) => {
+      import(`/plugins/${mod.path}/entry.js`)
+        .then((file) => {
+          files.push({
+            file,
+            id: mod.id,
+          });
 
-export function initPlugins(app: App) {
-  plugins.forEach((plugin) => plugin.init(app));
+          if (index === pluginImports.length - 1) {
+            resolve(files);
+          }
+        })
+        .catch((error) => {
+          app.notificationManager.error(
+            `Could not load plugin '${mod.name}'. Check the logs for more information.`,
+            'Error Loading Plugin'
+          );
+          app.notificationManager.log(
+            String(error.stack),
+            `Loading '${mod.name}' (${mod.id}) plugin failed`
+          );
+        });
+    });
+  });
+}
+
+export async function initPlugins(_app: App) {
+  const app = _app;
+
+  const modules = await importModules(app);
+  const plugins: Array<{ init: (app: App) => void; id: string }> = modules.map((mod) => ({
+    init: mod.file.init,
+    id: mod.id,
+  }));
+  plugins.forEach((plugin) => {
+    const instance = pluginImports.find((mod) => mod.id === plugin.id);
+
+    if (instance) {
+      app.id = instance.id;
+      app.name = instance.name;
+      plugin.init(app);
+
+      app.id = nexus.id;
+      app.name = nexus.name;
+      app.notificationManager.log(
+        `Plugin '${instance.name}:${instance.id}' loaded successfully`,
+        'Plugin loaded'
+      );
+    }
+  });
 }

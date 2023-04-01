@@ -7,7 +7,7 @@
     "distDir": "../build"
   },
   "package": {
-    "productName": "kasif",
+    "productName": "nexus",
     "version": "0.1.0"
   },
   "tauri": {
@@ -59,10 +59,10 @@
     "windows": [
       {
         "fullscreen": false,
-        "height": 760,
+        "width": 1100,
+        "height": 660,
         "resizable": true,
-        "title": "Kâşif the Explorer",
-        "width": 1100
+        "title": "Nexus | UI Tool"
       }
     ]
   }

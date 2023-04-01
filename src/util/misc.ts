@@ -100,6 +100,19 @@ export function createGlobalStyles(): CSSObject {
   };
 }
 
+export function getRelativeTime(timestamp: Date) {
+  const DAY_MILLISECONDS = 1000 * 60 * 60 * 24;
+  const rtf = new Intl.RelativeTimeFormat('en', {
+    numeric: 'auto',
+    style: 'long',
+  });
+  const daysDifference = Math.round(
+    (timestamp.getTime() - new Date().getTime()) / DAY_MILLISECONDS
+  );
+
+  return rtf.format(daysDifference, 'seconds');
+}
+
 export const reorder = (list: any[], startIndex: number, endIndex: number) => {
   const result = Array.from(list);
   const [removed] = result.splice(startIndex, 1);

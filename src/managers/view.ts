@@ -2,12 +2,13 @@ import React from 'react';
 import { createRecordSlice } from '@kasif-apps/cinq';
 import { WelcomePage } from '@kasif/pages/WelcomePage';
 import { BaseManager } from '@kasif/managers/base';
+import { RenderableNode } from '@kasif/util/node-renderer';
 
 export interface View {
   id: string;
   title: string;
   icon: JSX.Element;
-  render: React.FC;
+  render: React.FC | RenderableNode;
 }
 
 export interface ViewStore {
@@ -23,18 +24,6 @@ export class ViewManager extends BaseManager {
     },
     { key: 'view-store' }
   );
-
-  // constructor() {
-  //   super();
-
-  // const transactor = new StorageTransactor({
-  //   key: 'view-store',
-  //   slice: this.store,
-  //   type: 'localStorage',
-  // });
-
-  // transactor.init();
-  // }
 
   pushView(view: View) {
     const viewExists = this.store.get().views.some((v) => v.id === view.id);

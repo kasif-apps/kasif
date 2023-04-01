@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom/client';
 import { CSSObject, MantineProvider, MantineTheme } from '@mantine/core';
 import { Layout } from '@kasif/pages/Layout';
 import { NotificationsProvider } from '@mantine/notifications';
-import { app, useSetting } from '@kasif/config/app';
+import { app, nexus, useSetting } from '@kasif/config/app';
 import { ThemeSetting } from '@kasif//config/settings';
 import { initPlugins } from '@kasif/managers/plugin';
 import { SpotlightProvider } from '@mantine/spotlight';
@@ -12,8 +12,10 @@ import { createPaneStyles } from '@kasif/util/pane';
 import { useHotkeys } from '@mantine/hooks';
 import { createGlobalStyles } from '@kasif/util/misc';
 import { DndProvider } from '@kasif/config/dnd';
-import { ActionComponent, actions } from './components/Overlay/Spotlight';
-import { initCommands } from './config/command';
+import { ActionComponent, actions } from '@kasif/components/Overlay/Spotlight';
+import { initCommands } from '@kasif/config/command';
+
+app.notificationManager.log(`Nexus app initialized. Version: ${nexus.version}`, 'App initialized');
 
 function Wrapper() {
   const [ready, setReady] = useState(false);
