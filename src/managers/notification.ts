@@ -1,6 +1,6 @@
 import { NotificationProps, showNotification } from '@mantine/notifications';
 import { BaseManager } from '@kasif/managers/base';
-import { IconAlertTriangle, IconCheck, IconX } from '@tabler/icons';
+import { IconAlertTriangle, IconCheck, IconInfoCircle, IconX } from '@tabler/icons';
 import React from 'react';
 import { createVectorSlice } from '@kasif-apps/cinq';
 import { Group, Text } from '@mantine/core';
@@ -19,6 +19,13 @@ export interface NotificationLog {
   time: Date;
 }
 
+export const Log = {
+  ERROR: 0,
+  WARNING: 1,
+  SUCCESS: 2,
+  LOG: 3,
+} as const;
+
 export class NotificationManager extends BaseManager {
   logs = createVectorSlice<NotificationLog[]>([], { key: 'notification-logs' });
 
@@ -30,6 +37,13 @@ export class NotificationManager extends BaseManager {
     ]);
   }
 
+  getLogLevel() {
+    const controller = app.settingsManager.getSettingController<keyof typeof Log>('log-level')!;
+    const logLevel = controller.instance.get().value;
+
+    return Log[logLevel];
+  }
+
   error(
     message: string,
     title?: string,
@@ -37,13 +51,15 @@ export class NotificationManager extends BaseManager {
   ) {
     const source = { id: app.id, name: app.name };
 
-    showNotification({
-      ...options,
-      title: this.createMessageTitle(title || 'Error', source),
-      icon: React.createElement(IconX, { size: 20 }),
-      message: `${message}\nhi`,
-      color: 'red',
-    });
+    if (this.getLogLevel() >= Log.ERROR) {
+      showNotification({
+        ...options,
+        title: this.createMessageTitle(title || 'Error', source),
+        icon: React.createElement(IconX, { size: 20 }),
+        message: `${message}\nhi`,
+        color: 'red',
+      });
+    }
 
     this.logs.push({ message, title, type: 'error', source, time: new Date() });
     this.dispatchEvent(new CustomEvent('error', { detail: { message, title, options } }));
@@ -56,13 +72,15 @@ export class NotificationManager extends BaseManager {
   ) {
     const source = { id: app.id, name: app.name };
 
-    showNotification({
-      ...options,
-      title: this.createMessageTitle(title || 'Warning', source),
-      message,
-      icon: React.createElement(IconAlertTriangle, { size: 20 }),
-      color: 'orange',
-    });
+    if (this.getLogLevel() >= Log.WARNING) {
+      showNotification({
+        ...options,
+        title: this.createMessageTitle(title || 'Warning', source),
+        message,
+        icon: React.createElement(IconAlertTriangle, { size: 20 }),
+        color: 'orange',
+      });
+    }
 
     this.logs.push({ message, title, type: 'warn', source, time: new Date() });
     this.dispatchEvent(new CustomEvent('warn', { detail: { message, title, options } }));
@@ -75,13 +93,15 @@ export class NotificationManager extends BaseManager {
   ) {
     const source = { id: app.id, name: app.name };
 
-    showNotification({
-      ...options,
-      title: this.createMessageTitle(title || 'Success', source),
-      message,
-      icon: React.createElement(IconCheck, { size: 20 }),
-      color: 'green',
-    });
+    if (this.getLogLevel() >= Log.SUCCESS) {
+      showNotification({
+        ...options,
+        title: this.createMessageTitle(title || 'Success', source),
+        message,
+        icon: React.createElement(IconCheck, { size: 20 }),
+        color: 'green',
+      });
+    }
 
     this.logs.push({ message, title, type: 'success', source, time: new Date() });
     this.dispatchEvent(new CustomEvent('success', { detail: { message, title, options } }));
@@ -93,6 +113,16 @@ export class NotificationManager extends BaseManager {
     options?: Omit<Omit<Omit<NotificationProps, 'title'>, 'message'>, 'color'>
   ) {
     const source = { id: app.id, name: app.name };
+
+    if (this.getLogLevel() >= Log.LOG) {
+      showNotification({
+        ...options,
+        title: this.createMessageTitle(title || 'Info', source),
+        message,
+        icon: React.createElement(IconInfoCircle, { size: 20 }),
+        color: 'blue',
+      });
+    }
 
     this.logs.push({ message, title, type: 'log', source, time: new Date() });
     this.dispatchEvent(new CustomEvent('log', { detail: { message, title, options } }));

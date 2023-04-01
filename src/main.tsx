@@ -5,7 +5,7 @@ import { Layout } from '@kasif/pages/Layout';
 import { NotificationsProvider } from '@mantine/notifications';
 import { app, nexus, useSetting } from '@kasif/config/app';
 import { ThemeSetting } from '@kasif//config/settings';
-import { initPlugins } from '@kasif/managers/plugin';
+import { initApps } from '@kasif/managers/plugin';
 import { SpotlightProvider } from '@mantine/spotlight';
 import { IconSearch } from '@tabler/icons';
 import { createPaneStyles } from '@kasif/util/pane';
@@ -15,7 +15,10 @@ import { DndProvider } from '@kasif/config/dnd';
 import { ActionComponent, actions } from '@kasif/components/Overlay/Spotlight';
 import { initCommands } from '@kasif/config/command';
 
-app.notificationManager.log(`Nexus app initialized. Version: ${nexus.version}`, 'App initialized');
+app.notificationManager.log(
+  `Nexus skeleton initialized. Version: ${nexus.version}`,
+  'Skeleton initialized'
+);
 
 function Wrapper() {
   const [ready, setReady] = useState(false);
@@ -36,7 +39,7 @@ function Wrapper() {
 
   useEffect(() => {
     initCommands();
-    initPlugins(app);
+    initApps(app);
 
     return () => {
       app.networkManager.kill();

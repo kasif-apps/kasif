@@ -1,3 +1,4 @@
+import { Log } from '@kasif/managers/notification';
 import { SettingsItem } from '@kasif/managers/settings';
 import { ThemeOption } from '@kasif/managers/theme';
 import { Group, Select, Switch, Text } from '@mantine/core';
@@ -170,9 +171,35 @@ export namespace AnimationSetting {
   };
 }
 
+export namespace LogLevelSetting {
+  export type Type = keyof typeof Log;
+  const id = 'log-level';
+
+  export const definition: SettingsItem<Type> = {
+    id,
+    category: 'behavior',
+    title: 'Log Level',
+    description: 'Change the log display behavior of the app. Success is recommended.',
+    value: 'SUCCESS',
+    render: () => (
+      <SelectAction
+        id={id}
+        data={[
+          { value: 'LOG', label: 'Info' },
+          { value: 'SUCCESS', label: 'Success' },
+          { value: 'WARNING', label: 'Warning' },
+          { value: 'ERROR', label: 'Error' },
+        ]}
+        placeholder="Select Log Level"
+      />
+    ),
+  };
+}
+
 export const initialSettings: Array<SettingsItem<any>> = [
   ThemeSetting.definition,
   FontSetting.definition,
   LanguageSetting.definition,
   AnimationSetting.definition,
+  LogLevelSetting.definition,
 ];
