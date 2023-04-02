@@ -3,6 +3,32 @@ import { prebuiltViews } from '@kasif/config/view';
 
 export function initCommands() {
   app.commandManager.defineCommand({
+    id: 'close-all-tabs',
+    title: 'Close All Tabs',
+    shortCut: 'mod+Shift+W',
+    onTrigger: () => {
+      const store = app.viewManager.store.get();
+
+      store.views.forEach((view) => {
+        app.viewManager.removeView(view.id);
+      });
+    },
+  });
+
+  app.commandManager.defineCommand({
+    id: 'close-tab',
+    title: 'Close Tab',
+    shortCut: 'mod+W',
+    onTrigger: () => {
+      const store = app.viewManager.store.get();
+
+      if (store.currentView) {
+        app.viewManager.removeView(store.currentView);
+      }
+    },
+  });
+
+  app.commandManager.defineCommand({
     id: 'remove-all-panes',
     title: 'Remove All Panes',
     shortCut: 'mod+Shift+P',

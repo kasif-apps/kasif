@@ -1,12 +1,12 @@
 import { createRecordSlice } from '@kasif-apps/cinq';
 import { initialBottomItems, initialTopItems } from '@kasif/config/navbar';
-import React from 'react';
 import { BaseManager } from '@kasif/managers/base';
 import { trackable, tracker } from '@kasif/util/misc';
+import { RenderableNode } from '@kasif/util/node-renderer';
 
 export interface NavbarItem {
   id: string;
-  icon: React.FC;
+  icon: RenderableNode;
   label: string;
   onClick?(): void;
 }

@@ -1,6 +1,7 @@
 import React from 'react';
-import { Group, UnstyledButton, Badge, Text, createStyles, Kbd, Center } from '@mantine/core';
+import { Group, UnstyledButton, Text, createStyles, Kbd, Center } from '@mantine/core';
 import { SpotlightAction, SpotlightActionProps } from '@mantine/spotlight';
+import { app } from '@kasif/config/app';
 
 const useStyles = createStyles((theme) => ({
   action: {
@@ -24,6 +25,7 @@ export function ActionComponent({
   classNames,
   hovered,
   onTrigger,
+  id,
   ...others
 }: SpotlightActionProps) {
   const { classes, cx } = useStyles(null as unknown as void, {
@@ -31,6 +33,8 @@ export function ActionComponent({
     classNames,
     name: 'Spotlight',
   });
+
+  const { source } = app.commandManager.commands.find((c) => c.id === action.id)!;
 
   return (
     <UnstyledButton
@@ -45,7 +49,12 @@ export function ActionComponent({
 
         <div style={{ flex: 1 }}>
           <Group sx={{ justifyContent: 'space-between' }}>
-            <Text size="sm">{action.title}</Text>
+            <Group spacing="xs" sx={{ alignItems: 'baseline' }}>
+              <Text size="sm">{action.title}</Text>
+              <Text size="xs" color="dimmed">
+                {source.name}
+              </Text>
+            </Group>
             {action.shortCut && (
               <Kbd py={0} px={4}>
                 {action.shortCut}
@@ -59,8 +68,6 @@ export function ActionComponent({
             </Text>
           )}
         </div>
-
-        {action.new && <Badge>new</Badge>}
       </Group>
     </UnstyledButton>
   );

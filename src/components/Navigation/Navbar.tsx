@@ -1,6 +1,7 @@
 import { app } from '@kasif/config/app';
 import { NavbarItem } from '@kasif/managers/navbar';
 import { useSlice } from '@kasif/util/cinq-react';
+import { DisplayRenderableNode } from '@kasif/util/node-renderer';
 import {
   Navbar,
   Center,
@@ -40,7 +41,7 @@ function NavbarLink({ icon: Icon, label, onClick }: NavbarItem) {
   return (
     <Tooltip withinPortal label={label} position="right" transitionDuration={0}>
       <UnstyledButton onClick={onClick} className={classes.link}>
-        <Icon />
+        <DisplayRenderableNode node={Icon} />
       </UnstyledButton>
     </Tooltip>
   );

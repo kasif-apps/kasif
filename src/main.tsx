@@ -63,7 +63,7 @@ function Wrapper() {
         actions={actions}
         searchIcon={<IconSearch size={18} />}
         searchPlaceholder="Jump..."
-        actionComponent={ActionComponent}
+        actionComponent={(props) => <ActionComponent {...props} />}
         overlayBlur={0}
         overlayOpacity={0}
         shortcut="mod+alt+p"

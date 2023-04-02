@@ -1,12 +1,14 @@
 import { createShortcutLabel, trackable, tracker } from '@kasif/util/misc';
 import { registerSpotlightActions } from '@mantine/spotlight';
 import { BaseManager } from '@kasif/managers/base';
+import { nexus } from '@kasif/config/app';
 
 export interface Command {
   id: string;
   title: string;
   shortCut?: string;
   onTrigger: () => void;
+  source: typeof nexus;
 }
 
 @tracker('commandManager')
@@ -14,8 +16,11 @@ export class CommandManager extends BaseManager {
   commands: Command[] = [];
 
   @trackable
-  defineCommand(command: Command) {
-    this.commands.push(command);
+  defineCommand(command: Omit<Command, 'source'>) {
+    this.commands.push({
+      ...command,
+      source: { id: this.app.id, name: this.app.name, version: this.app.version },
+    });
 
     this.dispatchEvent(new CustomEvent('define-command', { detail: command }));
     this.app.notificationManager.log(
