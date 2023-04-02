@@ -1,12 +1,12 @@
 import { App } from '@kasif/config/app';
 
-const apps = [
-  {
-    name: 'Plugin',
-    id: 'plugin@v0.0.1',
-    path: 'plugin',
-  },
-];
+interface PluginModule {
+  name: string;
+  id: string;
+  path: string;
+}
+
+const apps: PluginModule[] = [];
 
 function importModules(app: App): Promise<{ file: { init: (app: App) => void }; id: string }[]> {
   const files: { file: any; id: string }[] = [];

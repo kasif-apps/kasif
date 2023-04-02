@@ -1,5 +1,5 @@
 import { CSSObject } from '@emotion/react';
-import { App } from '@kasif/config/app';
+import { App, nexus } from '@kasif/config/app';
 import { BaseManager } from '@kasif/managers/base';
 import { OS } from '@mantine/hooks';
 
@@ -170,7 +170,7 @@ export function trackable(
     const instance = this as BaseManager;
     const key = propertyKey as keyof BaseManager;
 
-    if (instance.parent) {
+    if (instance.parent && identifier) {
       const parent = instance.parent[identifier] as BaseManager;
       const targetMethod = parent[key];
 
@@ -183,6 +183,12 @@ export function trackable(
 
         // @ts-expect-error
         const result = targetMethod.apply(instance.parent[identifier], args);
+
+        if (parent && parent.app) {
+          parent.app.id = nexus.id;
+          parent.app.name = nexus.name;
+          parent.app.version = nexus.version;
+        }
         return () => result;
       }
     }

@@ -31,6 +31,10 @@ export class NavbarManager extends BaseManager {
     const itemExists = this.store.get().topItems.some((i) => i.id === item.id);
 
     if (itemExists) {
+      this.app.notificationManager.error(
+        `Top navbar item (${item.id}) exists`,
+        'Navbar Item Cannot Be Pushed'
+      );
       return;
     }
 

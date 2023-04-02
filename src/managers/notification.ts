@@ -59,7 +59,7 @@ export class NotificationManager extends BaseManager {
         ...options,
         title: this.createMessageTitle(title || 'Error', source),
         icon: React.createElement(IconX, { size: 20 }),
-        message: `${message}\nhi`,
+        message,
         color: 'red',
       });
     }
