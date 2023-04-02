@@ -17,19 +17,19 @@ export const initialBottomItems: NavbarItem[] = [
     id: 'store',
     icon: () => <IconShoppingBag size={20} stroke={1.5} />,
     label: 'Store',
-    onClick: () => app.viewManager.pushView(prebuiltViews.store),
+    onClick: () => app.viewManager.pushView({ view: prebuiltViews.store }),
   },
   { id: 'plugins', icon: () => <IconPuzzle size={20} stroke={1.5} />, label: 'Plugins' },
   {
     id: 'profile',
     icon: () => <IconUser size={20} stroke={1.5} />,
     label: 'Profile',
-    onClick: () => app.viewManager.pushView(prebuiltViews.profile),
+    onClick: () => app.viewManager.pushView({ view: prebuiltViews.profile }),
   },
   {
     id: 'settings',
     icon: () => <IconSettings size={20} stroke={1.5} />,
     label: 'Settings',
-    onClick: () => app.viewManager.pushView(prebuiltViews.settings),
+    onClick: () => app.viewManager.pushView({ view: prebuiltViews.settings }),
   },
 ];

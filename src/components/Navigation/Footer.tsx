@@ -1,6 +1,4 @@
-import { app } from '@kasif/config/app';
-import { useSlice } from '@kasif/util/cinq-react';
-import { ActionIcon, createStyles, Footer, Tooltip, Text, Box, Group } from '@mantine/core';
+import { ActionIcon, createStyles, Footer, Tooltip, Box, Group } from '@mantine/core';
 import { IconLicense } from '@tabler/icons';
 
 const useStyles = createStyles((theme) => ({
@@ -15,17 +13,10 @@ const useStyles = createStyles((theme) => ({
 
 export function KasifFooter() {
   const { classes } = useStyles();
-  const [selection] = useSlice(app.contentManager.selection);
 
   return (
     <Footer className={classes.footer} height={32} px="sm">
-      <Box>
-        {selection.length > 0 && (
-          <Text color="dimmed" size="xs">
-            {selection.length} Selected
-          </Text>
-        )}
-      </Box>
+      <Box>Hey</Box>
       <Group spacing="xs">
         <Tooltip label="Licenses">
           <ActionIcon variant="transparent" size="sm" color="primary">

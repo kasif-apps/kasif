@@ -2,6 +2,7 @@ import { createRecordSlice } from '@kasif-apps/cinq';
 import { initialBottomItems, initialTopItems } from '@kasif/config/navbar';
 import React from 'react';
 import { BaseManager } from '@kasif/managers/base';
+import { trackable, tracker } from '@kasif/util/misc';
 
 export interface NavbarItem {
   id: string;
@@ -15,6 +16,7 @@ export interface NavbarStore {
   bottomItems: NavbarItem[];
 }
 
+@tracker('navbarManager')
 export class NavbarManager extends BaseManager {
   store = createRecordSlice<NavbarStore>(
     { topItems: initialTopItems, bottomItems: initialBottomItems },
@@ -24,6 +26,7 @@ export class NavbarManager extends BaseManager {
   initialTopItemsCount = initialTopItems.length;
   initialBottomItemsCount = initialBottomItems.length;
 
+  @trackable
   pushTopItem(item: NavbarItem) {
     const itemExists = this.store.get().topItems.some((i) => i.id === item.id);
 
@@ -36,16 +39,20 @@ export class NavbarManager extends BaseManager {
     }));
 
     this.dispatchEvent(new CustomEvent('push-top-item', { detail: item }));
+    this.app.notificationManager.log(`Top navbar item (${item.id}) pushed`, 'Navbar Item Pushed');
   }
 
+  @trackable
   removeTopItem(itemId: NavbarItem['id']) {
     this.store.upsert((oldState) => ({
       topItems: (oldState as NavbarStore).topItems.filter((item) => item.id !== itemId),
     }));
 
     this.dispatchEvent(new CustomEvent('remove-top-item', { detail: itemId }));
+    this.app.notificationManager.log(`Top navbar item (${itemId}) removed`, 'Navbar Item Removed');
   }
 
+  @trackable
   pushBottomItem(item: NavbarItem) {
     const itemExists = this.store.get().bottomItems.some((i) => i.id === item.id);
 
@@ -58,13 +65,22 @@ export class NavbarManager extends BaseManager {
     }));
 
     this.dispatchEvent(new CustomEvent('push-bottom-item', { detail: item }));
+    this.app.notificationManager.log(
+      `Bottom navbar item (${item.id}) pushed`,
+      'Navbar Item Pushed'
+    );
   }
 
+  @trackable
   removeBottomItem(itemId: NavbarItem['id']) {
     this.store.upsert((oldState) => ({
       bottomItems: (oldState as NavbarStore).bottomItems.filter((item) => item.id !== itemId),
     }));
 
     this.dispatchEvent(new CustomEvent('remove-bottom-item', { detail: itemId }));
+    this.app.notificationManager.log(
+      `Bttom navbar item (${itemId}) removed`,
+      'Navbar Item Removed'
+    );
   }
 }

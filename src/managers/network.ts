@@ -1,5 +1,7 @@
 import { createSlice } from '@kasif-apps/cinq';
+import { App } from '@kasif/config/app';
 import { BaseManager } from '@kasif/managers/base';
+import { trackable, tracker } from '@kasif/util/misc';
 
 interface NetworkStatus {
   downlink?: number;
@@ -11,6 +13,7 @@ interface NetworkStatus {
   online: boolean;
 }
 
+@tracker('networkManager')
 export class NetworkManager extends BaseManager {
   store = createSlice<NetworkStatus>(this.getConnection(), { key: 'network-store' });
 
@@ -22,15 +25,17 @@ export class NetworkManager extends BaseManager {
     return connection;
   }
 
-  constructor() {
-    super();
+  constructor(app: App, parent?: App) {
+    super(app, parent);
     window.addEventListener('online', () => {
       this.store.set({ ...this.getConnection(), online: true });
       this.dispatchEvent(new CustomEvent('online'));
+      this.app.notificationManager.log('Network stasus is online', 'Network Status Changed');
     });
     window.addEventListener('offline', () => {
       this.store.set({ ...this.getConnection(), online: false });
       this.dispatchEvent(new CustomEvent('offline'));
+      this.app.notificationManager.log('Network stasus is offline', 'Network Status Changed');
     });
 
     const connection = this.getConnectionInstance();
@@ -44,6 +49,7 @@ export class NetworkManager extends BaseManager {
     this.dispatchEvent(new CustomEvent('change'));
   }
 
+  @trackable
   getConnection(): NetworkStatus {
     const connection = this.getConnectionInstance();
 
@@ -62,6 +68,7 @@ export class NetworkManager extends BaseManager {
     };
   }
 
+  @trackable
   kill() {
     const connection = this.getConnectionInstance();
 

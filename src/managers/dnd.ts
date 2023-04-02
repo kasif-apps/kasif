@@ -1,9 +1,10 @@
 import { createSlice } from '@kasif-apps/cinq';
 import { app } from '@kasif/config/app';
 import { BaseManager } from '@kasif/managers/base';
-import { reorder } from '@kasif/util/misc';
+import { reorder, tracker } from '@kasif/util/misc';
 import { DropResult, OnDragUpdateResponder } from 'react-beautiful-dnd';
 
+@tracker('dndManager')
 export class DndManager extends BaseManager {
   isDragging = createSlice(false, { key: 'is-dragging' });
   draggedItem = createSlice<string | null>(null, { key: 'dragged-item' });

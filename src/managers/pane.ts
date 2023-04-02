@@ -2,6 +2,7 @@ import { createRecordSlice } from '@kasif-apps/cinq';
 import { app } from '@kasif/config/app';
 import { BaseManager } from '@kasif/managers/base';
 import { View } from '@kasif/managers/view';
+import { trackable, tracker } from '@kasif/util/misc';
 import { RenderableNode } from '@kasif/util/node-renderer';
 
 export interface Pane {
@@ -13,6 +14,7 @@ export interface PaneStore {
   panes: Pane[];
 }
 
+@tracker('paneManager')
 export class PaneManager extends BaseManager {
   store = createRecordSlice<PaneStore>(
     {
@@ -21,27 +23,36 @@ export class PaneManager extends BaseManager {
     { key: 'pane-store' }
   );
 
+  @trackable
   pushPane(pane: Pane) {
     this.store.upsert(() => ({
       panes: [pane],
     }));
+    this.dispatchEvent(new CustomEvent('push-pane', { detail: pane }));
+    this.app.notificationManager.log(`Pane (${pane.id}) pushed`, 'Pane Pushed');
   }
 
+  @trackable
   removePane(paneId: Pane['id']) {
     this.store.setKey('panes', []);
 
     this.dispatchEvent(new CustomEvent('remove-pane', { detail: paneId }));
+    this.app.notificationManager.log(`Pane (${paneId}) removed`, 'Pane Removed');
   }
 
+  @trackable
   removeAllPanes() {
     this.store.setKey('panes', []);
     this.dispatchEvent(new CustomEvent('remove-all-panes'));
+    this.app.notificationManager.log('All panes removed', 'Pane Removed');
   }
 
+  @trackable
   getPane(paneId: Pane['id']) {
     return this.store.get().panes.find((pane) => pane.id === paneId);
   }
 
+  @trackable
   createPaneFromView(viewId: View['id']): Pane | undefined {
     const instance = app.viewManager.store.get();
     const view = instance.views.find((v) => v.id === viewId);
@@ -57,11 +68,16 @@ export class PaneManager extends BaseManager {
     };
   }
 
+  @trackable
   replacePane(paneId: Pane['id'], pane: Pane) {
     this.store.upsert((oldState) => ({
       panes: (oldState as PaneStore).panes.map((p) => (p.id === paneId ? pane : p)),
     }));
 
     this.dispatchEvent(new CustomEvent('replace-pane', { detail: pane }));
+    this.app.notificationManager.log(
+      `Pane (${paneId}) replaced with (${pane.id})`,
+      'Pane Replaced'
+    );
   }
 }

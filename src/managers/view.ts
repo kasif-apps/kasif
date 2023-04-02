@@ -3,6 +3,7 @@ import { createRecordSlice } from '@kasif-apps/cinq';
 import { WelcomePage } from '@kasif/pages/WelcomePage';
 import { BaseManager } from '@kasif/managers/base';
 import { RenderableNode } from '@kasif/util/node-renderer';
+import { trackable, tracker } from '@kasif/util/misc';
 
 export interface View {
   id: string;
@@ -16,6 +17,7 @@ export interface ViewStore {
   currentView: View['id'] | null;
 }
 
+@tracker('viewManager')
 export class ViewManager extends BaseManager {
   store = createRecordSlice<ViewStore>(
     {
@@ -25,7 +27,8 @@ export class ViewManager extends BaseManager {
     { key: 'view-store' }
   );
 
-  pushView(view: View) {
+  @trackable
+  pushView({ view }: { view: View }) {
     const viewExists = this.store.get().views.some((v) => v.id === view.id);
 
     if (viewExists) {
@@ -41,8 +44,10 @@ export class ViewManager extends BaseManager {
 
     this.dispatchEvent(new CustomEvent('push-view', { detail: view }));
     this.dispatchEvent(new CustomEvent('set-view', { detail: view.id }));
+    this.app.notificationManager.log(`View '${view.title}' (${view.id}) pushed`, 'View Pushed');
   }
 
+  @trackable
   removeView(viewId: View['id']) {
     const value = this.store.get();
     const isCurrentView = value.currentView === viewId;
@@ -68,12 +73,17 @@ export class ViewManager extends BaseManager {
     if (isCurrentView) {
       this.dispatchEvent(new CustomEvent('set-view', { detail: nextView }));
     }
+    this.app.notificationManager.log(`View (${viewId}) removed`, 'View Removed');
   }
 
+  @trackable
   setCurrentView(viewId: ViewStore['currentView']) {
-    this.store.setKey('currentView', viewId);
+    if (this.store.get().currentView !== viewId) {
+      this.store.setKey('currentView', viewId);
 
-    this.dispatchEvent(new CustomEvent('set-view', { detail: viewId }));
+      this.dispatchEvent(new CustomEvent('set-view', { detail: viewId }));
+      this.app.notificationManager.log(`View (${viewId ?? 'home'}) set`, 'View Set');
+    }
   }
 
   getViewComponent(id: ViewStore['currentView']): View['render'] {

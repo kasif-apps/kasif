@@ -4,7 +4,7 @@ import { IconAlertTriangle, IconCheck, IconInfoCircle, IconX } from '@tabler/ico
 import React from 'react';
 import { createVectorSlice } from '@kasif-apps/cinq';
 import { Group, Text } from '@mantine/core';
-import { app } from '@kasif/config/app';
+import { trackable, tracker } from '@kasif/util/misc';
 
 export type NotificationType = 'error' | 'warn' | 'success' | 'log';
 
@@ -26,6 +26,7 @@ export const Log = {
   LOG: 3,
 } as const;
 
+@tracker('notificationManager')
 export class NotificationManager extends BaseManager {
   logs = createVectorSlice<NotificationLog[]>([], { key: 'notification-logs' });
 
@@ -38,18 +39,20 @@ export class NotificationManager extends BaseManager {
   }
 
   getLogLevel() {
-    const controller = app.settingsManager.getSettingController<keyof typeof Log>('log-level')!;
+    const controller =
+      this.app.settingsManager.getSettingController<keyof typeof Log>('log-level')!;
     const logLevel = controller.instance.get().value;
 
     return Log[logLevel];
   }
 
+  @trackable
   error(
     message: string,
     title?: string,
     options?: Omit<Omit<Omit<NotificationProps, 'title'>, 'message'>, 'color'>
   ) {
-    const source = { id: app.id, name: app.name };
+    const source = { id: this.app.id, name: this.app.name };
 
     if (this.getLogLevel() >= Log.ERROR) {
       showNotification({
@@ -65,12 +68,13 @@ export class NotificationManager extends BaseManager {
     this.dispatchEvent(new CustomEvent('error', { detail: { message, title, options } }));
   }
 
+  @trackable
   warn(
     message: string,
     title?: string,
     options?: Omit<Omit<Omit<NotificationProps, 'title'>, 'message'>, 'color'>
   ) {
-    const source = { id: app.id, name: app.name };
+    const source = { id: this.app.id, name: this.app.name };
 
     if (this.getLogLevel() >= Log.WARNING) {
       showNotification({
@@ -86,12 +90,13 @@ export class NotificationManager extends BaseManager {
     this.dispatchEvent(new CustomEvent('warn', { detail: { message, title, options } }));
   }
 
+  @trackable
   success(
     message: string,
     title?: string,
     options?: Omit<Omit<Omit<NotificationProps, 'title'>, 'message'>, 'color'>
   ) {
-    const source = { id: app.id, name: app.name };
+    const source = { id: this.app.id, name: this.app.name };
 
     if (this.getLogLevel() >= Log.SUCCESS) {
       showNotification({
@@ -107,12 +112,13 @@ export class NotificationManager extends BaseManager {
     this.dispatchEvent(new CustomEvent('success', { detail: { message, title, options } }));
   }
 
+  @trackable
   log(
     message: string,
     title?: string,
     options?: Omit<Omit<Omit<NotificationProps, 'title'>, 'message'>, 'color'>
   ) {
-    const source = { id: app.id, name: app.name };
+    const source = { id: this.app.id, name: this.app.name };
 
     if (this.getLogLevel() >= Log.LOG) {
       showNotification({

@@ -16,7 +16,10 @@ export function NodeRenderer({ node }: { node: RenderableNode }) {
     };
   }, [node, ref]);
 
-  return React.createElement('div', { ref });
+  return React.createElement('div', {
+    ref,
+    style: { display: 'block', width: '100%', height: '100%' },
+  });
 }
 
 export interface RenderableNode {

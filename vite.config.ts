@@ -9,7 +9,15 @@ export default defineConfig({
     svgr({
       exportAsDefault: false,
     }),
-    react(),
+    react({
+      babel: {
+        parserOpts: {
+          plugins: ['decorators-legacy'],
+        },
+        babelrc: false,
+        configFile: false,
+      },
+    }),
   ],
   server: {
     port: 5010,

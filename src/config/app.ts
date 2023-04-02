@@ -7,7 +7,6 @@ import { ThemeManager } from '@kasif/managers/theme';
 import { ViewManager } from '@kasif/managers/view';
 import { useSlice } from '@kasif/util/cinq-react';
 import { BaseManager } from '@kasif/managers/base';
-import { FolderContentManager } from '@kasif/managers/content';
 import { DndManager } from '@kasif/managers/dnd';
 import { NetworkManager } from '@kasif/managers/network';
 
@@ -20,23 +19,35 @@ export const nexus = {
 export class App {
   id: string;
   name: string;
-  viewManager = new ViewManager();
-  settingsManager = new SettingsManager();
-  themeManager = new ThemeManager();
-  notificationManager = new NotificationManager();
-  navbarManager = new NavbarManager();
-  paneManager = new PaneManager();
-  commandManager = new CommandManager();
-  contentManager = new FolderContentManager();
-  dndManager = new DndManager();
-  networkManager = new NetworkManager();
-  contextMenuManager = null;
+  version: string;
+  viewManager: ViewManager;
+  settingsManager: SettingsManager;
+  themeManager: ThemeManager;
+  notificationManager: NotificationManager;
+  navbarManager: NavbarManager;
+  paneManager: PaneManager;
+  commandManager: CommandManager;
+  dndManager: DndManager;
+  networkManager: NetworkManager;
+  contextMenuManager: null;
 
   customManagers: Map<string, BaseManager> = new Map();
 
-  constructor() {
-    this.id = nexus.id;
-    this.name = nexus.name;
+  constructor(public parent?: App, options?: typeof nexus) {
+    this.id = options?.id ?? nexus.id;
+    this.name = options?.name ?? nexus.name;
+    this.version = options?.version ?? nexus.version;
+
+    this.settingsManager = new SettingsManager(this, this.parent);
+    this.notificationManager = new NotificationManager(this, this.parent);
+    this.viewManager = new ViewManager(this, this.parent);
+    this.themeManager = new ThemeManager(this, this.parent);
+    this.navbarManager = new NavbarManager(this, this.parent);
+    this.paneManager = new PaneManager(this, this.parent);
+    this.commandManager = new CommandManager(this, this.parent);
+    this.dndManager = new DndManager(this, this.parent);
+    this.networkManager = new NetworkManager(this, this.parent);
+    this.contextMenuManager = null;
   }
 
   defineCustomManager(id: string, manager: BaseManager) {

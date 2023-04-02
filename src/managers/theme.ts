@@ -1,6 +1,7 @@
 import { app } from '@kasif/config/app';
 import { MantineProviderProps } from '@mantine/core';
 import { BaseManager } from '@kasif/managers/base';
+import { trackable, tracker } from '@kasif/util/misc';
 
 export interface ThemeOption {
   id: string;
@@ -11,6 +12,7 @@ export interface ThemeOption {
   };
 }
 
+@tracker('themeManager')
 export class ThemeManager extends BaseManager {
   commonTheme: MantineProviderProps['theme'] = {
     primaryColor: 'kasif',
@@ -69,6 +71,7 @@ export class ThemeManager extends BaseManager {
     },
   ];
 
+  @trackable
   getTheme(id: ThemeOption['id']): ThemeOption {
     const result = this.options.find((option) => option.id === id);
 
@@ -79,8 +82,9 @@ export class ThemeManager extends BaseManager {
     return result || this.options[0];
   }
 
+  @trackable
   defineTheme(option: ThemeOption) {
     this.options.push(option);
-    this.dispatchEvent(new CustomEvent('defşne-theme', { detail: option }));
+    this.dispatchEvent(new CustomEvent('define-theme', { detail: option }));
   }
 }

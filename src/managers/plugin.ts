@@ -1,16 +1,10 @@
-// import React from 'react';
-import { App, nexus } from '@kasif/config/app';
+import { App } from '@kasif/config/app';
 
 const apps = [
   {
-    name: 'Test',
-    id: 'test@v0.0.1',
-    path: 'test',
-  },
-  {
-    name: 'Another',
-    id: 'another@v0.0.1',
-    path: 'another',
+    name: 'Plugin',
+    id: 'plugin@v0.0.1',
+    path: 'plugin',
   },
 ];
 
@@ -18,7 +12,7 @@ function importModules(app: App): Promise<{ file: { init: (app: App) => void }; 
   const files: { file: any; id: string }[] = [];
   return new Promise((resolve) => {
     apps.forEach((mod, index) => {
-      import(`/apps/${mod.path}/entry.js`)
+      import(`../apps/${mod.path}/entry.js`)
         .then((file) => {
           files.push({
             file,
@@ -60,12 +54,12 @@ export async function initApps(_app: App) {
         'App loading'
       );
 
-      app.id = instance.id;
-      app.name = instance.name;
-      plugin.init(app);
-
-      app.id = nexus.id;
-      app.name = nexus.name;
+      const subapp = new App(app, {
+        id: instance.id,
+        name: instance.name,
+        version: '0.0.1',
+      });
+      plugin.init(subapp);
 
       app.notificationManager.log(
         `App '${instance.name}:${instance.id}' loaded successfully`,

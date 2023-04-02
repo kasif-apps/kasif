@@ -182,7 +182,7 @@ export function WelcomePage() {
               <Button
                 variant="light"
                 leftIcon={<IconShoppingBag stroke={1.5} size={20} />}
-                onClick={() => app.viewManager.pushView(prebuiltViews.store)}
+                onClick={() => app.viewManager.pushView({ view: prebuiltViews.store })}
               >
                 Go To The Store
               </Button>

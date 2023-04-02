@@ -33,7 +33,7 @@ export function initCommands() {
     title: 'Open Logs',
     shortCut: 'mod+Shift+L',
     onTrigger: () => {
-      app.viewManager.pushView(prebuiltViews.logs);
+      app.viewManager.pushView({ view: prebuiltViews.logs });
     },
   });
 }

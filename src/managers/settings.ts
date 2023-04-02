@@ -1,8 +1,10 @@
 import React from 'react';
 import { createRecordSlice, RecordSlice, StorageTransactor } from '@kasif-apps/cinq';
-import { initialSettings } from '@kasif/config/settings';
+import { initialCategories, initialSettings } from '@kasif/config/settings';
 import { BaseManager } from '@kasif/managers/base';
 import { RenderableNode } from '@kasif/util/node-renderer';
+import { App } from '@kasif/config/app';
+import { trackable, tracker } from '@kasif/util/misc';
 
 export interface SettingCategory {
   id: string;
@@ -31,31 +33,28 @@ export interface SettingsStore {
   items: SettingsItem<any>[];
 }
 
+@tracker('settingsManager')
 export class SettingsManager extends BaseManager {
   controllers: SettingController<any>[] = [];
-  categories: SettingCategory[] = [
-    {
-      id: 'appearance',
-      title: 'Appearance',
-      description: 'Change the appearance of the app.',
-      color: 'orange',
-    },
-    {
-      id: 'behavior',
-      title: 'Behavior',
-      description: 'Basic & advanced behaviour related settings.',
-      color: 'cyan',
-    },
-  ];
+  categories: SettingCategory[] = [];
 
-  constructor() {
-    super();
-    initialSettings.forEach((setting) => this.defineSetting(setting));
+  constructor(app: App, parent?: App) {
+    super(app, parent);
+
+    if (!parent) {
+      initialCategories.forEach((category) => this.defineCategory(category));
+      initialSettings.forEach((setting) => this.defineSetting(setting));
+    }
   }
 
+  @trackable
   defineSetting<T>(item: SettingsItem<T>) {
     if (this.getSettingController(item.id)) {
-      throw new Error(`Setting with id ${item.id} already exists.`);
+      this.app.notificationManager.error(
+        `Setting with id ${item.id} already exists.`,
+        'Cannot Define Setting'
+      );
+      return;
     }
 
     const slice = createRecordSlice(item, { key: `kasif.${item.id}` });
@@ -66,6 +65,10 @@ export class SettingsManager extends BaseManager {
       update: (value: T) => {
         const oldValue = slice.get().value;
         slice.upsert({ ...item, value });
+        this.app.notificationManager.log(
+          `Setting '${item.title}' (${item.id}) updated`,
+          'Setting Updated'
+        );
         this.dispatchEvent(
           new CustomEvent('update-setting', {
             detail: { id: item.id, oldValue, newValue: value, controller },
@@ -89,15 +92,34 @@ export class SettingsManager extends BaseManager {
 
     this.controllers.push(controller);
     this.dispatchEvent(new CustomEvent('define-setting', { detail: controller }));
+
+    setTimeout(() => {
+      this.app.notificationManager.log(
+        `Setting '${item.title}' (${item.id}) defined`,
+        'Setting Defined'
+      );
+    });
   }
 
+  @trackable
   defineCategory(category: SettingCategory) {
     if (this.categories.find((c) => c.id === category.id)) {
-      throw new Error(`Category with id ${category.id} already exists.`);
+      this.app.notificationManager.error(
+        `Category with id ${category.id} already exists.`,
+        'Cannot Define Category'
+      );
+      return;
     }
 
     this.categories.push(category);
     this.dispatchEvent(new CustomEvent('define-category', { detail: category }));
+
+    setTimeout(() => {
+      this.app.notificationManager.log(
+        `Category '${category.title}' (${category.id}) defined`,
+        'Category Defined'
+      );
+    });
   }
 
   getSettingController<T>(id: SettingsItem<T>['id']): SettingController<T> | undefined {

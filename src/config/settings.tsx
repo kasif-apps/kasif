@@ -1,5 +1,5 @@
 import { Log } from '@kasif/managers/notification';
-import { SettingsItem } from '@kasif/managers/settings';
+import { SettingCategory, SettingsItem } from '@kasif/managers/settings';
 import { ThemeOption } from '@kasif/managers/theme';
 import { Group, Select, Switch, Text } from '@mantine/core';
 import { forwardRef } from 'react';
@@ -202,4 +202,19 @@ export const initialSettings: Array<SettingsItem<any>> = [
   LanguageSetting.definition,
   AnimationSetting.definition,
   LogLevelSetting.definition,
+];
+
+export const initialCategories: Array<SettingCategory> = [
+  {
+    id: 'appearance',
+    title: 'Appearance',
+    description: 'Change the appearance of the app.',
+    color: 'orange',
+  },
+  {
+    id: 'behavior',
+    title: 'Behavior',
+    description: 'Basic & advanced behaviour related settings.',
+    color: 'cyan',
+  },
 ];
