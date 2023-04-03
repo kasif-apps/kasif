@@ -23,6 +23,7 @@ export const initialBottomItems: NavbarItem[] = [
     id: 'plugins',
     icon: () => <IconPuzzle size={20} stroke={1.5} />,
     label: 'Plugins',
+    onClick: () => app.viewManager.pushView({ view: prebuiltViews.plugins }),
   },
   {
     id: 'profile',

@@ -1,11 +1,19 @@
 import { App } from '@kasif/config/app';
 import { tauri } from '@kasif/util/tauri';
-import { resolveResource } from '@tauri-apps/api/path';
+import { resolveResource, appLocalDataDir, join, basename } from '@tauri-apps/api/path';
 
 interface PluginModule {
   name: string;
   id: string;
   path: string;
+}
+
+export async function uploadPlugin(pluginPath: string) {
+  const localDataDir = await appLocalDataDir();
+  const base = await basename(pluginPath);
+  const destination = await join(localDataDir, 'apps', base);
+
+  await tauri.fs.copyFile(pluginPath, destination);
 }
 
 export async function initApps(_app: App) {

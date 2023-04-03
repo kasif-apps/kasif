@@ -3,7 +3,8 @@ import { ProfilePage } from '@kasif/pages/ProfilePage';
 import { SettingsPage } from '@kasif/pages/SettingsPage';
 import { StorePage } from '@kasif/pages/StorePage';
 import { LogsPage } from '@kasif/pages/LogsPage';
-import { IconSettings, IconUser, IconShoppingBag, IconMessages } from '@tabler/icons';
+import { IconSettings, IconUser, IconShoppingBag, IconMessages, IconPuzzle } from '@tabler/icons';
+import { PluginsPage } from '@kasif/pages/PluginsPage';
 
 export const prebuiltViews: Record<string, View> = {
   settings: {
@@ -23,6 +24,12 @@ export const prebuiltViews: Record<string, View> = {
     title: 'Store',
     icon: () => <IconShoppingBag size={18} stroke={1.5} />,
     render: StorePage,
+  },
+  plugins: {
+    id: 'plugins',
+    title: 'Plugins',
+    icon: () => <IconPuzzle size={18} stroke={1.5} />,
+    render: PluginsPage,
   },
   logs: {
     id: 'logs',
