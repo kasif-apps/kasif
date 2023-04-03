@@ -1,5 +1,6 @@
 import { App } from '@kasif/config/app';
 import { tauri } from '@kasif/util/tauri';
+import { resolveResource } from '@tauri-apps/api/path';
 
 interface PluginModule {
   name: string;
@@ -7,19 +8,21 @@ interface PluginModule {
   path: string;
 }
 
-function importModules(
+const appsFolder = await resolveResource('apps/');
+
+async function importModules(
   app: App,
   modules: PluginModule[]
-): Promise<{ file: { init: (app: App) => void }; id: string }[]> {
-  const files: { file: any; id: string }[] = [];
+): Promise<{ file: { init: (app: App) => void }; meta: PluginModule }[]> {
+  const files: { file: any; meta: PluginModule }[] = [];
 
   return new Promise((resolve) => {
     modules.forEach((mod, index) => {
-      import(`/apps/${mod.path}/entry.js`)
+      import(`${appsFolder}/${mod.path}/entry.js`)
         .then((file) => {
           files.push({
             file,
-            id: mod.id,
+            meta: mod,
           });
 
           if (index === modules.length - 1) {
@@ -41,7 +44,7 @@ function importModules(
 }
 
 async function readManifest(path: string) {
-  const raw_manifest = await tauri.fs.readTextFile(`repos/kasif/public/apps/${path}/package.json`, {
+  const raw_manifest = await tauri.fs.readTextFile(`${appsFolder}/${path}/package.json`, {
     dir: tauri.fs.BaseDirectory.Document,
   });
 
@@ -52,16 +55,13 @@ async function readManifest(path: string) {
 }
 
 async function exploreModules(): Promise<PluginModule[]> {
-  const entries = await tauri.fs.readDir('repos/kasif/public/apps', {
-    dir: tauri.fs.BaseDirectory.Document,
-    recursive: false,
-  });
+  const entries = await tauri.fs.readDir(appsFolder);
 
   const readAll = () => {
     const manifests: PluginModule[] = [];
     return new Promise((resolve) => {
       entries.forEach(async (entry, index) => {
-        if (entry.name) {
+        if (entry.name && entry.name.endsWith('.nexus')) {
           manifests.push(await readManifest(entry.name));
         }
 
@@ -80,33 +80,26 @@ export async function initApps(_app: App) {
   const app = _app;
 
   const modules = await exploreModules();
+  const plugins = await importModules(app, modules);
 
-  const importedModules = await importModules(app, modules);
-  const plugins: Array<{ init: (app: App) => void; id: string }> = importedModules.map((mod) => ({
-    init: mod.file.init,
-    id: mod.id,
-  }));
+  plugins.forEach((mod) => {
+    const instance = mod.meta;
 
-  plugins.forEach((plugin) => {
-    const instance = modules.find((mod) => mod.id === plugin.id);
+    app.notificationManager.log(
+      `App '${instance.name}:${instance.id}' began loading`,
+      'App loading'
+    );
 
-    if (instance) {
-      app.notificationManager.log(
-        `App '${instance.name}:${instance.id}' began loading`,
-        'App loading'
-      );
+    const subapp = new App(app, {
+      id: instance.id,
+      name: instance.name,
+      version: '0.0.1',
+    });
+    mod.file.init(subapp);
 
-      const subapp = new App(app, {
-        id: instance.id,
-        name: instance.name,
-        version: '0.0.1',
-      });
-      plugin.init(subapp);
-
-      app.notificationManager.log(
-        `App '${instance.name}:${instance.id}' loaded successfully`,
-        'App loaded'
-      );
-    }
+    app.notificationManager.log(
+      `App '${instance.name}:${instance.id}' loaded successfully`,
+      'App loaded'
+    );
   });
 }
