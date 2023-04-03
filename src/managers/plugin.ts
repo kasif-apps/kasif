@@ -46,6 +46,7 @@ async function readManifest(path: string) {
   });
 
   const manifest = JSON.parse(raw_manifest);
+  manifest.nexus.path = `${manifest.nexus.id}.nexus`;
 
   return manifest.nexus as PluginModule;
 }

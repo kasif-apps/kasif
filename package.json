@@ -9,6 +9,7 @@
     "build": "tsc && vite build",
     "preview": "vite preview",
     "tauri:dev": "tauri dev",
+    "tauri:debug": "RUST_BACKTRACE=1 tauri dev",
     "tauri:build": "tauri build",
     "lint": "eslint --ext .ts,.tsx src",
     "prepare": "husky install"
