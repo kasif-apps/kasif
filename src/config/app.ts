@@ -9,6 +9,7 @@ import { useSlice } from '@kasif/util/cinq-react';
 import { BaseManager } from '@kasif/managers/base';
 import { DndManager } from '@kasif/managers/dnd';
 import { NetworkManager } from '@kasif/managers/network';
+import { AuthManager } from '@kasif/managers/auth';
 
 export const kasif = {
   id: 'kasif@v0.0.1',
@@ -21,6 +22,7 @@ export class App {
   name: string;
   version: string;
   viewManager: ViewManager;
+  authManager: AuthManager;
   settingsManager: SettingsManager;
   themeManager: ThemeManager;
   notificationManager: NotificationManager;
@@ -41,6 +43,7 @@ export class App {
     this.settingsManager = new SettingsManager(this, this.parent);
     this.notificationManager = new NotificationManager(this, this.parent);
     this.viewManager = new ViewManager(this, this.parent);
+    this.authManager = new AuthManager(this, this.parent);
     this.themeManager = new ThemeManager(this, this.parent);
     this.navbarManager = new NavbarManager(this, this.parent);
     this.paneManager = new PaneManager(this, this.parent);
@@ -48,6 +51,8 @@ export class App {
     this.dndManager = new DndManager(this, this.parent);
     this.networkManager = new NetworkManager(this, this.parent);
     this.contextMenuManager = null;
+
+    this.authManager.init();
   }
 
   defineCustomManager(id: string, manager: BaseManager) {

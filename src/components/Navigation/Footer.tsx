@@ -16,7 +16,7 @@ export function KasifFooter() {
 
   return (
     <Footer className={classes.footer} height={32} px="sm">
-      <Box>Hey</Box>
+      <Box />
       <Group spacing="xs">
         <Tooltip label="Licenses">
           <ActionIcon variant="transparent" size="sm" color="primary">

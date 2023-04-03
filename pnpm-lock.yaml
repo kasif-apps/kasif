@@ -11,6 +11,7 @@ specifiers:
   '@kasif-apps/capture': ^0.2.2
   '@kasif-apps/cinq': ^0.1.3
   '@mantine/core': ^5.9.4
+  '@mantine/form': ^6.0.5
   '@mantine/hooks': ^5.9.4
   '@mantine/modals': ^5.9.4
   '@mantine/notifications': ^5.9.4
@@ -33,6 +34,7 @@ specifiers:
   eslint-plugin-react-hooks: ^4.6.0
   eslint-plugin-testing-library: ^5.9.1
   husky: ^8.0.0
+  pocketbase: ^0.13.1
   react: ^18.2.0
   react-beautiful-dnd: ^13.1.1
   react-dom: ^18.2.0
@@ -51,12 +53,14 @@ dependencies:
   '@kasif-apps/capture': 0.2.2
   '@kasif-apps/cinq': 0.1.3
   '@mantine/core': 5.9.4_pgo6dehjvjnehz6jphknhqbkyi
+  '@mantine/form': 6.0.5_react@18.2.0
   '@mantine/hooks': 5.9.4_react@18.2.0
   '@mantine/modals': 5.9.4_akxvflpdc4qclfp7ngtfppkada
   '@mantine/notifications': 5.9.4_akxvflpdc4qclfp7ngtfppkada
   '@mantine/spotlight': 5.9.4_akxvflpdc4qclfp7ngtfppkada
   '@tabler/icons': 1.116.1_biqbaboplfbrettd7655fr4n2y
   '@tauri-apps/api': 1.2.0
+  pocketbase: 0.13.1
   react: 18.2.0
   react-beautiful-dnd: 13.1.1_biqbaboplfbrettd7655fr4n2y
   react-dom: 18.2.0_react@18.2.0
@@ -963,6 +967,16 @@ packages:
     transitivePeerDependencies:
       - '@emotion/react'
       - '@types/react'
+    dev: false
+
+  /@mantine/form/6.0.5_react@18.2.0:
+    resolution: {integrity: sha512-7YclnSzYCCVZQKT4g9Hta6cvlVf20RUe5L6x1s570nfJFXk1j9wbrPIJ5pEUdXwTnMGfcZ+n0OmcCxUnf8lpPA==}
+    peerDependencies:
+      react: '>=16.8.0'
+    dependencies:
+      fast-deep-equal: 3.1.3
+      klona: 2.0.6
+      react: 18.2.0
     dev: false
 
   /@mantine/hooks/5.9.4_react@18.2.0:
@@ -2743,7 +2757,6 @@ packages:
 
   /fast-deep-equal/3.1.3:
     resolution: {integrity: sha512-f3qQ9oQy9j2AhBe/H9VC91wLmKBCCU/gDOnKNAYG5hswO7BLKj09Hc5HYNz9cGI++xlpDCIgDaitVs03ATR84Q==}
-    dev: true
 
   /fast-glob/3.2.12:
     resolution: {integrity: sha512-DVj4CQIYYow0BlaelwK1pHl5n5cRSJfM60UA0zK891sVInoPri2Ekj7+e1CT3/3qxXenpI+nBBmQAcJPJgaj4w==}
@@ -3318,6 +3331,11 @@ packages:
     engines: {node: '>=0.10.0'}
     dev: true
 
+  /klona/2.0.6:
+    resolution: {integrity: sha512-dhG34DXATL5hSxJbIexCft8FChFXtmskoZYnoPWjXQuebWYCNkVeV3KkGegCK9CP1oswI/vQibS2GY7Em/sJJA==}
+    engines: {node: '>= 8'}
+    dev: false
+
   /kolorist/1.7.0:
     resolution: {integrity: sha512-ymToLHqL02udwVdbkowNpzjFd6UzozMtshPQKVi5k1EjKRqKqBrOnE9QbLEb0/pV76SAiIT13hdL8R6suc+f3g==}
     dev: true
@@ -3741,6 +3759,10 @@ packages:
   /picomatch/2.3.1:
     resolution: {integrity: sha512-JU3teHTNjmE2VCGFzuY8EXzCDVwEqB2a8fsIvwaStHhAWJEeVd1o1QD80CU6+ZdEXXSLbSsuLwJjkCBWqRQUVA==}
     engines: {node: '>=8.6'}
+
+  /pocketbase/0.13.1:
+    resolution: {integrity: sha512-3Wsj87VcmvqmziWXdXWKyCDKbA3rfMR5wlP64UJj+7KBss4ZEXv3Z1ZXhLe5OOiFwF+ErbcO9bzWBMrVLfsIpQ==}
+    dev: false
 
   /postcss/8.4.20:
     resolution: {integrity: sha512-6Q04AXR1212bXr5fh03u8aAwbLxAQNGQ/Q1LNa0VfOI06ZAlhPHtQvE4OIdpj4kLThXilalPnmDSOD65DcHt+g==}

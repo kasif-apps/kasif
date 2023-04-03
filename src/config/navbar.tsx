@@ -1,6 +1,8 @@
 import { NavbarItem } from '@kasif/managers/navbar';
 import { prebuiltViews } from '@kasif/config/view';
 import { IconHome, IconPuzzle, IconSettings, IconShoppingBag, IconUser } from '@tabler/icons';
+import { Avatar } from '@mantine/core';
+import { useSlice } from '@kasif/util/cinq-react';
 import { app } from './app';
 
 export const initialTopItems: NavbarItem[] = [
@@ -27,7 +29,15 @@ export const initialBottomItems: NavbarItem[] = [
   },
   {
     id: 'profile',
-    icon: () => <IconUser size={20} stroke={1.5} />,
+    icon: () => {
+      const [avatar] = useSlice(app.authManager.avatar);
+
+      if (avatar.length > 0) {
+        return <Avatar size={24} radius="xl" src={avatar} />;
+      }
+
+      return <IconUser size={20} stroke={1.5} />;
+    },
     label: 'Profile',
     onClick: () => app.viewManager.pushView({ view: prebuiltViews.profile }),
   },

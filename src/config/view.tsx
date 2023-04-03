@@ -5,6 +5,9 @@ import { StorePage } from '@kasif/pages/StorePage';
 import { LogsPage } from '@kasif/pages/LogsPage';
 import { IconSettings, IconUser, IconShoppingBag, IconMessages, IconPuzzle } from '@tabler/icons';
 import { PluginsPage } from '@kasif/pages/PluginsPage';
+import { Avatar } from '@mantine/core';
+import { app } from '@kasif/config/app';
+import { useSlice } from '@kasif/util/cinq-react';
 
 export const prebuiltViews: Record<string, View> = {
   settings: {
@@ -16,7 +19,15 @@ export const prebuiltViews: Record<string, View> = {
   profile: {
     id: 'profile',
     title: 'Profile',
-    icon: () => <IconUser size={18} stroke={1.5} />,
+    icon: () => {
+      const [avatar] = useSlice(app.authManager.avatar);
+
+      if (avatar.length > 0) {
+        return <Avatar size={20} radius="xl" src={avatar} />;
+      }
+
+      return <IconUser size={18} stroke={1.5} />;
+    },
     render: ProfilePage,
   },
   store: {
