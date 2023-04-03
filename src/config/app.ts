@@ -10,9 +10,9 @@ import { BaseManager } from '@kasif/managers/base';
 import { DndManager } from '@kasif/managers/dnd';
 import { NetworkManager } from '@kasif/managers/network';
 
-export const nexus = {
-  id: 'nexus@v0.0.1',
-  name: 'Nexus',
+export const kasif = {
+  id: 'kasif@v0.0.1',
+  name: 'Kasif',
   version: '0.0.1',
 };
 
@@ -33,10 +33,10 @@ export class App {
 
   customManagers: Map<string, BaseManager> = new Map();
 
-  constructor(public parent?: App, options?: typeof nexus) {
-    this.id = options?.id ?? nexus.id;
-    this.name = options?.name ?? nexus.name;
-    this.version = options?.version ?? nexus.version;
+  constructor(public parent?: App, options?: typeof kasif) {
+    this.id = options?.id ?? kasif.id;
+    this.name = options?.name ?? kasif.name;
+    this.version = options?.version ?? kasif.version;
 
     this.settingsManager = new SettingsManager(this, this.parent);
     this.notificationManager = new NotificationManager(this, this.parent);

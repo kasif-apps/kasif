@@ -8,7 +8,8 @@ use std::{
 };
 
 fn unzip(target: &str, dir: &Path) {
-    let mut archive = zip::ZipArchive::new(fs::File::open(target).unwrap()).unwrap();
+    let mut archive = zip::ZipArchive::new(fs::File::open(target).expect("failed to open target"))
+        .expect("failed to create zip archive");
 
     for i in 0..archive.len() {
         let mut file = archive.by_index(i).unwrap();
@@ -30,12 +31,12 @@ fn unzip(target: &str, dir: &Path) {
 
 fn unpack_plugins(apps: &PathBuf, source: PathBuf) {
     if apps.exists() {
-        let _ = fs::remove_dir_all(apps);
+        let _ = fs::remove_dir_all(apps).expect("failed to remove apps directory");
     } else {
         fs::create_dir(apps).expect("failed to create apps directory");
     }
 
-    let paths = fs::read_dir(source).unwrap();
+    let paths = fs::read_dir(source).expect("failed to read source directory");
 
     for path in paths {
         let fullpath = path.as_ref().unwrap().path().display().to_string();
@@ -43,7 +44,9 @@ fn unpack_plugins(apps: &PathBuf, source: PathBuf) {
         let target = fullpath.clone();
         let dir = Path::new("").join(apps).join(name);
 
-        unzip(&target, &dir);
+        if target.ends_with(".kasif") {
+            unzip(&target, &dir);
+        }
     }
 }
 

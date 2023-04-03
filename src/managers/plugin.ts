@@ -8,75 +8,75 @@ interface PluginModule {
   path: string;
 }
 
-const appsFolder = await resolveResource('apps/');
+export async function initApps(_app: App) {
+  const appsFolder = await resolveResource('apps/');
 
-async function importModules(
-  app: App,
-  modules: PluginModule[]
-): Promise<{ file: { init: (app: App) => void }; meta: PluginModule }[]> {
-  const files: { file: any; meta: PluginModule }[] = [];
+  async function importModules(
+    app: App,
+    modules: PluginModule[]
+  ): Promise<{ file: { init: (app: App) => void }; meta: PluginModule }[]> {
+    const files: { file: any; meta: PluginModule }[] = [];
 
-  return new Promise((resolve) => {
-    modules.forEach((mod, index) => {
-      import(`${appsFolder}/${mod.path}/entry.js`)
-        .then((file) => {
-          files.push({
-            file,
-            meta: mod,
-          });
-
-          if (index === modules.length - 1) {
-            resolve(files);
-          }
-        })
-        .catch((error) => {
-          app.notificationManager.error(
-            `Could not load app '${mod.name}'. Check the logs for more information.`,
-            'Error Loading App'
-          );
-          app.notificationManager.log(
-            String(error.stack),
-            `Loading '${mod.name}' (${mod.id}) app failed`
-          );
-        });
-    });
-  });
-}
-
-async function readManifest(path: string) {
-  const raw_manifest = await tauri.fs.readTextFile(`${appsFolder}/${path}/package.json`, {
-    dir: tauri.fs.BaseDirectory.Document,
-  });
-
-  const manifest = JSON.parse(raw_manifest);
-  manifest.nexus.path = `${manifest.nexus.id}.nexus`;
-
-  return manifest.nexus as PluginModule;
-}
-
-async function exploreModules(): Promise<PluginModule[]> {
-  const entries = await tauri.fs.readDir(appsFolder);
-
-  const readAll = () => {
-    const manifests: PluginModule[] = [];
     return new Promise((resolve) => {
-      entries.forEach(async (entry, index) => {
-        if (entry.name && entry.name.endsWith('.nexus')) {
-          manifests.push(await readManifest(entry.name));
-        }
+      modules.forEach((mod, index) => {
+        import(`${appsFolder}/${mod.path}/entry.js`)
+          .then((file) => {
+            files.push({
+              file,
+              meta: mod,
+            });
 
-        if (index === entries.length - 1) {
-          resolve(manifests);
-        }
+            if (index === modules.length - 1) {
+              resolve(files);
+            }
+          })
+          .catch((error) => {
+            app.notificationManager.error(
+              `Could not load app '${mod.name}'. Check the logs for more information.`,
+              'Error Loading App'
+            );
+            app.notificationManager.log(
+              String(error.stack),
+              `Loading '${mod.name}' (${mod.id}) app failed`
+            );
+          });
       });
     });
-  };
+  }
 
-  const manifests = (await readAll()) as PluginModule[];
-  return manifests;
-}
+  async function readManifest(path: string) {
+    const raw_manifest = await tauri.fs.readTextFile(`${appsFolder}/${path}/package.json`, {
+      dir: tauri.fs.BaseDirectory.Document,
+    });
 
-export async function initApps(_app: App) {
+    const manifest = JSON.parse(raw_manifest);
+    manifest.kasif.path = `${manifest.kasif.id}.kasif`;
+
+    return manifest.kasif as PluginModule;
+  }
+
+  async function exploreModules(): Promise<PluginModule[]> {
+    const entries = await tauri.fs.readDir(appsFolder);
+
+    const readAll = () => {
+      const manifests: PluginModule[] = [];
+      return new Promise((resolve) => {
+        entries.forEach(async (entry, index) => {
+          if (entry.name && entry.name.endsWith('.kasif')) {
+            manifests.push(await readManifest(entry.name));
+          }
+
+          if (index === entries.length - 1) {
+            resolve(manifests);
+          }
+        });
+      });
+    };
+
+    const manifests = (await readAll()) as PluginModule[];
+    return manifests;
+  }
+
   const app = _app;
 
   const modules = await exploreModules();

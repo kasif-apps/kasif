@@ -1,14 +1,14 @@
 import { createShortcutLabel, trackable, tracker } from '@kasif/util/misc';
 import { registerSpotlightActions } from '@mantine/spotlight';
 import { BaseManager } from '@kasif/managers/base';
-import { nexus } from '@kasif/config/app';
+import { kasif } from '@kasif/config/app';
 
 export interface Command {
   id: string;
   title: string;
   shortCut?: string;
   onTrigger: () => void;
-  source: typeof nexus;
+  source: typeof kasif;
 }
 
 @tracker('commandManager')

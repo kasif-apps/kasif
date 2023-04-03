@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom/client';
 import { CSSObject, MantineProvider, MantineTheme } from '@mantine/core';
 import { Layout } from '@kasif/pages/Layout';
 import { NotificationsProvider } from '@mantine/notifications';
-import { app, nexus, useSetting } from '@kasif/config/app';
+import { app, kasif, useSetting } from '@kasif/config/app';
 import { ThemeSetting } from '@kasif//config/settings';
 import { initApps } from '@kasif/managers/plugin';
 import { SpotlightProvider } from '@mantine/spotlight';
@@ -16,7 +16,7 @@ import { ActionComponent, actions } from '@kasif/components/Overlay/Spotlight';
 import { initCommands } from '@kasif/config/command';
 
 app.notificationManager.log(
-  `Nexus skeleton initialized. Version: ${nexus.version}`,
+  `Kasif skeleton initialized. Version: ${kasif.version}`,
   'Skeleton initialized'
 );
 

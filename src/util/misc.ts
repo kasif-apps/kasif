@@ -1,5 +1,5 @@
 import { CSSObject } from '@emotion/react';
-import { App, nexus } from '@kasif/config/app';
+import { App, kasif } from '@kasif/config/app';
 import { BaseManager } from '@kasif/managers/base';
 import { OS } from '@mantine/hooks';
 
@@ -185,9 +185,9 @@ export function trackable(
         const result = targetMethod.apply(instance.parent[identifier], args);
 
         if (parent && parent.app) {
-          parent.app.id = nexus.id;
-          parent.app.name = nexus.name;
-          parent.app.version = nexus.version;
+          parent.app.id = kasif.id;
+          parent.app.name = kasif.name;
+          parent.app.version = kasif.version;
         }
         return () => result;
       }
