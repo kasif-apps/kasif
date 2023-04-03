@@ -15,6 +15,7 @@
     "isolatedModules": true,
     "noEmit": true,
     "experimentalDecorators": true,
+    "declaration": true,
     "jsx": "react-jsx",
     "paths": {
       "@kasif/pages/*": ["./src/pages/*"],

@@ -6,6 +6,7 @@ import { useEffect, useRef } from 'react';
 import { useMergedRef } from '@mantine/hooks';
 
 import { DraggableProvided } from 'react-beautiful-dnd';
+import { DisplayRenderableNode, RenderableNode } from '@kasif/util/node-renderer';
 
 const useStyles = createStyles((theme, { dragging }: { dragging: boolean }, getRef) => ({
   tab: {
@@ -64,7 +65,7 @@ const useStyles = createStyles((theme, { dragging }: { dragging: boolean }, getR
 export interface TabItemProps {
   id: string;
   title: string;
-  icon: React.ReactNode;
+  icon: React.FC | RenderableNode;
   active?: boolean;
   dragging?: boolean;
   beforeActive?: boolean;
@@ -107,7 +108,9 @@ export function TabItem(props: TabItemProps) {
     >
       <Tooltip openDelay={1000} sx={{ maxWidth: 400 }} multiline withinPortal label={title}>
         <div className={cx('content', active && 'active')}>
-          <span className="tab-icon">{icon}</span>
+          <span className="tab-icon">
+            <DisplayRenderableNode node={icon} />
+          </span>
           <p className={classes.title}>{title}</p>
           <ActionIcon className="close-icon" onClick={handleClose} size="xs" radius="xl">
             <IconX size={12} />

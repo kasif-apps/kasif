@@ -6,7 +6,7 @@ import { RenderableNode } from '@kasif/util/node-renderer';
 
 export interface NavbarItem {
   id: string;
-  icon: RenderableNode;
+  icon: React.FC | RenderableNode;
   label: string;
   onClick?(): void;
 }

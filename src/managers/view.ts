@@ -8,7 +8,7 @@ import { trackable, tracker } from '@kasif/util/misc';
 export interface View {
   id: string;
   title: string;
-  icon: JSX.Element;
+  icon: React.FC | RenderableNode;
   render: React.FC | RenderableNode;
 }
 
