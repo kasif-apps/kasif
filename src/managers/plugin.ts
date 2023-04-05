@@ -1,12 +1,83 @@
 import { App } from '@kasif/config/app';
 import { tauri } from '@kasif/util/tauri';
 import { resolveResource, appLocalDataDir, join, basename } from '@tauri-apps/api/path';
+import { User } from '@kasif/managers/auth';
+import { backend } from '@kasif/config/backend';
+import { Record } from 'pocketbase';
 
 interface PluginModule {
   name: string;
   id: string;
   path: string;
 }
+
+export interface PluginDTO {
+  author: User;
+  created: Date;
+  category: string[];
+  description: string;
+  image: string;
+  id: string;
+  package: string;
+  title: string;
+  updated: Date;
+  record: Record;
+  downloads: number;
+}
+
+export interface PluginRawDTO {
+  author: string;
+  created: string;
+  category: string[];
+  description: string;
+  image: string;
+  id: string;
+  package: string;
+  title: string;
+  updated: string;
+  downloads: number;
+  expand: {
+    author: User;
+  };
+}
+
+export class Plugin {
+  private mapItem(item: PluginRawDTO, record: Record): PluginDTO {
+    return {
+      ...item,
+      record,
+      package: backend.getFileUrl(record, item.package),
+      image: backend.getFileUrl(record, item.image),
+      author: item.expand.author,
+      created: new Date(item.created),
+      updated: new Date(item.updated),
+    };
+  }
+
+  async list(): Promise<PluginDTO[]> {
+    const apps = await backend.collection('apps').getList(0, 100, { expand: 'author' });
+
+    return apps.items.map((record) => {
+      const item = record as unknown as PluginRawDTO;
+
+      return this.mapItem(item, record);
+    });
+  }
+
+  async getPopular(): Promise<PluginDTO[]> {
+    const apps = await backend
+      .collection('apps')
+      .getList(0, 2, { expand: 'author', sort: '-downloads' });
+
+    return apps.items.map((record) => {
+      const item = record as unknown as PluginRawDTO;
+
+      return this.mapItem(item, record);
+    });
+  }
+}
+
+export const plugins = new Plugin();
 
 export async function uploadPlugin(pluginPath: string) {
   const localDataDir = await appLocalDataDir();
@@ -88,9 +159,9 @@ export async function initApps(_app: App) {
   const app = _app;
 
   const modules = await exploreModules();
-  const plugins = await importModules(app, modules);
+  const $plugins = await importModules(app, modules);
 
-  plugins.forEach((mod) => {
+  $plugins.forEach((mod) => {
     const instance = mod.meta;
 
     app.notificationManager.log(

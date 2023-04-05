@@ -1,7 +1,8 @@
 import { app } from '@kasif/config/app';
-import { MantineProviderProps } from '@mantine/core';
+import { MantineProviderProps, MantineTheme } from '@mantine/core';
 import { BaseManager } from '@kasif/managers/base';
 import { trackable, tracker } from '@kasif/util/misc';
+import { createSlice, Slice } from '@kasif-apps/cinq';
 
 export interface ThemeOption {
   id: string;
@@ -71,6 +72,15 @@ export class ThemeManager extends BaseManager {
     },
   ];
 
+  interface: Slice<MantineTheme | null> = createSlice(null, {
+    key: 'interface',
+  }) as Slice<MantineTheme | null>;
+
+  @trackable
+  getInterfaceSnapshot() {
+    return this.interface.get();
+  }
+
   @trackable
   getTheme(id: ThemeOption['id']): ThemeOption {
     const result = this.options.find((option) => option.id === id);
@@ -80,6 +90,13 @@ export class ThemeManager extends BaseManager {
     }
 
     return result || this.options[0];
+  }
+
+  @trackable
+  getCurrentTheme(): ThemeOption {
+    const id = this.app.settingsManager.getSetting<ThemeOption['id']>('theme')!;
+
+    return this.getTheme(id);
   }
 
   @trackable

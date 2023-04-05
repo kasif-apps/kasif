@@ -1,37 +1,55 @@
-import { app } from '@kasif/config/app';
-import { backend } from '@kasif/config/backend';
-import { useSlice } from '@kasif/util/cinq-react';
-import { Button } from '@mantine/core';
-import { useState } from 'react';
+import { Hero, PluginCard } from '@kasif/components/Compound/PluginCard';
+import { PluginDTO, plugins } from '@kasif/managers/plugin';
+import { Box, SimpleGrid, Stack, Title } from '@mantine/core';
+import { useElementSize } from '@mantine/hooks';
+import { useEffect, useState } from 'react';
 
 export function StorePage() {
-  const [user] = useSlice(app.authManager.getUserSlice());
-  const [loading, setLoading] = useState(false);
+  const [packages, setPackages] = useState<PluginDTO[] | null>(null);
+  const [popular, setPopular] = useState<PluginDTO[] | null>(null);
+  const { ref, width } = useElementSize();
 
-  const handleLogin = async () => {
-    setLoading(true);
-    await backend.collection('users').authWithPassword('m.ali.can@kasif.app', '1234567890');
-    setLoading(false);
+  useEffect(() => {
+    plugins.getPopular().then((popularItems: PluginDTO[]) => {
+      setPopular(popularItems);
+
+      plugins.list().then((items: PluginDTO[]) => {
+        setPackages(items);
+      });
+    });
+  }, []);
+
+  const getColumnCount = (w: number) => {
+    if (w > 800) return 3;
+    if (w > 560) return 2;
+    return 1;
   };
 
-  const handleLogout = () => {
-    backend.authStore.clear();
-  };
+  const columnCount = width === 0 ? 3 : getColumnCount(width);
+
+  if (!packages || !popular) return <div>Loading...</div>;
 
   return (
-    <div>
-      <pre>{JSON.stringify(user, null, 2)}</pre>
-      <div>
-        {user ? (
-          <Button loading={loading} onClick={handleLogout}>
-            Logout
-          </Button>
-        ) : (
-          <Button loading={loading} onClick={handleLogin}>
-            Login
-          </Button>
-        )}
-      </div>
+    <div ref={ref}>
+      <Box p="sm" pt={0} sx={{ maxWidth: 1400, margin: 'auto' }}>
+        <Stack>
+          <Title>Popular</Title>
+          <Hero data={popular} />
+          <Title>Discover</Title>
+          <SimpleGrid cols={columnCount}>
+            {packages.map((item) => (
+              <PluginCard
+                key={item.id}
+                author={item.author.username}
+                title={item.title}
+                description={item.description}
+                image={item.image}
+                category={item.category}
+              />
+            ))}
+          </SimpleGrid>
+        </Stack>
+      </Box>
     </div>
   );
 }

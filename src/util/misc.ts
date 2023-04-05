@@ -189,7 +189,7 @@ export function trackable(
           parent.app.name = kasif.name;
           parent.app.version = kasif.version;
         }
-        return () => result;
+        return result;
       }
     }
 

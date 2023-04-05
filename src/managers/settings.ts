@@ -127,4 +127,12 @@ export class SettingsManager extends BaseManager {
 
     return result as SettingController<T>;
   }
+
+  getSetting<T>(id: SettingsItem<T>['id']): T | undefined {
+    const theme = this.app.settingsManager.getSettingController<T>(id);
+
+    if (theme) {
+      return theme.instance.get().value;
+    }
+  }
 }

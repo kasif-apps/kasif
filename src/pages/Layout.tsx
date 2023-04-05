@@ -1,6 +1,12 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { KasifHeader, KasifNavbar, KasifFooter } from '@kasif/components/Navigation';
-import { AppShell, createStyles, ScrollArea, ScrollAreaProps } from '@mantine/core';
+import {
+  AppShell,
+  createStyles,
+  ScrollArea,
+  ScrollAreaProps,
+  useMantineTheme,
+} from '@mantine/core';
 import { app } from '@kasif/config/app';
 import { useSlice } from '@kasif/util/cinq-react';
 import SplitPane from 'react-split-pane';
@@ -105,15 +111,29 @@ export function Layout() {
   const Component = app.viewManager.getViewComponent(currentView);
   const panes: Pane[] = [{ id: '0', render: Component }, ...paneStore.panes];
 
+  const [, setInterface] = useSlice(app.themeManager.interface);
+  const theme = useMantineTheme();
+
+  useEffect(() => {
+    setInterface(theme);
+  }, [theme]);
+
+  const getPaneSize = (size: number | undefined) => {
+    if (size) {
+      return `${size}px`;
+    }
+
+    return '50%';
+  };
+
   return (
     <AppShell
       navbar={<KasifNavbar />}
       header={<KasifHeader />}
       footer={<KasifFooter />}
-      styles={(theme) => ({
+      styles={(them) => ({
         main: {
-          backgroundColor:
-            theme.colorScheme === 'dark' ? theme.colors.dark[8] : theme.colors.gray[0],
+          backgroundColor: them.colorScheme === 'dark' ? them.colors.dark[8] : them.colors.gray[0],
           paddingTop: 'calc(var(--mantine-header-height, 0px))',
           paddingBottom: 'calc(var(--mantine-footer-height, 0px))',
           paddingLeft: 'calc(var(--mantine-navbar-width, 0px))',
@@ -123,7 +143,7 @@ export function Layout() {
     >
       {panes.length > 1 ? (
         // @ts-ignore
-        <SplitPane size="50%" split="vertical">
+        <SplitPane size={`calc(100% - ${getPaneSize(panes[1]?.width)})`} split="vertical">
           {panes.map((pane, index) => (
             <PaneItem droppable={index !== 0} id={pane.id} key={pane.id}>
               <CustomScrollArea>
