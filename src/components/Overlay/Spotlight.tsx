@@ -44,7 +44,7 @@ export function ActionComponent({
       onClick={onTrigger}
       {...others}
     >
-      <Group noWrap>
+      <Group noWrap spacing="xs">
         {action.icon && <Center>{action.icon}</Center>}
 
         <div style={{ flex: 1 }}>

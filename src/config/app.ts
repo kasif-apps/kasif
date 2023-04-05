@@ -10,6 +10,7 @@ import { BaseManager } from '@kasif/managers/base';
 import { DndManager } from '@kasif/managers/dnd';
 import { NetworkManager } from '@kasif/managers/network';
 import { AuthManager } from '@kasif/managers/auth';
+import { ContextMenuManager } from '@kasif/managers/contextmenu';
 
 export const kasif = {
   id: 'kasif@v0.0.1',
@@ -31,7 +32,7 @@ export class App {
   commandManager: CommandManager;
   dndManager: DndManager;
   networkManager: NetworkManager;
-  contextMenuManager: null;
+  contextMenuManager: ContextMenuManager;
 
   customManagers: Map<string, BaseManager> = new Map();
 
@@ -48,11 +49,12 @@ export class App {
     this.navbarManager = new NavbarManager(this, this.parent);
     this.paneManager = new PaneManager(this, this.parent);
     this.commandManager = new CommandManager(this, this.parent);
+    this.contextMenuManager = new ContextMenuManager(this, this.parent);
     this.dndManager = new DndManager(this, this.parent);
     this.networkManager = new NetworkManager(this, this.parent);
-    this.contextMenuManager = null;
 
     this.authManager.init();
+    this.contextMenuManager.init();
   }
 
   defineCustomManager(id: string, manager: BaseManager) {

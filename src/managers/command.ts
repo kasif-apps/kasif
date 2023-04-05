@@ -1,14 +1,17 @@
-import { createShortcutLabel, trackable, tracker } from '@kasif/util/misc';
+import { createShortcutLabelFromString, trackable, tracker } from '@kasif/util/misc';
 import { registerSpotlightActions } from '@mantine/spotlight';
 import { BaseManager } from '@kasif/managers/base';
 import { kasif } from '@kasif/config/app';
+import { DisplayRenderableNode, RenderableNode } from '@kasif/util/node-renderer';
+import React from 'react';
 
 export interface Command {
   id: string;
   title: string;
   shortCut?: string;
-  onTrigger: () => void;
+  onTrigger: () => Promise<unknown>;
   source: typeof kasif;
+  icon?: React.FC | RenderableNode;
 }
 
 @tracker('commandManager')
@@ -32,7 +35,7 @@ export class CommandManager extends BaseManager {
 
     let label;
     if (shortCut) {
-      label = createShortcutLabel(...shortCut.split('+').map((key) => key.trim()));
+      label = createShortcutLabelFromString(shortCut);
     }
 
     registerSpotlightActions([
@@ -40,6 +43,9 @@ export class CommandManager extends BaseManager {
         ...command,
         shortCut: label,
         group: 'Commands',
+        icon: command.icon
+          ? React.createElement(DisplayRenderableNode, { node: command.icon })
+          : undefined,
       },
     ]);
   }

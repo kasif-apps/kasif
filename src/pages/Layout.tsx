@@ -14,6 +14,7 @@ import { Pane } from '@kasif/managers/pane';
 import { useHover } from '@mantine/hooks';
 import { Droppable, DroppableProvided } from 'react-beautiful-dnd';
 import { DisplayRenderableNode } from '@kasif/util/node-renderer';
+import { ContextMenu } from '@kasif/components/Compound/ContextMenu';
 
 const useStyles = createStyles((theme, { isDragging }: { isDragging: boolean }) => ({
   paneFreeDropArea: {
@@ -141,6 +142,7 @@ export function Layout() {
         },
       })}
     >
+      <ContextMenu />
       {panes.length > 1 ? (
         // @ts-ignore
         <SplitPane size={`calc(100% - ${getPaneSize(panes[1]?.width)})`} split="vertical">

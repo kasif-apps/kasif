@@ -102,6 +102,10 @@ export function createGlobalStyles(): CSSObject {
   };
 }
 
+export function createShortcutLabelFromString(shortCut: string) {
+  return createShortcutLabel(...shortCut.split('+').map((key) => key.trim()));
+}
+
 export function getRelativeTime(timestamp: Date) {
   const DAY_MILLISECONDS = 1000 * 60 * 60 * 24;
   const rtf = new Intl.RelativeTimeFormat('en', {

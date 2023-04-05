@@ -1,12 +1,13 @@
 import { app } from '@kasif/config/app';
-import { prebuiltViews } from '@kasif/config/view';
+import { IconWindowMaximize, IconWindowMinimize } from '@tabler/icons';
+import React from 'react';
 
 export function initCommands() {
   app.commandManager.defineCommand({
     id: 'close-all-tabs',
     title: 'Close All Tabs',
     shortCut: 'mod+Shift+W',
-    onTrigger: () => {
+    onTrigger: async () => {
       const store = app.viewManager.store.get();
 
       store.views.forEach((view) => {
@@ -19,7 +20,7 @@ export function initCommands() {
     id: 'close-tab',
     title: 'Close Tab',
     shortCut: 'mod+W',
-    onTrigger: () => {
+    onTrigger: async () => {
       const store = app.viewManager.store.get();
 
       if (store.currentView) {
@@ -31,8 +32,9 @@ export function initCommands() {
   app.commandManager.defineCommand({
     id: 'remove-all-panes',
     title: 'Remove All Panes',
+    icon: () => React.createElement(IconWindowMinimize, { size: 14 }),
     shortCut: 'mod+Shift+P',
-    onTrigger: () => {
+    onTrigger: async () => {
       app.paneManager.removeAllPanes();
     },
   });
@@ -41,7 +43,8 @@ export function initCommands() {
     id: 'creaete-pane',
     title: 'Create Pane From View',
     shortCut: 'mod+P',
-    onTrigger: () => {
+    icon: () => React.createElement(IconWindowMaximize, { size: 14 }),
+    onTrigger: async () => {
       const view = app.viewManager.store.get().currentView;
 
       if (view) {
@@ -51,15 +54,6 @@ export function initCommands() {
       } else {
         app.notificationManager.error('Select a view to create a pane', 'No view is selected');
       }
-    },
-  });
-
-  app.commandManager.defineCommand({
-    id: 'open-logs',
-    title: 'Open Logs',
-    shortCut: 'mod+Shift+L',
-    onTrigger: () => {
-      app.viewManager.pushView({ view: prebuiltViews.logs });
     },
   });
 }

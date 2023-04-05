@@ -14,6 +14,7 @@ import { createGlobalStyles } from '@kasif/util/misc';
 import { DndProvider } from '@kasif/config/dnd';
 import { ActionComponent, actions } from '@kasif/components/Overlay/Spotlight';
 import { initCommands } from '@kasif/config/command';
+import { initAppContextMenu } from '@kasif/config/contextmenu';
 
 app.notificationManager.log(
   `Kasif skeleton initialized. Version: ${kasif.version}`,
@@ -39,6 +40,7 @@ function Wrapper() {
 
   useEffect(() => {
     initCommands();
+    initAppContextMenu(app);
     initApps(app);
 
     return () => {
@@ -47,34 +49,36 @@ function Wrapper() {
   }, []);
 
   return (
-    <MantineProvider
-      withGlobalStyles
-      withNormalizeCSS
-      theme={{
-        ...theme.ui,
-        globalStyles: ((t) => ({
-          ...createGlobalStyles(),
-          ...createPaneStyles(t),
-        })) as (theme: MantineTheme) => CSSObject,
-      }}
-    >
-      <SpotlightProvider
-        topOffset={10}
-        actions={actions}
-        searchIcon={<IconSearch size={18} />}
-        searchPlaceholder="Jump..."
-        actionComponent={(props) => <ActionComponent {...props} />}
-        overlayBlur={0}
-        overlayOpacity={0}
-        shortcut="mod+alt+p"
-        shadow="xl"
-        nothingFoundMessage="Nothing found..."
+    <div data-contextmenu-field="app">
+      <MantineProvider
+        withGlobalStyles
+        withNormalizeCSS
+        theme={{
+          ...theme.ui,
+          globalStyles: ((t) => ({
+            ...createGlobalStyles(),
+            ...createPaneStyles(t),
+          })) as (theme: MantineTheme) => CSSObject,
+        }}
       >
-        <NotificationsProvider target="#notifications" position="bottom-right" zIndex={9999}>
-          <DndProvider>{ready && <Layout />}</DndProvider>
-        </NotificationsProvider>
-      </SpotlightProvider>
-    </MantineProvider>
+        <SpotlightProvider
+          topOffset={10}
+          actions={actions}
+          searchIcon={<IconSearch size={18} />}
+          searchPlaceholder="Jump..."
+          actionComponent={(props) => <ActionComponent {...props} />}
+          overlayBlur={0}
+          overlayOpacity={0}
+          shortcut="mod+alt+p"
+          shadow="xl"
+          nothingFoundMessage="Nothing found..."
+        >
+          <NotificationsProvider target="#notifications" position="bottom-right" zIndex={9999}>
+            <DndProvider>{ready && <Layout />}</DndProvider>
+          </NotificationsProvider>
+        </SpotlightProvider>
+      </MantineProvider>
+    </div>
   );
 }
 

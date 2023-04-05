@@ -108,7 +108,7 @@ function QuickItem() {
   const { classes } = useStyles();
 
   return (
-    <UnstyledButton className={classes.quickItem}>
+    <UnstyledButton data-contextmenu-field="welcome-recent-item" className={classes.quickItem}>
       <Avatar>K</Avatar>
       <Text color="dimmed" size="xs">
         kasif
@@ -129,9 +129,9 @@ export function WelcomePage() {
   });
 
   return (
-    <Stack p="sm" spacing="sm" pt={0} sx={{ maxWidth: 1400, margin: 'auto', height: '100%' }}>
+    <Stack p="sm" spacing="sm" pt={0} sx={{ maxWidth: 1200, margin: 'auto', height: '100%' }}>
       <Transition transition="fade">
-        <Card radius="md" p="xl" className={classes.card}>
+        <Card data-contextmenu-field="welcome-card" radius="md" p="xl" className={classes.card}>
           <Stack>
             <CtaText>Get Started</CtaText>
             <Stack spacing="lg">
