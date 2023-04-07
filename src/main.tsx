@@ -12,6 +12,7 @@ import { useHotkeys } from '@mantine/hooks';
 import { createGlobalStyles } from '@kasif/util/misc';
 import { DndProvider } from '@kasif/config/dnd';
 import { ActionComponent, actions } from '@kasif/components/Overlay/Spotlight';
+import { ModalsProvider } from '@mantine/modals';
 
 app.notificationManager.log(
   `Kasif skeleton initialized. Version: ${kasif.version}`,
@@ -68,9 +69,11 @@ function Wrapper() {
           shadow="xl"
           nothingFoundMessage="Nothing found..."
         >
-          <NotificationsProvider target="#notifications" position="bottom-right" zIndex={9999}>
-            <DndProvider>{ready && <Layout />}</DndProvider>
-          </NotificationsProvider>
+          <ModalsProvider>
+            <NotificationsProvider target="#notifications" position="bottom-right" zIndex={9999}>
+              <DndProvider>{ready && <Layout />}</DndProvider>
+            </NotificationsProvider>
+          </ModalsProvider>
         </SpotlightProvider>
       </MantineProvider>
     </div>

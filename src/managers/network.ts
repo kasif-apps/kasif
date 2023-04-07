@@ -1,7 +1,6 @@
 import { createSlice } from '@kasif-apps/cinq';
-import { App } from '@kasif/config/app';
 import { BaseManager } from '@kasif/managers/base';
-import { trackable, tracker } from '@kasif/util/misc';
+import { authorized, trackable, tracker } from '@kasif/util/decorators';
 
 interface NetworkStatus {
   downlink?: number;
@@ -25,8 +24,9 @@ export class NetworkManager extends BaseManager {
     return connection;
   }
 
-  constructor(app: App, parent?: App) {
-    super(app, parent);
+  @trackable
+  @authorized(['reinit_network_manager'])
+  init() {
     window.addEventListener('online', () => {
       this.store.set({ ...this.getConnection(), online: true });
       this.dispatchEvent(new CustomEvent('online'));
@@ -50,6 +50,7 @@ export class NetworkManager extends BaseManager {
   }
 
   @trackable
+  @authorized(['read_connection_data'])
   getConnection(): NetworkStatus {
     const connection = this.getConnectionInstance();
 
@@ -69,6 +70,7 @@ export class NetworkManager extends BaseManager {
   }
 
   @trackable
+  @authorized(['kill_network_manager'])
   kill() {
     const connection = this.getConnectionInstance();
 

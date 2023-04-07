@@ -10,14 +10,16 @@ import {
 import { User } from '@kasif/managers/auth';
 import { backend } from '@kasif/config/backend';
 import { Record } from 'pocketbase';
-import { trackable, tracker } from '@kasif/util/misc';
+import { authorized, trackable, tracker } from '@kasif/util/decorators';
 import { BaseManager } from '@kasif/managers/base';
 import { invoke } from '@tauri-apps/api';
+import { PermissionType } from './permission';
 
 interface PluginModule {
   name: string;
   id: string;
   path: string;
+  permissions?: PermissionType[];
 }
 
 interface PluginImport {
@@ -96,6 +98,7 @@ export class PluginManager extends BaseManager {
   }
 
   @trackable
+  @authorized(['upload_plugin'])
   async uploadPlugin(pluginPath: string) {
     const localDataDir = await appLocalDataDir();
     const base = await basename(pluginPath);
@@ -107,6 +110,7 @@ export class PluginManager extends BaseManager {
   }
 
   @trackable
+  @authorized(['install_plugin'])
   async installPlugin(url: string) {
     const base = await basename(url);
     const request = await fetch(url);
@@ -121,45 +125,44 @@ export class PluginManager extends BaseManager {
   }
 
   @trackable
+  @authorized(['load_plugin'])
   async init() {
     const appsFolder = await resolveResource('apps/');
     const entries = await tauri.fs.readDir(appsFolder);
 
-    const manifests: PluginModule[] = [];
-
-    for await (const entry of entries) {
+    for (const entry of entries) {
       if (entry.name && entry.name.endsWith('.kasif')) {
-        manifests.push(await this.readManifest(entry.name));
-      }
-    }
+        this.readManifest(entry.name).then(async (manifest) => {
+          const plugin = await this.importModule(manifest);
 
-    for await (const manifest of manifests) {
-      const plugin = await this.importModule(manifest);
+          if (plugin) {
+            const instance = plugin.meta;
 
-      if (plugin) {
-        const instance = plugin.meta;
+            this.app.notificationManager.log(
+              `App '${instance.name}:${instance.id}' began loading`,
+              'App loading'
+            );
 
-        this.app.notificationManager.log(
-          `App '${instance.name}:${instance.id}' began loading`,
-          'App loading'
-        );
+            const subapp = new App(this.app, {
+              id: instance.id,
+              name: instance.name,
+              version: '0.0.1',
+            });
+            this.app.permissionManager.store.setKey(plugin.meta.id, plugin.meta.permissions || []);
+            plugin.file.init(subapp);
 
-        const subapp = new App(this.app, {
-          id: instance.id,
-          name: instance.name,
-          version: '0.0.1',
+            this.app.notificationManager.log(
+              `App '${instance.name}:${instance.id}' loaded successfully`,
+              'App loaded'
+            );
+          }
         });
-        plugin.file.init(subapp);
-
-        this.app.notificationManager.log(
-          `App '${instance.name}:${instance.id}' loaded successfully`,
-          'App loaded'
-        );
       }
     }
   }
 
   @trackable
+  @authorized(['load_plugin'])
   async importModule(pluginModule: PluginModule): Promise<PluginImport | undefined> {
     const appsFolder = await resolveResource('apps/');
 
@@ -182,6 +185,7 @@ export class PluginManager extends BaseManager {
   }
 
   @trackable
+  @authorized(['load_plugin'])
   async readManifest(path: string): Promise<PluginModule> {
     const appsFolder = await resolveResource('apps/');
 

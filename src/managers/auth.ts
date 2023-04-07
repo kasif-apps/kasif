@@ -1,6 +1,6 @@
 import { createSlice, Slice } from '@kasif-apps/cinq';
 import { backend } from '@kasif/config/backend';
-import { trackable, tracker } from '@kasif/util/misc';
+import { authorized, trackable, tracker } from '@kasif/util/decorators';
 import { BaseManager } from './base';
 
 export interface User {
@@ -31,6 +31,8 @@ export class AuthManager extends BaseManager {
     { key: 'user-avatar' }
   );
 
+  @trackable
+  @authorized(['reinit_auth_manager'])
   init() {
     this.#user.set(backend.authStore.model as User | null);
 
@@ -40,11 +42,13 @@ export class AuthManager extends BaseManager {
   }
 
   @trackable
+  // @authorized(['read_user_data'])
   getUserSnaphot() {
     return this.#user.get();
   }
 
   @trackable
+  // @authorized(['read_user_data'])
   getUserSlice() {
     return this.#user;
   }

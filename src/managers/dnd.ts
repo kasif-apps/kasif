@@ -1,7 +1,8 @@
 import { createSlice } from '@kasif-apps/cinq';
 import { app } from '@kasif/config/app';
 import { BaseManager } from '@kasif/managers/base';
-import { reorder, tracker } from '@kasif/util/misc';
+import { tracker } from '@kasif/util/decorators';
+import { reorder } from '@kasif/util/misc';
 import { DropResult, OnDragUpdateResponder } from 'react-beautiful-dnd';
 
 @tracker('dndManager')

@@ -1,10 +1,11 @@
-import { createShortcutLabelFromString, trackable, tracker } from '@kasif/util/misc';
+import { createShortcutLabelFromString } from '@kasif/util/misc';
 import { registerSpotlightActions } from '@mantine/spotlight';
 import { BaseManager } from '@kasif/managers/base';
 import { kasif } from '@kasif/config/app';
 import { DisplayRenderableNode, RenderableNode } from '@kasif/util/node-renderer';
 import React from 'react';
 import { initCommands } from '@kasif/config/command';
+import { authorized, trackable, tracker } from '@kasif/util/decorators';
 
 export interface Command {
   id: string;
@@ -24,6 +25,7 @@ export class CommandManager extends BaseManager {
   }
 
   @trackable
+  @authorized(['define_command'])
   defineCommand(command: Omit<Command, 'source'>) {
     this.commands.push({
       ...command,

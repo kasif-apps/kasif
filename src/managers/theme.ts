@@ -1,7 +1,7 @@
 import { app } from '@kasif/config/app';
 import { MantineProviderProps, MantineTheme } from '@mantine/core';
 import { BaseManager } from '@kasif/managers/base';
-import { trackable, tracker } from '@kasif/util/misc';
+import { trackable, tracker } from '@kasif/util/decorators';
 import { createSlice, Slice } from '@kasif-apps/cinq';
 
 export interface ThemeOption {

@@ -1,7 +1,7 @@
 import { createRecordSlice } from '@kasif-apps/cinq';
 import { initialBottomItems, initialTopItems } from '@kasif/config/navbar';
 import { BaseManager } from '@kasif/managers/base';
-import { trackable, tracker } from '@kasif/util/misc';
+import { authorized, trackable, tracker } from '@kasif/util/decorators';
 import { RenderableNode } from '@kasif/util/node-renderer';
 
 export interface NavbarItem {
@@ -27,6 +27,7 @@ export class NavbarManager extends BaseManager {
   initialBottomItemsCount = initialBottomItems.length;
 
   @trackable
+  @authorized(['push_navbar_item'])
   pushTopItem(item: NavbarItem) {
     const itemExists = this.store.get().topItems.some((i) => i.id === item.id);
 
@@ -47,6 +48,7 @@ export class NavbarManager extends BaseManager {
   }
 
   @trackable
+  @authorized(['remove_navbar_item'])
   removeTopItem(itemId: NavbarItem['id']) {
     this.store.upsert((oldState) => ({
       topItems: (oldState as NavbarStore).topItems.filter((item) => item.id !== itemId),
@@ -57,6 +59,7 @@ export class NavbarManager extends BaseManager {
   }
 
   @trackable
+  @authorized(['push_navbar_item'])
   pushBottomItem(item: NavbarItem) {
     const itemExists = this.store.get().bottomItems.some((i) => i.id === item.id);
 
@@ -76,6 +79,7 @@ export class NavbarManager extends BaseManager {
   }
 
   @trackable
+  @authorized(['remove_navbar_item'])
   removeBottomItem(itemId: NavbarItem['id']) {
     this.store.upsert((oldState) => ({
       bottomItems: (oldState as NavbarStore).bottomItems.filter((item) => item.id !== itemId),

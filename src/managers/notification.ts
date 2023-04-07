@@ -4,7 +4,7 @@ import { IconAlertTriangle, IconCheck, IconInfoCircle, IconX } from '@tabler/ico
 import React from 'react';
 import { createVectorSlice } from '@kasif-apps/cinq';
 import { Group, Text } from '@mantine/core';
-import { trackable, tracker } from '@kasif/util/misc';
+import { authorized, trackable, tracker } from '@kasif/util/decorators';
 
 export type NotificationType = 'error' | 'warn' | 'success' | 'log';
 
@@ -47,6 +47,7 @@ export class NotificationManager extends BaseManager {
   }
 
   @trackable
+  @authorized(['show_notifications'])
   error(
     message: string,
     title?: string,
@@ -69,6 +70,7 @@ export class NotificationManager extends BaseManager {
   }
 
   @trackable
+  @authorized(['show_notifications'])
   warn(
     message: string,
     title?: string,
@@ -91,6 +93,7 @@ export class NotificationManager extends BaseManager {
   }
 
   @trackable
+  @authorized(['show_notifications'])
   success(
     message: string,
     title?: string,
@@ -113,6 +116,7 @@ export class NotificationManager extends BaseManager {
   }
 
   @trackable
+  @authorized(['show_notifications'])
   log(
     message: string,
     title?: string,

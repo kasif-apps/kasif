@@ -12,6 +12,7 @@ import { NetworkManager } from '@kasif/managers/network';
 import { AuthManager } from '@kasif/managers/auth';
 import { ContextMenuManager } from '@kasif/managers/contextmenu';
 import { PluginManager } from '@kasif/managers/plugin';
+import { PermissionManager } from '@kasif/managers/permission';
 
 export const kasif = {
   id: 'kasif@v0.0.1',
@@ -23,7 +24,9 @@ export class App {
   id: string;
   name: string;
   version: string;
+
   viewManager: ViewManager;
+  permissionManager: PermissionManager;
   authManager: AuthManager;
   settingsManager: SettingsManager;
   themeManager: ThemeManager;
@@ -43,6 +46,7 @@ export class App {
     this.name = options?.name ?? kasif.name;
     this.version = options?.version ?? kasif.version;
 
+    this.permissionManager = new PermissionManager(this, this.parent);
     this.settingsManager = new SettingsManager(this, this.parent);
     this.notificationManager = new NotificationManager(this, this.parent);
     this.viewManager = new ViewManager(this, this.parent);
@@ -66,6 +70,8 @@ export class App {
   }
 
   init() {
+    this.permissionManager.init();
+    this.networkManager.init();
     this.commandManager.init();
     this.authManager.init();
     this.contextMenuManager.init();

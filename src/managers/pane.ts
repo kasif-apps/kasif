@@ -2,7 +2,7 @@ import { createRecordSlice } from '@kasif-apps/cinq';
 import { app } from '@kasif/config/app';
 import { BaseManager } from '@kasif/managers/base';
 import { View } from '@kasif/managers/view';
-import { trackable, tracker } from '@kasif/util/misc';
+import { authorized, trackable, tracker } from '@kasif/util/decorators';
 import { RenderableNode } from '@kasif/util/node-renderer';
 
 export interface Pane {
@@ -25,6 +25,7 @@ export class PaneManager extends BaseManager {
   );
 
   @trackable
+  @authorized(['push_pane'])
   pushPane(pane: Pane) {
     this.store.upsert(() => ({
       panes: [pane],
@@ -34,6 +35,7 @@ export class PaneManager extends BaseManager {
   }
 
   @trackable
+  @authorized(['remove_pane'])
   removePane(paneId: Pane['id']) {
     this.store.setKey('panes', []);
 
@@ -42,6 +44,7 @@ export class PaneManager extends BaseManager {
   }
 
   @trackable
+  @authorized(['remove_pane'])
   removeAllPanes() {
     this.store.setKey('panes', []);
     this.dispatchEvent(new CustomEvent('remove-all-panes'));
@@ -70,6 +73,7 @@ export class PaneManager extends BaseManager {
   }
 
   @trackable
+  @authorized(['replace_pane'])
   replacePane(paneId: Pane['id'], pane: Pane) {
     this.store.upsert((oldState) => ({
       panes: (oldState as PaneStore).panes.map((p) => (p.id === paneId ? pane : p)),

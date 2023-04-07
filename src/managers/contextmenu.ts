@@ -3,7 +3,7 @@ import { app } from '@kasif/config/app';
 import { initAppContextMenu } from '@kasif/config/contextmenu';
 import { BaseManager } from '@kasif/managers/base';
 import { useSlice } from '@kasif/util/cinq-react';
-import { trackable, tracker } from '@kasif/util/misc';
+import { authorized, trackable, tracker } from '@kasif/util/decorators';
 import { RenderableNode } from '@kasif/util/node-renderer';
 
 export interface ContextMenuState {
@@ -68,6 +68,8 @@ export class ContextMenuManager extends BaseManager {
     key: 'context-menu-current-path',
   });
 
+  @trackable
+  @authorized(['reinit_command_manager'])
   init() {
     document.addEventListener('contextmenu', (e) => this.#handleContextMenuEvent(e));
     initAppContextMenu(this.app);
@@ -120,6 +122,7 @@ export class ContextMenuManager extends BaseManager {
   }
 
   @trackable
+  @authorized(['kill_contextmenu_manager'])
   kill() {
     this.fields.set([]);
     this.categories.set([]);
@@ -130,6 +133,7 @@ export class ContextMenuManager extends BaseManager {
   }
 
   @trackable
+  @authorized(['open_contextmenu'])
   openMenu(position: ContextMenuState['position']) {
     this.store.upsert({ open: false, position: { x: 0, y: 0 } });
     setTimeout(() => {
@@ -139,6 +143,7 @@ export class ContextMenuManager extends BaseManager {
   }
 
   @trackable
+  @authorized(['close_contextmenu'])
   closeMenu() {
     this.store.setKey('open', false);
     this.currentItems.set([]);
@@ -148,16 +153,19 @@ export class ContextMenuManager extends BaseManager {
   }
 
   @trackable
+  @authorized(['define_contextmenu_field'])
   defineField(id: string) {
     this.fields.push({ id, items: [] });
   }
 
   @trackable
+  @authorized(['define_contextmenu_category'])
   defineCategory(category: ContextMenuCategory) {
     this.categories.push(category);
   }
 
   @trackable
+  @authorized(['define_contextmenu_item'])
   defineItem(fieldId: string, item: ContextMenuItem) {
     const fields = this.fields.get();
     const categories = this.categories.get();

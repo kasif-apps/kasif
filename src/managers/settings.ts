@@ -4,7 +4,7 @@ import { initialCategories, initialSettings } from '@kasif/config/settings';
 import { BaseManager } from '@kasif/managers/base';
 import { RenderableNode } from '@kasif/util/node-renderer';
 import { App } from '@kasif/config/app';
-import { trackable, tracker } from '@kasif/util/misc';
+import { authorized, trackable, tracker } from '@kasif/util/decorators';
 
 export interface SettingCategory {
   id: string;
@@ -48,6 +48,7 @@ export class SettingsManager extends BaseManager {
   }
 
   @trackable
+  @authorized(['define_setting'])
   defineSetting<T>(item: SettingsItem<T>) {
     if (this.getSettingController(item.id)) {
       this.app.notificationManager.error(
@@ -102,6 +103,7 @@ export class SettingsManager extends BaseManager {
   }
 
   @trackable
+  @authorized(['define_setting_category'])
   defineCategory(category: SettingCategory) {
     if (this.categories.find((c) => c.id === category.id)) {
       this.app.notificationManager.error(
@@ -122,12 +124,14 @@ export class SettingsManager extends BaseManager {
     });
   }
 
+  @trackable
   getSettingController<T>(id: SettingsItem<T>['id']): SettingController<T> | undefined {
     const result = this.controllers.find((controller) => controller.id === id);
 
     return result as SettingController<T>;
   }
 
+  @trackable
   getSetting<T>(id: SettingsItem<T>['id']): T | undefined {
     const theme = this.app.settingsManager.getSettingController<T>(id);
 

@@ -3,7 +3,7 @@ import { createRecordSlice } from '@kasif-apps/cinq';
 import { WelcomePage } from '@kasif/pages/WelcomePage';
 import { BaseManager } from '@kasif/managers/base';
 import { RenderableNode } from '@kasif/util/node-renderer';
-import { trackable, tracker } from '@kasif/util/misc';
+import { authorized, trackable, tracker } from '@kasif/util/decorators';
 
 export interface View {
   id: string;
@@ -28,6 +28,7 @@ export class ViewManager extends BaseManager {
   );
 
   @trackable
+  @authorized(['push_view'])
   pushView({ view }: { view: View }) {
     const viewExists = this.store.get().views.some((v) => v.id === view.id);
 
@@ -48,6 +49,7 @@ export class ViewManager extends BaseManager {
   }
 
   @trackable
+  @authorized(['remove_view'])
   removeView(viewId: View['id']) {
     const value = this.store.get();
     const isCurrentView = value.currentView === viewId;
@@ -77,6 +79,7 @@ export class ViewManager extends BaseManager {
   }
 
   @trackable
+  @authorized(['set_view'])
   setCurrentView(viewId: ViewStore['currentView']) {
     if (this.store.get().currentView !== viewId) {
       this.store.setKey('currentView', viewId);
