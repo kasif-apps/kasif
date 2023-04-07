@@ -1,11 +1,17 @@
 import { App } from '@kasif/config/app';
 import { tauri } from '@kasif/util/tauri';
-import { resolveResource, appLocalDataDir, join, basename } from '@tauri-apps/api/path';
+import {
+  resolveResource,
+  appLocalDataDir,
+  join,
+  basename,
+  BaseDirectory,
+} from '@tauri-apps/api/path';
 import { User } from '@kasif/managers/auth';
 import { backend } from '@kasif/config/backend';
 import { Record } from 'pocketbase';
 import { trackable, tracker } from '@kasif/util/misc';
-import { BaseManager } from './base';
+import { BaseManager } from '@kasif/managers/base';
 
 interface PluginModule {
   name: string;
@@ -52,7 +58,7 @@ export interface PluginRawDTO {
 
 @tracker('pluginManager')
 export class PluginManager extends BaseManager {
-  private mapItem(item: PluginRawDTO, record: Record): PluginDTO {
+  #mapItem(item: PluginRawDTO, record: Record): PluginDTO {
     return {
       ...item,
       record,
@@ -71,7 +77,7 @@ export class PluginManager extends BaseManager {
     return apps.items.map((record) => {
       const item = record as unknown as PluginRawDTO;
 
-      return this.mapItem(item, record);
+      return this.#mapItem(item, record);
     });
   }
 
@@ -84,7 +90,7 @@ export class PluginManager extends BaseManager {
     return apps.items.map((record) => {
       const item = record as unknown as PluginRawDTO;
 
-      return this.mapItem(item, record);
+      return this.#mapItem(item, record);
     });
   }
 
@@ -95,6 +101,17 @@ export class PluginManager extends BaseManager {
     const destination = await join(localDataDir, 'apps', base);
 
     await tauri.fs.copyFile(pluginPath, destination);
+  }
+
+  @trackable
+  async installPlugin(url: string) {
+    const base = await basename(url);
+    const request = await fetch(url);
+    const file = await request.blob();
+
+    await tauri.fs.writeBinaryFile(`apps/${base}`, await file.arrayBuffer(), {
+      dir: BaseDirectory.AppLocalData,
+    });
   }
 
   @trackable
@@ -137,11 +154,6 @@ export class PluginManager extends BaseManager {
   }
 
   @trackable
-  async installPlugin(url: string) {
-    return url;
-  }
-
-  @trackable
   async importModule(pluginModule: PluginModule): Promise<PluginImport | undefined> {
     const appsFolder = await resolveResource('apps/');
 
@@ -172,7 +184,7 @@ export class PluginManager extends BaseManager {
     });
 
     const manifest = JSON.parse(raw_manifest);
-    manifest.kasif.path = `${manifest.kasif.id}.kasif`;
+    manifest.kasif.path = path;
 
     return manifest.kasif as PluginModule;
   }

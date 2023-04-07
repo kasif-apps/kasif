@@ -48,6 +48,7 @@ export function StorePage() {
                 description={item.description}
                 image={item.image}
                 category={item.category}
+                url={item.package}
               />
             ))}
           </SimpleGrid>

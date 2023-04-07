@@ -2,6 +2,8 @@ import { animations } from '@kasif/util/misc';
 import { Card, Image, Text, Group, Badge, Button, ActionIcon, createStyles } from '@mantine/core';
 import { IconHeart } from '@tabler/icons';
 import { Transition } from '@kasif/components/Transition/TransitionWrapper';
+import { app } from '@kasif/config/app';
+import { useState } from 'react';
 
 const useStyles = createStyles((theme) => ({
   card: {
@@ -47,9 +49,11 @@ interface BadgeCardProps {
   author: string;
   category: string[];
   description: string;
+  url: string;
 }
 
-export function PluginCard({ image, title, description, category, author }: BadgeCardProps) {
+export function PluginCard({ image, title, description, category, author, url }: BadgeCardProps) {
+  const [loading, setLoading] = useState(false);
   const { classes } = useStyles();
 
   return (
@@ -85,7 +89,16 @@ export function PluginCard({ image, title, description, category, author }: Badg
           </Card.Section>
 
           <Group mt="xs">
-            <Button radius="md" style={{ flex: 1 }}>
+            <Button
+              loading={loading}
+              onClick={async () => {
+                setLoading(true);
+                await app.pluginManager.installPlugin(url);
+                setLoading(false);
+              }}
+              radius="md"
+              style={{ flex: 1 }}
+            >
               Install
             </Button>
             <ActionIcon variant="default" radius="md" size={36}>
