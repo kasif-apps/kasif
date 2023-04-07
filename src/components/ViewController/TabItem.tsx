@@ -104,6 +104,8 @@ export function TabItem(props: TabItemProps) {
       sx={style}
       onClick={() => app.viewManager.setCurrentView(id)}
       component="div"
+      data-contextmenu-field="view-handle"
+      data-view-id={id}
       className={cx(classes.tab, active && 'active', beforeActive && 'before-active')}
     >
       <Tooltip openDelay={1000} sx={{ maxWidth: 400 }} multiline withinPortal label={title}>

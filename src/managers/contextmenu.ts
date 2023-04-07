@@ -31,6 +31,7 @@ export interface ContextMenuItem {
   category: string;
   shortCut?: string;
   icon?: React.FC | RenderableNode;
+  registerCommand?: boolean;
 }
 
 @tracker('contextMenuManager')
@@ -58,6 +59,14 @@ export class ContextMenuManager extends BaseManager {
     key: 'context-menu-current-items',
   });
 
+  currentFields: VectorSlice<Array<string>> = createVectorSlice<Array<string>>([], {
+    key: 'context-menu-current-fields',
+  });
+
+  currentPath: VectorSlice<Array<HTMLElement>> = createVectorSlice<Array<HTMLElement>>([], {
+    key: 'context-menu-current-path',
+  });
+
   init() {
     document.addEventListener('contextmenu', (e) => this.#handleContextMenuEvent(e));
   }
@@ -65,28 +74,32 @@ export class ContextMenuManager extends BaseManager {
   #handleContextMenuEvent(event: MouseEvent) {
     event.preventDefault();
 
-    const targets = this.#getTargets(
-      event.composedPath().filter((item) => {
-        if (!item) return false;
+    const path = event.composedPath().filter((item) => {
+      if (!item) return false;
 
-        if (item instanceof HTMLElement) {
-          return true;
-        }
+      if (item instanceof HTMLElement) {
+        return true;
+      }
 
-        return false;
-      }) as HTMLElement[]
-    );
+      return false;
+    }) as HTMLElement[];
+
+    const targets = this.#getTargets(path);
 
     const items: ContextMenuItem[] = [];
     const fields = this.fields.get();
+    const targetFields: string[] = [];
 
     fields.forEach((field) => {
       if (targets.includes(field.id)) {
+        targetFields.push(field.id);
         items.push(...field.items);
       }
     });
 
     this.currentItems.set(items);
+    this.currentFields.set(targetFields);
+    this.currentPath.set(path);
 
     if (this.currentItems.get().length > 0) {
       this.openMenu({ x: event.clientX, y: event.clientY });
@@ -105,14 +118,30 @@ export class ContextMenuManager extends BaseManager {
   }
 
   @trackable
+  kill() {
+    this.fields.set([]);
+    this.categories.set([]);
+    this.app.notificationManager.warn(
+      `Context menu manager killed by ${this.app.name} (${this.app.id})`,
+      'Context Menu Manager Killed'
+    );
+  }
+
+  @trackable
   openMenu(position: ContextMenuState['position']) {
-    this.store.upsert({ open: true, position });
-    this.dispatchEvent(new CustomEvent('open-menu', { detail: position }));
+    this.store.upsert({ open: false, position: { x: 0, y: 0 } });
+    setTimeout(() => {
+      this.store.upsert({ open: true, position });
+      this.dispatchEvent(new CustomEvent('open-menu', { detail: position }));
+    }, 10);
   }
 
   @trackable
   closeMenu() {
     this.store.setKey('open', false);
+    this.currentItems.set([]);
+    this.currentFields.set([]);
+    this.currentPath.set([]);
     this.dispatchEvent(new CustomEvent('close-menu'));
   }
 
@@ -135,7 +164,7 @@ export class ContextMenuManager extends BaseManager {
 
     if (targetFieldIndex >= 0) {
       if (targetCategoryIndex >= 0) {
-        if (item.shortCut) {
+        if (item.shortCut && item.registerCommand) {
           this.app.commandManager.defineCommand(item);
         }
 

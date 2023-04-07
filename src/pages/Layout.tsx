@@ -86,6 +86,8 @@ const PaneItem = (props: { children: React.ReactNode; id: string; droppable: boo
     <Droppable droppableId={`busy-pane-id:${props.id}`}>
       {(provided: DroppableProvided) => (
         <div
+          data-pane-id={props.id}
+          data-contextmenu-field="pane"
           className={cx(classes.paneBusyDropArea)}
           ref={provided.innerRef}
           {...provided.droppableProps}

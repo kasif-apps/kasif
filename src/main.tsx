@@ -45,6 +45,7 @@ function Wrapper() {
 
     return () => {
       app.networkManager.kill();
+      app.contextMenuManager.kill();
     };
   }, []);
 

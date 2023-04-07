@@ -1,5 +1,7 @@
+import { animations } from '@kasif/util/misc';
 import { Card, Image, Text, Group, Badge, Button, ActionIcon, createStyles } from '@mantine/core';
 import { IconHeart } from '@tabler/icons';
+import { Transition } from '@kasif/components/Transition/TransitionWrapper';
 
 const useStyles = createStyles((theme) => ({
   card: {
@@ -51,44 +53,46 @@ export function PluginCard({ image, title, description, category, author }: Badg
   const { classes } = useStyles();
 
   return (
-    <Card radius="md" p="md" className={classes.card}>
-      <Card.Section>
-        <Image src={image} alt={title} height={180} />
-      </Card.Section>
+    <Transition transition="fade">
+      <Card radius="md" p="md" className={classes.card}>
+        <Card.Section>
+          <Image src={image} alt={title} height={180} />
+        </Card.Section>
 
-      <Card.Section className={classes.section} mt="md">
-        <Group noWrap position="apart">
-          <Text fz="lg" fw={500}>
-            {title}
+        <Card.Section className={classes.section} mt="md">
+          <Group noWrap position="apart">
+            <Text fz="lg" fw={500}>
+              {title}
+            </Text>
+            <Text className={classes.author} size="xs" color="dimmed">
+              {author}
+            </Text>
+          </Group>
+          <Text fz="sm" mt="xs">
+            {description}
           </Text>
-          <Text className={classes.author} size="xs" color="dimmed">
-            {author}
-          </Text>
-        </Group>
-        <Text fz="sm" mt="xs">
-          {description}
-        </Text>
-      </Card.Section>
+        </Card.Section>
 
-      <Card.Section className={classes.section}>
-        <Group noWrap spacing="xs" mt="md">
-          {category.map((item) => (
-            <Badge key={item} size="sm" color="teal">
-              {item}
-            </Badge>
-          ))}
-        </Group>
-      </Card.Section>
+        <Card.Section className={classes.section}>
+          <Group noWrap spacing="xs" mt="md">
+            {category.map((item) => (
+              <Badge key={item} size="sm" color="teal">
+                {item}
+              </Badge>
+            ))}
+          </Group>
+        </Card.Section>
 
-      <Group mt="xs">
-        <Button radius="md" style={{ flex: 1 }}>
-          Install
-        </Button>
-        <ActionIcon variant="default" radius="md" size={36}>
-          <IconHeart size="1.1rem" className={classes.like} stroke={1.5} />
-        </ActionIcon>
-      </Group>
-    </Card>
+        <Group mt="xs">
+          <Button radius="md" style={{ flex: 1 }}>
+            Install
+          </Button>
+          <ActionIcon variant="default" radius="md" size={36}>
+            <IconHeart size="1.1rem" className={classes.like} stroke={1.5} />
+          </ActionIcon>
+        </Group>
+      </Card>
+    </Transition>
   );
 }
 
@@ -176,5 +180,9 @@ export function Hero({ data }: HeroProps) {
     </div>
   ));
 
-  return <div className={classes.root}>{stats}</div>;
+  return (
+    <Transition transition={animations.scale}>
+      <div className={classes.root}>{stats}</div>
+    </Transition>
+  );
 }

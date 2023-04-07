@@ -161,6 +161,33 @@ export const animations = {
   },
 };
 
+export function getFirstNodeInPath(
+  path: HTMLElement[],
+  attributeName: string,
+  attributeValue?: string
+): HTMLElement | null {
+  let found: HTMLElement | null = null;
+
+  // eslint-disable-next-line no-plusplus
+  for (let i = 0; i < path.length; i++) {
+    const element = path[i];
+
+    if (element.hasAttribute(attributeName)) {
+      if (attributeValue) {
+        if (element.getAttribute(attributeName) === attributeValue) {
+          found = element;
+          break;
+        }
+      } else {
+        found = element;
+        break;
+      }
+    }
+  }
+
+  return found;
+}
+
 export function trackable(
   target: BaseManager,
   propertyKey: string,

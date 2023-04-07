@@ -13,6 +13,15 @@ const useStyles = createStyles(() => ({
     left: 0,
     zIndex: 9999,
   },
+
+  item: {
+    padding: '4px 6px',
+  },
+
+  label: {
+    padding: '2px 6px',
+    fontSize: 10,
+  },
 }));
 
 export function ContextMenu() {
@@ -23,19 +32,27 @@ export function ContextMenu() {
 
   if (!store.open) return null;
 
+  const entries = Array.from(items.entries()).sort((a, b) => a[0].order - b[0].order);
+
   return (
     <div
       ref={ref}
       style={{ top: store.position.y, left: store.position.x }}
       className={classes.root}
     >
-      <Menu position="top-start" opened shadow="md" width={260}>
+      <Menu
+        classNames={{ item: classes.item, label: classes.label }}
+        position="bottom-start"
+        opened
+        shadow="md"
+        width={220}
+      >
         <Menu.Target>
           <span />
         </Menu.Target>
 
         <Menu.Dropdown>
-          {Array.from(items.entries()).map(([category, children]) => (
+          {entries.map(([category, children]) => (
             <>
               <Menu.Label key={category.id}>{category.title}</Menu.Label>
               {children.map((item) => (
@@ -55,7 +72,7 @@ export function ContextMenu() {
                     ) : undefined
                   }
                 >
-                  <Text size="sm">{item.title}</Text>
+                  <Text size="xs">{item.title}</Text>
                 </Menu.Item>
               ))}
             </>
