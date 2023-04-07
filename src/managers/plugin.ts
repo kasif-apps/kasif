@@ -12,6 +12,7 @@ import { backend } from '@kasif/config/backend';
 import { Record } from 'pocketbase';
 import { trackable, tracker } from '@kasif/util/misc';
 import { BaseManager } from '@kasif/managers/base';
+import { invoke } from '@tauri-apps/api';
 
 interface PluginModule {
   name: string;
@@ -101,6 +102,8 @@ export class PluginManager extends BaseManager {
     const destination = await join(localDataDir, 'apps', base);
 
     await tauri.fs.copyFile(pluginPath, destination);
+    await invoke('load_plugins_remote');
+    this.init();
   }
 
   @trackable
@@ -112,6 +115,9 @@ export class PluginManager extends BaseManager {
     await tauri.fs.writeBinaryFile(`apps/${base}`, await file.arrayBuffer(), {
       dir: BaseDirectory.AppLocalData,
     });
+
+    await invoke('load_plugins_remote');
+    this.init();
   }
 
   @trackable

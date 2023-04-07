@@ -7,6 +7,8 @@ use std::{
     path::{Path, PathBuf},
 };
 
+use tauri::Manager;
+
 fn unzip(target: &str, dir: &Path) {
     let mut archive = zip::ZipArchive::new(fs::File::open(target).expect("failed to open target"))
         .expect("failed to create zip archive");
@@ -57,25 +59,36 @@ fn open_devtools(window: tauri::Window) -> String {
     return "ok".to_string();
 }
 
+#[tauri::command]
+fn load_plugins_remote(app_handle: tauri::AppHandle) {
+    load_plugins(&app_handle)
+}
+
+fn load_plugins(app: &tauri::AppHandle) {
+    let resource_path = app
+        .path_resolver()
+        .resolve_resource("apps")
+        .expect("failed to resolve resource");
+
+    let mut plugin_source_path = app
+        .path_resolver()
+        .app_local_data_dir()
+        .expect("failed to resolve app local data dir");
+
+    plugin_source_path.push("apps");
+
+    unpack_plugins(&resource_path, plugin_source_path);
+}
+
 fn main() {
     tauri::Builder::default()
         .setup(|app| {
-            let resource_path = app
-                .path_resolver()
-                .resolve_resource("apps")
-                .expect("failed to resolve resource");
-
-            let mut plugin_source_path = app
-                .path_resolver()
-                .app_local_data_dir()
-                .expect("failed to resolve app local data dir");
-
-            plugin_source_path.push("apps");
-
-            unpack_plugins(&resource_path, plugin_source_path);
+            let app_handle = app.app_handle();
+            load_plugins(&app_handle);
             Ok(())
         })
         .invoke_handler(tauri::generate_handler![open_devtools])
+        .invoke_handler(tauri::generate_handler![load_plugins_remote])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
