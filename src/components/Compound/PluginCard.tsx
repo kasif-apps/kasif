@@ -6,7 +6,7 @@ import { Transition } from '@kasif/components/Transition/TransitionWrapper';
 const useStyles = createStyles((theme) => ({
   card: {
     backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[7] : theme.white,
-    transition: 'transform 0.2s ease',
+    transition: 'transform 0.3s ease',
 
     '&:hover': {
       transform: 'scale(1.02)',
@@ -54,44 +54,46 @@ export function PluginCard({ image, title, description, category, author }: Badg
 
   return (
     <Transition transition="fade">
-      <Card radius="md" p="md" className={classes.card}>
-        <Card.Section>
-          <Image src={image} alt={title} height={180} />
-        </Card.Section>
+      <div>
+        <Card radius="md" p="md" className={classes.card}>
+          <Card.Section>
+            <Image src={image} alt={title} height={180} />
+          </Card.Section>
 
-        <Card.Section className={classes.section} mt="md">
-          <Group noWrap position="apart">
-            <Text fz="lg" fw={500}>
-              {title}
+          <Card.Section className={classes.section} mt="md">
+            <Group noWrap position="apart">
+              <Text fz="lg" fw={500}>
+                {title}
+              </Text>
+              <Text className={classes.author} size="xs" color="dimmed">
+                {author}
+              </Text>
+            </Group>
+            <Text fz="sm" mt="xs">
+              {description}
             </Text>
-            <Text className={classes.author} size="xs" color="dimmed">
-              {author}
-            </Text>
-          </Group>
-          <Text fz="sm" mt="xs">
-            {description}
-          </Text>
-        </Card.Section>
+          </Card.Section>
 
-        <Card.Section className={classes.section}>
-          <Group noWrap spacing="xs" mt="md">
-            {category.map((item) => (
-              <Badge key={item} size="sm" color="teal">
-                {item}
-              </Badge>
-            ))}
-          </Group>
-        </Card.Section>
+          <Card.Section className={classes.section}>
+            <Group noWrap spacing="xs" mt="md">
+              {category.map((item) => (
+                <Badge key={item} size="sm" color="teal">
+                  {item}
+                </Badge>
+              ))}
+            </Group>
+          </Card.Section>
 
-        <Group mt="xs">
-          <Button radius="md" style={{ flex: 1 }}>
-            Install
-          </Button>
-          <ActionIcon variant="default" radius="md" size={36}>
-            <IconHeart size="1.1rem" className={classes.like} stroke={1.5} />
-          </ActionIcon>
-        </Group>
-      </Card>
+          <Group mt="xs">
+            <Button radius="md" style={{ flex: 1 }}>
+              Install
+            </Button>
+            <ActionIcon variant="default" radius="md" size={36}>
+              <IconHeart size="1.1rem" className={classes.like} stroke={1.5} />
+            </ActionIcon>
+          </Group>
+        </Card>
+      </div>
     </Transition>
   );
 }

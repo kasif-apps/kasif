@@ -1,4 +1,4 @@
-import { uploadPlugin } from '@kasif/managers/plugin';
+import { app } from '@kasif/config/app';
 import { Button } from '@mantine/core';
 import { open } from '@tauri-apps/api/dialog';
 import { useState } from 'react';
@@ -26,7 +26,7 @@ export function PluginsPage() {
 
     if (selected) {
       selected.forEach((path) => {
-        uploadPlugin(path);
+        app.pluginManager.uploadPlugin(path);
       });
     }
   };

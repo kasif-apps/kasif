@@ -11,6 +11,7 @@ import { DndManager } from '@kasif/managers/dnd';
 import { NetworkManager } from '@kasif/managers/network';
 import { AuthManager } from '@kasif/managers/auth';
 import { ContextMenuManager } from '@kasif/managers/contextmenu';
+import { PluginManager } from '@kasif/managers/plugin';
 
 export const kasif = {
   id: 'kasif@v0.0.1',
@@ -33,6 +34,7 @@ export class App {
   dndManager: DndManager;
   networkManager: NetworkManager;
   contextMenuManager: ContextMenuManager;
+  pluginManager: PluginManager;
 
   customManagers: Map<string, BaseManager> = new Map();
 
@@ -52,9 +54,7 @@ export class App {
     this.contextMenuManager = new ContextMenuManager(this, this.parent);
     this.dndManager = new DndManager(this, this.parent);
     this.networkManager = new NetworkManager(this, this.parent);
-
-    this.authManager.init();
-    this.contextMenuManager.init();
+    this.pluginManager = new PluginManager(this, this.parent);
   }
 
   defineCustomManager(id: string, manager: BaseManager) {
@@ -63,6 +63,18 @@ export class App {
 
   getCustomManager<T extends BaseManager>(id: string): T {
     return this.customManagers.get(id) as T;
+  }
+
+  init() {
+    this.commandManager.init();
+    this.authManager.init();
+    this.contextMenuManager.init();
+    this.pluginManager.init();
+  }
+
+  kill() {
+    this.networkManager.kill();
+    this.contextMenuManager.kill();
   }
 }
 

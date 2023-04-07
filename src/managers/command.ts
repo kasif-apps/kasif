@@ -4,6 +4,7 @@ import { BaseManager } from '@kasif/managers/base';
 import { kasif } from '@kasif/config/app';
 import { DisplayRenderableNode, RenderableNode } from '@kasif/util/node-renderer';
 import React from 'react';
+import { initCommands } from '@kasif/config/command';
 
 export interface Command {
   id: string;
@@ -17,6 +18,10 @@ export interface Command {
 @tracker('commandManager')
 export class CommandManager extends BaseManager {
   commands: Command[] = [];
+
+  init() {
+    initCommands();
+  }
 
   @trackable
   defineCommand(command: Omit<Command, 'source'>) {

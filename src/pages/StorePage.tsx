@@ -1,6 +1,7 @@
 import { Hero, PluginCard } from '@kasif/components/Compound/PluginCard';
-import { PluginDTO, plugins } from '@kasif/managers/plugin';
-import { Box, SimpleGrid, Stack, Title } from '@mantine/core';
+import { app } from '@kasif/config/app';
+import { PluginDTO } from '@kasif/managers/plugin';
+import { Box, LoadingOverlay, SimpleGrid, Stack, Title } from '@mantine/core';
 import { useElementSize } from '@mantine/hooks';
 import { useEffect, useState } from 'react';
 
@@ -10,10 +11,10 @@ export function StorePage() {
   const { ref, width } = useElementSize();
 
   useEffect(() => {
-    plugins.getPopular().then((popularItems: PluginDTO[]) => {
+    app.pluginManager.getPopular().then((popularItems: PluginDTO[]) => {
       setPopular(popularItems);
 
-      plugins.list().then((items: PluginDTO[]) => {
+      app.pluginManager.list().then((items: PluginDTO[]) => {
         setPackages(items);
       });
     });
@@ -27,7 +28,9 @@ export function StorePage() {
 
   const columnCount = width === 0 ? 3 : getColumnCount(width);
 
-  if (!packages || !popular) return <div>Loading...</div>;
+  if (!packages || !popular) {
+    return <LoadingOverlay overlayColor="transparent" loaderProps={{ variant: 'dots' }} visible />;
+  }
 
   return (
     <div ref={ref}>

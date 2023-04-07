@@ -5,7 +5,6 @@ import { Layout } from '@kasif/pages/Layout';
 import { NotificationsProvider } from '@mantine/notifications';
 import { app, kasif, useSetting } from '@kasif/config/app';
 import { ThemeSetting } from '@kasif//config/settings';
-import { initApps } from '@kasif/managers/plugin';
 import { SpotlightProvider } from '@mantine/spotlight';
 import { IconSearch } from '@tabler/icons';
 import { createPaneStyles } from '@kasif/util/pane';
@@ -13,8 +12,6 @@ import { useHotkeys } from '@mantine/hooks';
 import { createGlobalStyles } from '@kasif/util/misc';
 import { DndProvider } from '@kasif/config/dnd';
 import { ActionComponent, actions } from '@kasif/components/Overlay/Spotlight';
-import { initCommands } from '@kasif/config/command';
-import { initAppContextMenu } from '@kasif/config/contextmenu';
 
 app.notificationManager.log(
   `Kasif skeleton initialized. Version: ${kasif.version}`,
@@ -39,13 +36,10 @@ function Wrapper() {
   }, [themeSetting.value]);
 
   useEffect(() => {
-    initCommands();
-    initAppContextMenu(app);
-    initApps(app);
+    app.init();
 
     return () => {
-      app.networkManager.kill();
-      app.contextMenuManager.kill();
+      app.kill();
     };
   }, []);
 

@@ -1,5 +1,6 @@
 import { createRecordSlice, createVectorSlice, RecordSlice, VectorSlice } from '@kasif-apps/cinq';
 import { app } from '@kasif/config/app';
+import { initAppContextMenu } from '@kasif/config/contextmenu';
 import { BaseManager } from '@kasif/managers/base';
 import { useSlice } from '@kasif/util/cinq-react';
 import { trackable, tracker } from '@kasif/util/misc';
@@ -69,6 +70,7 @@ export class ContextMenuManager extends BaseManager {
 
   init() {
     document.addEventListener('contextmenu', (e) => this.#handleContextMenuEvent(e));
+    initAppContextMenu(this.app);
   }
 
   #handleContextMenuEvent(event: MouseEvent) {
