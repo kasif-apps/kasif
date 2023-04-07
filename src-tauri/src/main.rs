@@ -50,6 +50,13 @@ fn unpack_plugins(apps: &PathBuf, source: PathBuf) {
     }
 }
 
+#[tauri::command]
+fn open_devtools(window: tauri::Window) -> String {
+    window.open_devtools();
+
+    return "ok".to_string();
+}
+
 fn main() {
     tauri::Builder::default()
         .setup(|app| {
@@ -68,6 +75,7 @@ fn main() {
             unpack_plugins(&resource_path, plugin_source_path);
             Ok(())
         })
+        .invoke_handler(tauri::generate_handler![open_devtools])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }

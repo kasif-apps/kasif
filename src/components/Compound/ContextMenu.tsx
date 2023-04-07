@@ -22,6 +22,10 @@ const useStyles = createStyles(() => ({
     padding: '2px 6px',
     fontSize: 10,
   },
+
+  shortCut: {
+    fontSize: 10,
+  },
 }));
 
 export function ContextMenu() {
@@ -66,7 +70,7 @@ export function ContextMenu() {
                   }}
                   rightSection={
                     item.shortCut ? (
-                      <Text size="xs" color="dimmed">
+                      <Text className={classes.shortCut} color="dimmed">
                         {createShortcutLabelFromString(item.shortCut)}
                       </Text>
                     ) : undefined

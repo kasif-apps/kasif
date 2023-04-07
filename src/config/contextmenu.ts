@@ -2,12 +2,14 @@ import { getFirstNodeInPath } from '@kasif/util/misc';
 import { openSpotlight } from '@mantine/spotlight';
 import {
   IconArticle,
+  IconCode,
   IconRefresh,
   IconSettings,
   IconTerminal2,
   IconWindowMinimize,
 } from '@tabler/icons';
 import React from 'react';
+import { invoke } from '@tauri-apps/api';
 import { App } from './app';
 import { prebuiltViews } from './view';
 
@@ -65,6 +67,18 @@ export function initAppContextMenu(app: App) {
     icon: () => React.createElement(IconSettings, { size: 14 }),
     onTrigger: async () => {
       app.viewManager.pushView({ view: prebuiltViews.settings });
+    },
+    category: 'settings',
+    registerCommand: true,
+  });
+
+  app.contextMenuManager.defineItem('app', {
+    id: 'open-devtools',
+    title: 'Open Devtools',
+    shortCut: 'mod+alt+I',
+    icon: () => React.createElement(IconCode, { size: 14 }),
+    onTrigger: async () => {
+      invoke('open_devtools');
     },
     category: 'settings',
     registerCommand: true,
