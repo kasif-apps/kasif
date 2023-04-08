@@ -61,7 +61,7 @@ function ValueComponent({
   ...others
 }: MultiSelectValueProps & { value: string; plugin: PluginImport }) {
   const [appPermissions] = useSlice(app.permissionManager.store);
-  const pluginPermissions = appPermissions[plugin.meta.id];
+  const pluginPermissions = appPermissions[plugin.meta.id] || [];
   const index = pluginPermissions.indexOf(value as PermissionType);
   const limit = 4;
 
@@ -150,6 +150,8 @@ export function PermissionsPage() {
                 sx={{ maxWidth: 400 }}
                 withinPortal
                 // disableSelectedItemFiltering
+                nothingFound="Nothing found"
+                placeholder="Pick all that you like"
                 valueComponent={(props) => <ValueComponent plugin={plugin} {...props} />}
                 itemComponent={SelectItem}
                 searchable
