@@ -1,4 +1,4 @@
-import { ActionIcon, createStyles, Sx, Tooltip, UnstyledButton } from '@mantine/core';
+import { ActionIcon, createStyles, Sx, Tooltip, UnstyledButton, getStylesRef } from '@mantine/core';
 import { IconX } from '@tabler/icons';
 
 import { app } from '@kasif/config/app';
@@ -8,7 +8,7 @@ import { useMergedRef } from '@mantine/hooks';
 import { DraggableProvided } from 'react-beautiful-dnd';
 import { DisplayRenderableNode, RenderableNode } from '@kasif/util/node-renderer';
 
-const useStyles = createStyles((theme, { dragging }: { dragging: boolean }, getRef) => ({
+const useStyles = createStyles((theme, { dragging }: { dragging: boolean }) => ({
   tab: {
     height: '100%',
     display: 'flex',
@@ -38,7 +38,7 @@ const useStyles = createStyles((theme, { dragging }: { dragging: boolean }, getR
       gap: theme.spacing.xs,
       lineHeight: 1,
       fontWeight: 500,
-      padding: `0 4px 0 ${theme.spacing.xs}px`,
+      padding: `0 4px 0 ${theme.spacing.xs}`,
       borderRadius: theme.radius.sm,
       transition: 'background-color 200ms ease',
       backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[8] : theme.colors.gray[0],
@@ -48,7 +48,7 @@ const useStyles = createStyles((theme, { dragging }: { dragging: boolean }, getR
       cursor: 'initial',
 
       '&.active': {
-        ref: getRef('active'),
+        ref: getStylesRef('active'),
         backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[5] : theme.white,
         boxShadow: theme.colorScheme === 'dark' ? 'none' : theme.shadows.xs,
       },

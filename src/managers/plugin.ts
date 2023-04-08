@@ -152,7 +152,7 @@ export class PluginManager extends BaseManager {
               version: '0.0.1',
             });
 
-            const currentPermissions = this.app.permissionManager.store.get()[instance.id];
+            const currentPermissions = this.app.permissionManager.store.get()[instance.id] || [];
             const permissions = plugin.meta.permissions || [];
             this.app.permissionManager.store.setKey(
               plugin.meta.id,

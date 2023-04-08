@@ -115,7 +115,7 @@ const useHeroStyles = createStyles((theme) => ({
   root: {
     display: 'flex',
     backgroundImage: `linear-gradient(-60deg, ${theme.colors.blue[4]} 0%, ${theme.colors.blue[7]} 100%)`,
-    padding: `calc(${theme.spacing.xl}px * 1.5)`,
+    padding: `calc(${theme.spacing.xl} * 1.5)`,
     borderRadius: theme.radius.md,
 
     [theme.fn.smallerThan('sm')]: {

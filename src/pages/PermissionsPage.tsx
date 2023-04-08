@@ -149,7 +149,7 @@ export function PermissionsPage() {
               <MultiSelect
                 sx={{ maxWidth: 400 }}
                 withinPortal
-                // disableSelectedItemFiltering
+                disableSelectedItemFiltering
                 nothingFound="Nothing found"
                 placeholder="Pick all that you like"
                 valueComponent={(props) => <ValueComponent plugin={plugin} {...props} />}

@@ -34,9 +34,8 @@ fn unzip(target: &str, dir: &Path) {
 fn unpack_plugins(apps: &PathBuf, source: PathBuf) {
     if apps.exists() {
         let _ = fs::remove_dir_all(apps).expect("failed to remove apps directory");
-    } else {
-        fs::create_dir(apps).expect("failed to create apps directory");
     }
+    fs::create_dir(apps).expect("failed to create apps directory");
 
     let paths = fs::read_dir(source).expect("failed to read source directory");
 

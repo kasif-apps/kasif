@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom/client';
 import { CSSObject, MantineProvider, MantineTheme } from '@mantine/core';
 import { Layout } from '@kasif/pages/Layout';
-import { NotificationsProvider } from '@mantine/notifications';
+import { Notifications } from '@mantine/notifications';
 import { app, kasif, useSetting } from '@kasif/config/app';
 import { ThemeSetting } from '@kasif//config/settings';
 import { SpotlightProvider } from '@mantine/spotlight';
@@ -11,8 +11,10 @@ import { createPaneStyles } from '@kasif/util/pane';
 import { useHotkeys } from '@mantine/hooks';
 import { createGlobalStyles } from '@kasif/util/misc';
 import { DndProvider } from '@kasif/config/dnd';
-import { ActionComponent, actions } from '@kasif/components/Overlay/Spotlight';
+import { ActionComponent } from '@kasif/components/Overlay/Spotlight';
 import { ModalsProvider } from '@mantine/modals';
+import { useSlice } from './util/cinq-react';
+import { DisplayRenderableNode } from './util/node-renderer';
 
 app.notificationManager.log(
   `Kasif skeleton initialized. Version: ${kasif.version}`,
@@ -24,9 +26,10 @@ function Wrapper() {
   const [themeID, setThemeID] = useState('default-light');
   const { theme } = app.themeManager.getTheme(themeID);
   const [themeSetting] = useSetting<ThemeSetting.Type>('theme');
+  const [commands] = useSlice(app.commandManager.commands);
 
   useHotkeys(
-    app.commandManager.commands
+    commands
       .filter((command) => Boolean(command.shortCut))
       .map((command) => [command.shortCut!, command.onTrigger])
   );
@@ -58,21 +61,25 @@ function Wrapper() {
         }}
       >
         <SpotlightProvider
-          topOffset={10}
-          actions={actions}
+          yOffset={10}
+          actions={commands.map((command) => ({
+            ...command,
+            icon: command.icon ? <DisplayRenderableNode node={command.icon} /> : undefined,
+          }))}
           searchIcon={<IconSearch size={18} />}
           searchPlaceholder="Jump..."
           actionComponent={(props) => <ActionComponent {...props} />}
-          overlayBlur={0}
-          overlayOpacity={0}
+          overlayProps={{
+            blur: 0,
+            opacity: 0,
+          }}
           shortcut="mod+alt+p"
           shadow="xl"
           nothingFoundMessage="Nothing found..."
         >
           <ModalsProvider>
-            <NotificationsProvider target="#notifications" position="bottom-right" zIndex={9999}>
-              <DndProvider>{ready && <Layout />}</DndProvider>
-            </NotificationsProvider>
+            <Notifications target="#notifications" position="bottom-right" zIndex={9999} />
+            <DndProvider>{ready && <Layout />}</DndProvider>
           </ModalsProvider>
         </SpotlightProvider>
       </MantineProvider>

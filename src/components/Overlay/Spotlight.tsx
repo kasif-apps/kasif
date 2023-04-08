@@ -1,7 +1,8 @@
 import React from 'react';
 import { Group, UnstyledButton, Text, createStyles, Kbd, Center } from '@mantine/core';
-import { SpotlightAction, SpotlightActionProps } from '@mantine/spotlight';
+import { SpotlightActionProps } from '@mantine/spotlight';
 import { app } from '@kasif/config/app';
+import { useSlice } from '@kasif/util/cinq-react';
 
 const useStyles = createStyles((theme) => ({
   action: {
@@ -16,8 +17,6 @@ const useStyles = createStyles((theme) => ({
     backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[4] : theme.colors.gray[1],
   },
 }));
-
-export const actions: SpotlightAction[] = [];
 
 export function ActionComponent({
   action,
@@ -34,7 +33,8 @@ export function ActionComponent({
     name: 'Spotlight',
   });
 
-  const { source } = app.commandManager.commands.find((c) => c.id === action.id)!;
+  const [commands] = useSlice(app.commandManager.commands);
+  const { source } = commands.find((c) => c.id === action.id)!;
 
   return (
     <UnstyledButton

@@ -6,6 +6,7 @@ import { DisplayRenderableNode, RenderableNode } from '@kasif/util/node-renderer
 import React from 'react';
 import { initCommands } from '@kasif/config/command';
 import { authorized, trackable, tracker } from '@kasif/util/decorators';
+import { createVectorSlice } from '@kasif-apps/cinq';
 
 export interface Command {
   id: string;
@@ -18,7 +19,7 @@ export interface Command {
 
 @tracker('commandManager')
 export class CommandManager extends BaseManager {
-  commands: Command[] = [];
+  commands = createVectorSlice<Command[]>([], { key: 'commands' });
 
   init() {
     initCommands();
