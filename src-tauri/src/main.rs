@@ -87,8 +87,7 @@ fn main() {
             load_plugins(&app_handle);
             Ok(())
         })
-        .invoke_handler(tauri::generate_handler![open_devtools])
-        .invoke_handler(tauri::generate_handler![load_plugins_remote])
+        .invoke_handler(tauri::generate_handler![open_devtools, load_plugins_remote])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }

@@ -37,6 +37,7 @@ export const permissions = [
   'revoke_permission',
   'read_user_data',
   'read_connection_data',
+  'read_permission_data',
   'read_setting',
 ] as const;
 
@@ -61,38 +62,51 @@ export class PermissionManager extends BaseManager {
   }
 
   @trackable
+  // @authorized(['read_permission_data'])
+  getMissingPermissions(required: Array<PermissionType>): Array<PermissionType> {
+    return this.#getMissingPermissions(required);
+  }
+
+  #getMissingPermissions(required: Array<PermissionType>): Array<PermissionType> {
+    const allowedPermissions = this.store.get()[this.app.id];
+
+    if (allowedPermissions) {
+      const missingPermissions: Array<PermissionType> = [];
+
+      required.forEach((permission) => {
+        if (!allowedPermissions.includes(permission)) {
+          missingPermissions.push(permission);
+        }
+      });
+
+      return missingPermissions;
+    }
+
+    return required;
+  }
+
+  @trackable
   async prompt(required: Array<PermissionType>) {
     return new Promise<boolean>((resolve) => {
       const allowedPermissions = this.store.get()[this.app.id];
+      const missingPermissions = this.#getMissingPermissions(required);
 
-      if (allowedPermissions) {
-        let isAllowed = true;
-
-        required.forEach((permission) => {
-          if (!allowedPermissions.includes(permission)) {
-            isAllowed = false;
-          }
-        });
-
-        if (isAllowed) {
-          resolve(true);
-          return;
-        }
-      } else {
+      if (!allowedPermissions) {
         this.store.setKey(this.app.id, []);
       }
 
+      const { id, name } = this.app;
       const openModal = () =>
         openConfirmModal({
-          title: `${this.app.name} Asks for permission the following`,
-          children: React.createElement(Permissions, { permissions: required }),
+          title: `${name} Asks for permission the following`,
+          children: React.createElement(Permissions, { permissions: missingPermissions }),
           labels: { confirm: 'Confirm', cancel: 'Cancel' },
           onCancel: () => resolve(false),
           onConfirm: () => {
             resolve(true);
-            this.store.setKey(this.app.id, (oldValue) => {
+            this.store.setKey(id, (oldValue) => {
               if (oldValue && oldValue.length > 0) {
-                return [...oldValue, ...required];
+                return Array.from(new Set([...oldValue, ...required]));
               }
 
               return required;

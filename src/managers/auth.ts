@@ -42,13 +42,13 @@ export class AuthManager extends BaseManager {
   }
 
   @trackable
-  // @authorized(['read_user_data'])
+  @authorized(['read_user_data'])
   getUserSnaphot() {
     return this.#user.get();
   }
 
   @trackable
-  // @authorized(['read_user_data'])
+  @authorized(['read_user_data'])
   getUserSlice() {
     return this.#user;
   }

@@ -54,13 +54,19 @@ export function authorized(permissions: PermissionType[]) {
     const originalValue = _descriptor.value;
     const descriptor = _descriptor;
 
-    descriptor.value = async function descValue(...args: any[]) {
+    descriptor.value = function descValue(...args: any[]) {
       const instance = this as BaseManager;
-      const granted = await instance.app.permissionManager.prompt(permissions);
+      const missingPermissions = instance.app.permissionManager.getMissingPermissions(permissions);
 
-      if (granted) {
+      if (missingPermissions.length === 0) {
         return originalValue.apply(instance, args);
       }
+
+      instance.app.permissionManager.prompt(permissions).then((granted) => {
+        if (granted) {
+          originalValue.apply(instance, args);
+        }
+      });
     };
   };
 }

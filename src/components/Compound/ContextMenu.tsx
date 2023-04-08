@@ -57,8 +57,8 @@ export function ContextMenu() {
 
         <Menu.Dropdown>
           {entries.map(([category, children]) => (
-            <>
-              <Menu.Label key={category.id}>{category.title}</Menu.Label>
+            <span key={category.id}>
+              <Menu.Label>{category.title}</Menu.Label>
               {children.map((item) => (
                 <Menu.Item
                   key={item.id}
@@ -79,7 +79,7 @@ export function ContextMenu() {
                   <Text size="xs">{item.title}</Text>
                 </Menu.Item>
               ))}
-            </>
+            </span>
           ))}
         </Menu.Dropdown>
       </Menu>

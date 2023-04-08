@@ -148,8 +148,22 @@ export class PluginManager extends BaseManager {
               name: instance.name,
               version: '0.0.1',
             });
-            this.app.permissionManager.store.setKey(plugin.meta.id, plugin.meta.permissions || []);
-            plugin.file.init(subapp);
+
+            const currentPermissions = this.app.permissionManager.store.get()[instance.id];
+            const permissions = plugin.meta.permissions || [];
+            this.app.permissionManager.store.setKey(
+              plugin.meta.id,
+              Array.from(new Set([...currentPermissions, ...permissions]))
+            );
+
+            try {
+              plugin.file.init(subapp);
+            } catch (error) {
+              this.app.notificationManager.error(
+                String(error),
+                `Error running '${instance.name}' (${instance.id}) plugin script`
+              );
+            }
 
             this.app.notificationManager.log(
               `App '${instance.name}:${instance.id}' loaded successfully`,

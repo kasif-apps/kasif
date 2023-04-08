@@ -128,6 +128,10 @@ export const labels: Record<PermissionType, { label: string; description: string
     label: 'Read Connection Data',
     description: 'Reading network connection information',
   },
+  read_permission_data: {
+    label: 'Read Permission Data',
+    description: "Reading any apps' permission information",
+  },
   revoke_permission: {
     label: 'Revoke Permission',
     description: 'Revoking a permission of an app on behalf of you',
