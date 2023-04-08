@@ -13,16 +13,17 @@ import { Record } from 'pocketbase';
 import { authorized, trackable, tracker } from '@kasif/util/decorators';
 import { BaseManager } from '@kasif/managers/base';
 import { invoke } from '@tauri-apps/api';
-import { PermissionType } from './permission';
+import { PermissionType } from '@kasif/config/permission';
+import { createVectorSlice } from '@kasif-apps/cinq';
 
-interface PluginModule {
+export interface PluginModule {
   name: string;
   id: string;
   path: string;
   permissions?: PermissionType[];
 }
 
-interface PluginImport {
+export interface PluginImport {
   file: {
     init: (app: App) => void;
   };
@@ -61,6 +62,8 @@ export interface PluginRawDTO {
 
 @tracker('pluginManager')
 export class PluginManager extends BaseManager {
+  plugins = createVectorSlice<PluginImport[]>([], { key: 'loaded-plugins' });
+
   #mapItem(item: PluginRawDTO, record: Record): PluginDTO {
     return {
       ...item,
@@ -158,6 +161,7 @@ export class PluginManager extends BaseManager {
 
             try {
               plugin.file.init(subapp);
+              this.plugins.push(plugin);
             } catch (error) {
               this.app.notificationManager.error(
                 String(error),

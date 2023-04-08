@@ -5,43 +5,7 @@ import { openConfirmModal } from '@mantine/modals';
 import { createRecordSlice, StorageTransactor } from '@kasif-apps/cinq';
 import { kasif } from '@kasif/config/app';
 import { Permissions } from '@kasif/components/Compound/Permission';
-
-export const permissions = [
-  'upload_plugin',
-  'install_plugin',
-  'load_plugin',
-  'show_notifications',
-  'push_view',
-  'push_pane',
-  'remove_view',
-  'set_view',
-  'remove_pane',
-  'replace_pane',
-  'push_navbar_item',
-  'remove_navbar_item',
-  'define_command',
-  'define_setting',
-  'define_setting_category',
-  'define_contextmenu_item',
-  'define_contextmenu_category',
-  'define_contextmenu_field',
-  'open_contextmenu',
-  'close_contextmenu',
-  'kill_network_manager',
-  'kill_contextmenu_manager',
-  'reinit_permission_manager',
-  'reinit_command_manager',
-  'reinit_auth_manager',
-  'reinit_plugin_manager',
-  'reinit_network_manager',
-  'revoke_permission',
-  'read_user_data',
-  'read_connection_data',
-  'read_permission_data',
-  'read_setting',
-] as const;
-
-export type PermissionType = typeof permissions[number];
+import { permissions, PermissionType } from '@kasif/config/permission';
 
 @tracker('permissionManager')
 export class PermissionManager extends BaseManager {

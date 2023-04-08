@@ -3,7 +3,15 @@ import { ProfilePage } from '@kasif/pages/ProfilePage';
 import { SettingsPage } from '@kasif/pages/SettingsPage';
 import { StorePage } from '@kasif/pages/StorePage';
 import { LogsPage } from '@kasif/pages/LogsPage';
-import { IconSettings, IconUser, IconShoppingBag, IconMessages, IconPuzzle } from '@tabler/icons';
+import { PermissionsPage } from '@kasif/pages/PermissionsPage';
+import {
+  IconSettings,
+  IconUser,
+  IconShoppingBag,
+  IconMessages,
+  IconPuzzle,
+  IconLicense,
+} from '@tabler/icons';
 import { PluginsPage } from '@kasif/pages/PluginsPage';
 import { Avatar } from '@mantine/core';
 import { app } from '@kasif/config/app';
@@ -47,5 +55,11 @@ export const prebuiltViews: Record<string, View> = {
     title: 'Logs',
     icon: () => <IconMessages size={18} stroke={1.5} />,
     render: LogsPage,
+  },
+  permissions: {
+    id: 'permissions',
+    title: 'Permissions',
+    icon: () => <IconLicense size={18} stroke={1.5} />,
+    render: PermissionsPage,
   },
 };

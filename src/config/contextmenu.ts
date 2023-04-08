@@ -3,6 +3,7 @@ import { openSpotlight } from '@mantine/spotlight';
 import {
   IconArticle,
   IconCode,
+  IconLicense,
   IconRefresh,
   IconSettings,
   IconTerminal2,
@@ -61,30 +62,6 @@ export function initAppContextMenu(app: App) {
   });
 
   app.contextMenuManager.defineItem('app', {
-    id: 'open-settings',
-    title: 'Open Settings',
-    shortCut: 'mod+alt+S',
-    icon: () => React.createElement(IconSettings, { size: 14 }),
-    onTrigger: async () => {
-      app.viewManager.pushView({ view: prebuiltViews.settings });
-    },
-    category: 'settings',
-    registerCommand: true,
-  });
-
-  app.contextMenuManager.defineItem('app', {
-    id: 'open-devtools',
-    title: 'Open Devtools',
-    shortCut: 'mod+alt+I',
-    icon: () => React.createElement(IconCode, { size: 14 }),
-    onTrigger: async () => {
-      invoke('open_devtools');
-    },
-    category: 'settings',
-    registerCommand: true,
-  });
-
-  app.contextMenuManager.defineItem('app', {
     id: 'open-command-center',
     title: 'Open Command Center',
     icon: () => React.createElement(IconTerminal2, { size: 14 }),
@@ -130,5 +107,41 @@ export function initAppContextMenu(app: App) {
       }
     },
     category: 'view',
+  });
+
+  app.contextMenuManager.defineItem('app', {
+    id: 'open-settings',
+    title: 'Open Settings',
+    shortCut: 'mod+alt+S',
+    icon: () => React.createElement(IconSettings, { size: 14 }),
+    onTrigger: async () => {
+      app.viewManager.pushView({ view: prebuiltViews.settings });
+    },
+    category: 'settings',
+    registerCommand: true,
+  });
+
+  app.contextMenuManager.defineItem('app', {
+    id: 'edit-permissions',
+    title: 'Edit Permissions',
+    shortCut: 'mod+shift+K',
+    icon: () => React.createElement(IconLicense, { size: 14 }),
+    onTrigger: async () => {
+      app.viewManager.pushView({ view: prebuiltViews.permissions });
+    },
+    category: 'settings',
+    registerCommand: true,
+  });
+
+  app.contextMenuManager.defineItem('app', {
+    id: 'open-devtools',
+    title: 'Open Devtools',
+    shortCut: 'mod+alt+I',
+    icon: () => React.createElement(IconCode, { size: 14 }),
+    onTrigger: async () => {
+      invoke('open_devtools');
+    },
+    category: 'settings',
+    registerCommand: true,
   });
 }
