@@ -19,6 +19,8 @@ import { createVectorSlice } from '@kasif-apps/cinq';
 export interface PluginModule {
   name: string;
   id: string;
+  description?: string;
+  entry: string;
   path: string;
   permissions?: PermissionType[];
 }
@@ -185,7 +187,9 @@ export class PluginManager extends BaseManager {
     const appsFolder = await resolveResource('apps/');
 
     try {
-      const file = (await import(`${appsFolder}/${pluginModule.path}/entry.js`)) as {
+      const file = (await import(
+        `${appsFolder}/${pluginModule.path}/${pluginModule.entry}.js`
+      )) as {
         init: (app: App) => void;
       };
 

@@ -29,7 +29,14 @@ export function StorePage() {
   const columnCount = width === 0 ? 3 : getColumnCount(width);
 
   if (!packages || !popular) {
-    return <LoadingOverlay overlayColor="transparent" loaderProps={{ variant: 'dots' }} visible />;
+    return (
+      <LoadingOverlay
+        overlayOpacity={0}
+        overlayColor="transparent"
+        loaderProps={{ variant: 'dots' }}
+        visible
+      />
+    );
   }
 
   return (

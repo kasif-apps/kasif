@@ -8,7 +8,7 @@ import { authorized, trackable, tracker } from '@kasif/util/decorators';
 export interface View {
   id: string;
   title: string;
-  icon: React.FC | RenderableNode;
+  icon: React.FC | RenderableNode | null;
   render: React.FC | RenderableNode;
 }
 

@@ -65,7 +65,7 @@ const useStyles = createStyles((theme, { dragging }: { dragging: boolean }) => (
 export interface TabItemProps {
   id: string;
   title: string;
-  icon: React.FC | RenderableNode;
+  icon: React.FC | RenderableNode | null;
   active?: boolean;
   dragging?: boolean;
   beforeActive?: boolean;
@@ -110,9 +110,11 @@ export function TabItem(props: TabItemProps) {
     >
       <Tooltip openDelay={1000} sx={{ maxWidth: 400 }} multiline withinPortal label={title}>
         <div className={cx('content', active && 'active')}>
-          <span className="tab-icon">
-            <DisplayRenderableNode node={icon} />
-          </span>
+          {icon && (
+            <span className="tab-icon">
+              <DisplayRenderableNode node={icon} />
+            </span>
+          )}
           <p className={classes.title}>{title}</p>
           <ActionIcon className="close-icon" onClick={handleClose} size="xs" radius="xl">
             <IconX size={12} />
