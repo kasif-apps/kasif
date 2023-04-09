@@ -1,6 +1,6 @@
 import { App, kasif } from '@kasif/config/app';
 import { BaseManager } from '@kasif/managers/base';
-import { PermissionType } from '@kasif/managers/permission';
+import { PermissionType } from '@kasif/config/permission';
 
 export function trackable(
   target: BaseManager,

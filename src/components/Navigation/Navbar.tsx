@@ -39,7 +39,7 @@ const useStyles = createStyles((theme) => ({
 function NavbarLink({ icon: Icon, label, onClick }: NavbarItem) {
   const { classes } = useStyles();
   return (
-    <Tooltip withinPortal label={label} position="right" transitionDuration={0}>
+    <Tooltip withinPortal label={label} position="right">
       <UnstyledButton onClick={onClick} className={classes.link}>
         <DisplayRenderableNode node={Icon} />
       </UnstyledButton>

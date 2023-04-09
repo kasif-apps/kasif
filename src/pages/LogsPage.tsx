@@ -125,7 +125,7 @@ export function LogsPage() {
                       </Group>
                     </Group>
                   }
-                  disallowClose
+                  withCloseButton={false}
                   icon={getIcon(log.type)}
                 >
                   {log.message}
