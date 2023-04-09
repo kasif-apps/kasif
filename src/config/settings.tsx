@@ -27,6 +27,7 @@ export interface SelectActionProps<T extends string> {
   id: string;
   data: { value: T; label: string }[];
   placeholder?: string;
+  onChange?: (value: T) => void;
 }
 
 export function SelectAction<T extends string>(props: SelectActionProps<T>) {
@@ -38,7 +39,11 @@ export function SelectAction<T extends string>(props: SelectActionProps<T>) {
       value={state.value}
       onChange={(value) => {
         if (value) {
-          setState(value as T);
+          if (props.onChange) {
+            props.onChange(value as T);
+          } else {
+            setState(value as T);
+          }
         }
       }}
       data={props.data}

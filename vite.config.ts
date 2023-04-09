@@ -38,6 +38,7 @@ export default defineConfig({
       '@kasif/layouts': path.resolve(__dirname, './src/layouts'),
       '@kasif/hooks': path.resolve(__dirname, './src/hooks'),
       '@kasif/config': path.resolve(__dirname, './src/config'),
+      '@kasif/locales': path.resolve(__dirname, './src/locales'),
     },
   },
 });

@@ -15,6 +15,8 @@ import { useHover } from '@mantine/hooks';
 import { Droppable, DroppableProvided } from 'react-beautiful-dnd';
 import { DisplayRenderableNode } from '@kasif/util/node-renderer';
 import { ContextMenu } from '@kasif/components/Compound/ContextMenu';
+import { LanguageSetting } from '@kasif/config/settings';
+import { useTranslation } from 'react-i18next';
 
 const useStyles = createStyles((theme, { isDragging }: { isDragging: boolean }) => ({
   paneFreeDropArea: {
@@ -111,11 +113,30 @@ export function Layout() {
   const { hovered, ref: paneDropAreaRef } = useHover();
   const [paneStore] = useSlice(app.paneManager.store);
 
+  const { i18n } = useTranslation();
+
   const Component = app.viewManager.getViewComponent(currentView);
   const panes: Pane[] = [{ id: '0', render: Component }, ...paneStore.panes];
 
   const [, setInterface] = useSlice(app.themeManager.interface);
   const theme = useMantineTheme();
+
+  useEffect(() => {
+    const languageController =
+      app.settingsManager.getSettingController<LanguageSetting.Type>('language');
+    let cleanup: () => void = () => {};
+
+    if (languageController) {
+      cleanup = languageController.instance.subscribe(({ detail }) => {
+        const language = detail.value.value;
+        i18n.changeLanguage(language);
+        const htmlNode = Array.from(document.getElementsByTagName('html'))[0];
+        htmlNode?.setAttribute('lang', language);
+      });
+    }
+
+    return () => cleanup();
+  }, []);
 
   useEffect(() => {
     setInterface(theme);

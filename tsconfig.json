@@ -25,6 +25,7 @@
       "@kasif/assets/*": ["./src/assets/*"],
       "@kasif/guards/*": ["./src/guards/*"],
       "@kasif/config/*": ["./src/config/*"],
+      "@kasif/locales/*": ["./src/locales/*"],
       "@kasif/*": ["./src/*"]
     }
   },

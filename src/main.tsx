@@ -1,3 +1,4 @@
+import '@kasif/config/i18n';
 import { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom/client';
 import { CSSObject, MantineProvider, MantineTheme } from '@mantine/core';
@@ -11,10 +12,10 @@ import { createPaneStyles } from '@kasif/util/pane';
 import { useHotkeys } from '@mantine/hooks';
 import { createGlobalStyles } from '@kasif/util/misc';
 import { DndProvider } from '@kasif/config/dnd';
+import { DisplayRenderableNode } from '@kasif/util/node-renderer';
+import { useSlice } from '@kasif/util/cinq-react';
 import { ActionComponent } from '@kasif/components/Overlay/Spotlight';
 import { ModalsProvider } from '@mantine/modals';
-import { useSlice } from './util/cinq-react';
-import { DisplayRenderableNode } from './util/node-renderer';
 
 app.notificationManager.log(
   `Kasif skeleton initialized. Version: ${kasif.version}`,
