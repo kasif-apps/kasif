@@ -33,7 +33,7 @@ export interface PluginImport {
 }
 
 export interface PluginDTO {
-  author: User;
+  // author: User;
   created: Date;
   category: string[];
   description: string;
@@ -72,7 +72,7 @@ export class PluginManager extends BaseManager {
       record,
       package: backend.getFileUrl(record, item.package),
       image: backend.getFileUrl(record, item.image),
-      author: item.expand.author,
+      // author: item.expand.author,
       created: new Date(item.created),
       updated: new Date(item.updated),
     };

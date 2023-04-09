@@ -12,7 +12,7 @@ export function ProfilePage() {
   return (
     <Box p="sm" pt={0} sx={{ margin: 'auto', height: '100%' }}>
       <Group sx={{ height: '100%', width: '100%', alignItems: 'start' }}>
-        <UserCard avatar={avatar} name={user.name} title={user.username} />
+        <UserCard avatar={avatar} name={user.name} title={user.email} />
       </Group>
     </Box>
   );

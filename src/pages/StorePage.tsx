@@ -50,7 +50,8 @@ export function StorePage() {
             {packages.map((item) => (
               <PluginCard
                 key={item.id}
-                author={item.author.username}
+                // author={item.author.username}
+                author=""
                 title={item.title}
                 description={item.description}
                 image={item.image}

@@ -59,6 +59,11 @@ fn open_devtools(window: tauri::Window) -> String {
 }
 
 #[tauri::command]
+fn launch_auth(path: String) {
+    opener::open(path).expect("Failed to launch url");
+}
+
+#[tauri::command]
 fn load_plugins_remote(app_handle: tauri::AppHandle) {
     load_plugins(&app_handle)
 }
@@ -86,7 +91,11 @@ fn main() {
             load_plugins(&app_handle);
             Ok(())
         })
-        .invoke_handler(tauri::generate_handler![open_devtools, load_plugins_remote])
+        .invoke_handler(tauri::generate_handler![
+            open_devtools,
+            load_plugins_remote,
+            launch_auth
+        ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }

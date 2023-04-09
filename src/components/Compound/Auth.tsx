@@ -16,10 +16,31 @@ import {
   Avatar,
   Card,
   createStyles,
+  LoadingOverlay,
 } from '@mantine/core';
-import { GoogleButton, TwitterButton } from '@kasif/components/Primitive/SocialButtons';
-import { useState } from 'react';
+import {
+  GoogleButton,
+  TwitterButton,
+  GithubButton,
+} from '@kasif/components/Primitive/SocialButtons';
+import React, { useCallback, useEffect, useState } from 'react';
 import { backend, BackendError } from '@kasif/config/backend';
+import { invoke } from '@tauri-apps/api';
+
+interface AuthProvider {
+  authUrl: string;
+  codeChallenge: string;
+  codeChallengeMethod: string;
+  codeVerifier: string;
+  name: 'github' | 'google' | 'twitter';
+  state: string;
+}
+
+const globalAuthMethods = {
+  github: (props: any) => <GithubButton {...props} />,
+  google: (props: any) => <GoogleButton {...props} />,
+  twitter: (props: any) => <TwitterButton {...props} />,
+};
 
 export function SignInLogin(props: PaperProps) {
   const [type, toggle] = useToggle(['login', 'register']);
@@ -38,7 +59,52 @@ export function SignInLogin(props: PaperProps) {
     },
   });
 
+  const [subscriptionChannel, setSubscriptionChannel] = useState<string | null>(null);
+  const [authProviders, setAuthProviders] = useState<AuthProvider[]>([]);
+  const redirectUrl = `${import.meta.env.VITE_REACT_API_URL}/api/users/auth-redirect`;
   const [loading, setLoading] = useState(false);
+
+  const handleOAuthLogin = useCallback(async (provider: AuthProvider) => {
+    const record = await backend.collection('auth_table').create({
+      state: provider.state,
+    });
+
+    if (record) {
+      const channel = `auth_table/${provider.state}`;
+      setSubscriptionChannel(channel);
+
+      backend.realtime.subscribe(channel, (event) => {
+        if (event.code) {
+          backend
+            .collection('users')
+            .authWithOAuth2(provider.name, event.code, provider.codeVerifier, redirectUrl)
+            .then(async () => {
+              setLoading(false);
+            });
+        }
+      });
+
+      invoke('launch_auth', {
+        path: provider.authUrl + redirectUrl,
+      });
+      setLoading(true);
+    }
+  }, []);
+
+  useEffect(() => {
+    backend
+      .collection('users')
+      .listAuthMethods()
+      .then((authMethods) => {
+        setAuthProviders(authMethods.authProviders as AuthProvider[]);
+      });
+
+    return () => {
+      if (subscriptionChannel) {
+        backend.realtime.unsubscribe(subscriptionChannel);
+      }
+    };
+  }, []);
 
   const handleLogin = async () => {
     if (type === 'login') {
@@ -61,13 +127,19 @@ export function SignInLogin(props: PaperProps) {
       sx={{ maxWidth: 550, margin: 'auto', height: '100%', display: 'flex', alignItems: 'center' }}
     >
       <Paper radius="md" p="xl" withBorder sx={{ width: '100%' }} {...props}>
+        <LoadingOverlay loaderProps={{ variant: 'dots' }} visible={loading} />
         <Text size="lg" weight={500}>
           Welcome to Kâşif, {type} with
         </Text>
 
-        <Group grow mb="md" mt="md">
-          <GoogleButton radius="xl">Google</GoogleButton>
-          <TwitterButton radius="xl">Twitter</TwitterButton>
+        <Group sx={{ minHeight: 36 }} grow mb="md" mt="md">
+          {authProviders.map((provider) =>
+            React.createElement(
+              globalAuthMethods[provider.name],
+              { onClick: () => handleOAuthLogin(provider), radius: 'xl' },
+              `Login with ${upperFirst(provider.name)}`
+            )
+          )}
         </Group>
 
         <Divider label="Or continue with email" labelPosition="center" my="lg" />
@@ -125,7 +197,7 @@ export function SignInLogin(props: PaperProps) {
                 ? 'Already have an account? Login'
                 : "Don't have an account? Register"}
             </Anchor>
-            <Button loading={loading} type="submit" radius="xl">
+            <Button type="submit" radius="xl">
               {upperFirst(type)}
             </Button>
           </Group>
@@ -157,22 +229,10 @@ interface UserCardProps {
   avatar: string;
   name: string;
   title: string;
-  // stats: { label: string; value: string }[];
 }
 
 export function UserCard({ avatar, name, title }: UserCardProps) {
   const { classes, theme } = useStyles();
-
-  // const items = stats.map((stat) => (
-  //   <div key={stat.label}>
-  //     <Text ta="center" fz="lg" fw={500}>
-  //       {stat.value}
-  //     </Text>
-  //     <Text ta="center" fz="sm" c="dimmed">
-  //       {stat.label}
-  //     </Text>
-  //   </div>
-  // ));
 
   return (
     <Card p="xl" radius="md" className={classes.card}>

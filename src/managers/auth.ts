@@ -23,7 +23,11 @@ export class AuthManager extends BaseManager {
   avatar: Slice<string> = this.#user.derive(
     (user) => {
       if (user) {
-        return backend.getFileUrl(user, user.avatar);
+        if (user.avatar) {
+          return backend.getFileUrl(user, user.avatar);
+        }
+
+        return '/favicon.png';
       }
 
       return '';
