@@ -18,6 +18,7 @@ export function initAppContextMenu(app: App) {
   app.contextMenuManager.defineField('app');
   app.contextMenuManager.defineField('pane');
   app.contextMenuManager.defineField('view-handle');
+  app.contextMenuManager.defineField('view-handle-bar');
 
   app.contextMenuManager.defineCategory({
     id: 'app',
@@ -93,7 +94,7 @@ export function initAppContextMenu(app: App) {
   app.contextMenuManager.defineItem('view-handle', {
     id: 'close-this-view',
     title: 'Close This View',
-    icon: () => React.createElement(IconWindowMinimize, { size: 14 }),
+    shortCut: 'mod+W',
     onTrigger: async () => {
       const path = app.contextMenuManager.currentPath.get();
       const element = getFirstNodeInPath(path, 'data-view-id');
@@ -105,6 +106,26 @@ export function initAppContextMenu(app: App) {
           app.viewManager.removeView(id);
         }
       }
+    },
+    async condition() {
+      return app.viewManager.store.get().currentView !== null;
+    },
+    category: 'view',
+  });
+
+  app.contextMenuManager.defineItem('view-handle-bar', {
+    id: 'close-all-views',
+    title: 'Close All Views',
+    shortCut: 'mod+shift+W',
+    onTrigger: async () => {
+      const store = app.viewManager.store.get();
+
+      store.views.forEach((view) => {
+        app.viewManager.removeView(view.id);
+      });
+    },
+    async condition() {
+      return app.viewManager.store.get().views.length > 0;
     },
     category: 'view',
   });

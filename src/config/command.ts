@@ -4,8 +4,8 @@ import React from 'react';
 
 export function initCommands() {
   app.commandManager.defineCommand({
-    id: 'close-all-tabs',
-    title: 'Close All Tabs',
+    id: 'close-all-view',
+    title: 'Close All View',
     shortCut: 'mod+Shift+W',
     onTrigger: async () => {
       const store = app.viewManager.store.get();
@@ -17,8 +17,8 @@ export function initCommands() {
   });
 
   app.commandManager.defineCommand({
-    id: 'close-tab',
-    title: 'Close Tab',
+    id: 'close-view',
+    title: 'Close View',
     shortCut: 'mod+W',
     onTrigger: async () => {
       const store = app.viewManager.store.get();

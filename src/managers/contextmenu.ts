@@ -33,6 +33,7 @@ export interface ContextMenuItem {
   shortCut?: string;
   icon?: React.FC | RenderableNode;
   registerCommand?: boolean;
+  condition?: () => Promise<boolean>;
 }
 
 @tracker('contextMenuManager')
@@ -75,7 +76,7 @@ export class ContextMenuManager extends BaseManager {
     initAppContextMenu(this.app);
   }
 
-  #handleContextMenuEvent(event: MouseEvent) {
+  async #handleContextMenuEvent(event: MouseEvent) {
     event.preventDefault();
 
     const path = event.composedPath().filter((item) => {
@@ -94,12 +95,20 @@ export class ContextMenuManager extends BaseManager {
     const fields = this.fields.get();
     const targetFields: string[] = [];
 
-    fields.forEach((field) => {
+    for await (const field of fields) {
       if (targets.includes(field.id)) {
         targetFields.push(field.id);
-        items.push(...field.items);
+        let { items: subItems } = field;
+
+        for await (const item of subItems) {
+          if (item.condition && (await item.condition()) === false) {
+            subItems = subItems.filter((i) => i.id !== item.id);
+          }
+        }
+
+        items.push(...subItems);
       }
-    });
+    }
 
     this.currentItems.set(items);
     this.currentFields.set(targetFields);

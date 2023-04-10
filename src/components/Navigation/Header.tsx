@@ -12,6 +12,7 @@ export function KasifHeader() {
 
   return (
     <Header
+      data-contextmenu-field="view-handle-bar"
       className={classes.header}
       withBorder={false}
       sx={{ left: 'var(--mantine-navbar-width)' }}
