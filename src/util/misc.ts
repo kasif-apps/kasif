@@ -185,3 +185,10 @@ export function getFirstNodeInPath(
 
   return found;
 }
+
+export function snakeToPascal(input: string) {
+  return input
+    .split('-')
+    .map((substr) => substr.charAt(0).toUpperCase() + substr.slice(1))
+    .join('');
+}

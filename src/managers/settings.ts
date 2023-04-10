@@ -125,6 +125,7 @@ export class SettingsManager extends BaseManager {
   }
 
   @trackable
+  @authorized(['read_setting'])
   getSettingController<T>(id: SettingsItem<T>['id']): SettingController<T> | undefined {
     const result = this.controllers.find((controller) => controller.id === id);
 
@@ -132,6 +133,7 @@ export class SettingsManager extends BaseManager {
   }
 
   @trackable
+  @authorized(['read_setting'])
   getSetting<T>(id: SettingsItem<T>['id']): T | undefined {
     const theme = this.app.settingsManager.getSettingController<T>(id);
 
