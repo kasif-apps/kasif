@@ -1,14 +1,22 @@
 import { createStyles, Header, ScrollArea } from '@mantine/core';
 import { Tabs } from '@kasif/components/ViewController/Tabs';
+import { useSlice } from '@kasif/util/cinq-react';
+import { app } from '@kasif/config/app';
 
-const useStyles = createStyles((theme) => ({
+const useStyles = createStyles((theme, { isHomeView }: { isHomeView: boolean }) => ({
   header: {
-    backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[8] : theme.colors.gray[0],
+    backgroundColor:
+      theme.colorScheme === 'dark'
+        ? theme.fn.rgba(theme.colors.dark[8], isHomeView ? 0.2 : 1)
+        : theme.fn.rgba(theme.colors.gray[0], isHomeView ? 0.2 : 1),
+
+    backdropFilter: 'blur(5px)',
   },
 }));
 
 export function KasifHeader() {
-  const { classes } = useStyles();
+  const [viewStore] = useSlice(app.viewManager.store);
+  const { classes } = useStyles({ isHomeView: viewStore.currentView === null });
 
   return (
     <Header

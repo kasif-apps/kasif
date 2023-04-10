@@ -13,7 +13,16 @@ import {
   Divider,
 } from '@mantine/core';
 
-const useStyles = createStyles((theme) => ({
+const useStyles = createStyles((theme, { isHomeView }: { isHomeView: boolean }) => ({
+  navbar: {
+    backgroundColor:
+      theme.colorScheme === 'dark'
+        ? theme.fn.rgba(theme.colors.dark[7], isHomeView ? 0.2 : 1)
+        : theme.fn.rgba(theme.colors.gray[0], isHomeView ? 0.2 : 1),
+
+    backdropFilter: 'blur(5px)',
+  },
+
   link: {
     width: 40,
     height: 40,
@@ -21,10 +30,18 @@ const useStyles = createStyles((theme) => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    color: theme.colorScheme === 'dark' ? theme.colors.dark[0] : theme.colors.gray[7],
+    color: isHomeView
+      ? theme.white
+      : theme.colorScheme === 'dark'
+      ? theme.colors.dark[0]
+      : theme.colors.gray[7],
 
     '&:hover': {
-      backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[5] : theme.colors.gray[0],
+      backgroundColor:
+        theme.colorScheme === 'dark'
+          ? theme.fn.rgba(theme.colors.dark[5], isHomeView ? 0.2 : 1)
+          : theme.fn.rgba(theme.colors.gray[0], isHomeView ? 0.2 : 1),
+      backdropFilter: 'blur(5px)',
     },
   },
 
@@ -36,8 +53,13 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
-function NavbarLink({ icon: Icon, label, onClick }: NavbarItem) {
-  const { classes } = useStyles();
+function NavbarLink({
+  icon: Icon,
+  label,
+  onClick,
+  isHomeView,
+}: NavbarItem & { isHomeView: boolean }) {
+  const { classes } = useStyles({ isHomeView });
   return (
     <Tooltip withinPortal label={label} position="right">
       <UnstyledButton onClick={onClick} className={classes.link}>
@@ -48,10 +70,15 @@ function NavbarLink({ icon: Icon, label, onClick }: NavbarItem) {
 }
 
 export function KasifNavbar() {
+  const [viewStore] = useSlice(app.viewManager.store);
+  const isHomeView = viewStore.currentView === null;
+  const { classes } = useStyles({ isHomeView });
   const [navbarStore] = useSlice(app.navbarManager.store);
-  const topItems = navbarStore.topItems.map((link) => <NavbarLink {...link} key={link.label} />);
+  const topItems = navbarStore.topItems.map((link) => (
+    <NavbarLink isHomeView={isHomeView} {...link} key={link.label} />
+  ));
   const bottomItems = navbarStore.bottomItems.map((link) => (
-    <NavbarLink {...link} key={link.label} />
+    <NavbarLink isHomeView={isHomeView} {...link} key={link.label} />
   ));
 
   const upperDividedTop = topItems.slice(0, app.navbarManager.initialTopItemsCount);
@@ -61,7 +88,13 @@ export function KasifNavbar() {
   const lowerDividedBottom = bottomItems.slice(app.navbarManager.initialBottomItemsCount);
 
   return (
-    <Navbar withBorder={false} height="100%" sx={{ top: 0 }} width={{ base: 64 }}>
+    <Navbar
+      className={classes.navbar}
+      withBorder={false}
+      height="100%"
+      sx={{ top: 0 }}
+      width={{ base: 64 }}
+    >
       <Center mt="md">
         <img src="/favicon.png" alt="logo" height={26} />
       </Center>
@@ -77,7 +110,12 @@ export function KasifNavbar() {
             <Divider
               sx={(theme) => ({
                 borderColor:
-                  theme.colorScheme === 'dark' ? theme.colors.dark[5] : theme.colors.gray[2],
+                  theme.colorScheme === 'dark'
+                    ? theme.fn.rgba(
+                        isHomeView ? theme.colors.gray[2] : theme.colors.dark[5],
+                        isHomeView ? 0.2 : 1
+                      )
+                    : theme.fn.rgba(theme.colors.gray[2], isHomeView ? 0.2 : 1),
                 width: '60%',
               })}
             />

@@ -1,9 +1,9 @@
 import { getFirstNodeInPath } from '@kasif/util/misc';
 import { openSpotlight } from '@mantine/spotlight';
 import {
-  IconArticle,
   IconCode,
   IconLicense,
+  IconMessages,
   IconRefresh,
   IconSettings,
   IconTerminal2,
@@ -54,7 +54,7 @@ export function initAppContextMenu(app: App) {
     id: 'open-logs',
     title: 'Open Logs',
     shortCut: 'mod+Shift+L',
-    icon: () => React.createElement(IconArticle, { size: 14 }),
+    icon: () => React.createElement(IconMessages, { size: 14 }),
     onTrigger: async () => {
       app.viewManager.pushView({ view: prebuiltViews.logs });
     },
