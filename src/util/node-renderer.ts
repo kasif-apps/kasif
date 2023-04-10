@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { LoadingOverlay } from '@mantine/core';
+import { LoadingOverlay, LoadingOverlayProps } from '@mantine/core';
 import { TablerIconProps } from '@tabler/icons';
 
 export function isCustomRender(node: RenderableNode | React.FC): node is CustomRender {
@@ -50,7 +50,11 @@ export function PrebuiltRenderer(props: PrebuiltRender) {
   }, [props.type, render]);
 
   if (props.type === 'loading-overlay') {
-    return React.createElement(LoadingOverlay, { visible: true, loaderProps: { variant: 'dots' } });
+    return React.createElement(LoadingOverlay, {
+      ...props.props,
+      visible: true,
+      loaderProps: { variant: 'dots' },
+    });
   }
 
   if (!props.render || component === null) return React.createElement(React.Fragment);
@@ -73,6 +77,7 @@ export type PrebuiltRender = PrebuiltIcon | PrebuiltLoadingOverlay;
 
 export interface PrebuiltLoadingOverlay {
   type: 'loading-overlay';
+  props: LoadingOverlayProps;
 }
 
 export interface PrebuiltIcon {
