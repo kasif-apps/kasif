@@ -11,6 +11,7 @@ import {
 } from '@tabler/icons';
 import React from 'react';
 import { invoke } from '@tauri-apps/api';
+import { environment } from '@kasif/util/environment';
 import { App } from './app';
 import { prebuiltViews } from './view';
 
@@ -163,6 +164,7 @@ export function initAppContextMenu(app: App) {
       invoke('open_devtools');
     },
     category: 'settings',
-    registerCommand: true,
+    registerCommand: environment.currentEnvironment === 'desktop',
+    condition: async () => environment.currentEnvironment === 'desktop',
   });
 }

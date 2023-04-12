@@ -4,7 +4,9 @@ import { useSlice } from '@kasif/util/cinq-react';
 import { animations } from '@kasif/util/misc';
 import {
   Box,
+  Button,
   Card,
+  Center,
   CloseButton,
   createStyles,
   Divider,
@@ -17,6 +19,8 @@ import {
 import { permissionDescriptions, permissions, PermissionType } from '@kasif/config/permission';
 import { forwardRef } from 'react';
 import { PluginImport } from '@kasif/managers/plugin';
+import { prebuiltViews } from '@kasif/config/view';
+import { IconShoppingBag } from '@tabler/icons';
 
 const useStyles = createStyles((theme) => ({
   card: {
@@ -138,6 +142,24 @@ export function PermissionsPage() {
           <Text size="xl" className={classes.title} weight={800}>
             Edit Permissions
           </Text>
+          {plugins.length === 0 && (
+            <Center>
+              <Stack>
+                <Text size="sm" sx={{ textTransform: 'uppercase' }} color="dimmed">
+                  You don&apos;t have any plugins installed
+                </Text>
+                <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
+                  <Button
+                    size="xs"
+                    onClick={() => app.viewManager.pushView({ view: prebuiltViews.store })}
+                    leftIcon={<IconShoppingBag size={16} />}
+                  >
+                    Go To The Store
+                  </Button>
+                </Box>
+              </Stack>
+            </Center>
+          )}
           {plugins.map((plugin) => (
             <Group key={plugin.meta.id} position="apart">
               <Stack spacing={0}>

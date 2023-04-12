@@ -24,7 +24,8 @@ const useStyles = createStyles((theme, { isDragging }: { isDragging: boolean }) 
     top: 'var(--mantine-header-height)',
     right: 0,
     width: 140,
-    height: 'calc(100vh - var(--mantine-header-height) - var(--mantine-footer-height))',
+    height:
+      'calc(100vh - var(--mantine-header-height) - var(--titlebar-height) - var(--mantine-footer-height))',
     pointerEvents: isDragging ? 'auto' : 'none',
     backgroundColor: 'transparent',
 

@@ -1,5 +1,6 @@
 import { CSSObject } from '@emotion/react';
 import { OS } from '@mantine/hooks';
+import { environment } from '@kasif/util/environment';
 
 export function getCssVar(varaible: string): string {
   const root = document.querySelector(':root')!;
@@ -83,7 +84,7 @@ export function createShortcutLabel(...keys: string[]): string {
 export function createGlobalStyles(): CSSObject {
   return {
     ':root': {
-      '--titlebar-height': '30px',
+      '--titlebar-height': environment.currentEnvironment === 'desktop' ? '30px' : '0px',
     },
 
     '*': {

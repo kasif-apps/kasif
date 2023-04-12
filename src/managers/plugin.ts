@@ -1,12 +1,5 @@
 import { App } from '@kasif/config/app';
-import { tauri } from '@kasif/util/tauri';
-import {
-  resolveResource,
-  appLocalDataDir,
-  join,
-  basename,
-  BaseDirectory,
-} from '@tauri-apps/api/path';
+import { environment } from '@kasif/util/environment';
 import { User } from '@kasif/managers/auth';
 import { backend } from '@kasif/config/backend';
 import { Record } from 'pocketbase';
@@ -105,11 +98,11 @@ export class PluginManager extends BaseManager {
   @trackable
   @authorized(['upload_plugin'])
   async uploadPlugin(pluginPath: string) {
-    const localDataDir = await appLocalDataDir();
-    const base = await basename(pluginPath);
-    const destination = await join(localDataDir, 'apps', base);
+    const localDataDir = await environment.path.appLocalDataDir();
+    const base = await environment.path.basename(pluginPath);
+    const destination = await environment.path.join(localDataDir, 'apps', base);
 
-    await tauri.fs.copyFile(pluginPath, destination);
+    await environment.fs.copyFile(pluginPath, destination);
     await invoke('load_plugins_remote');
     this.init();
   }
@@ -117,12 +110,12 @@ export class PluginManager extends BaseManager {
   @trackable
   @authorized(['install_plugin'])
   async installPlugin(url: string) {
-    const base = await basename(url);
+    const base = await environment.path.basename(url);
     const request = await fetch(url);
     const file = await request.blob();
 
-    await tauri.fs.writeBinaryFile(`apps/${base}`, await file.arrayBuffer(), {
-      dir: BaseDirectory.AppLocalData,
+    await environment.fs.writeBinaryFile(`apps/${base}`, await file.arrayBuffer(), {
+      dir: environment.path.BaseDirectory.AppLocalData,
     });
 
     await invoke('load_plugins_remote');
@@ -132,8 +125,8 @@ export class PluginManager extends BaseManager {
   @trackable
   @authorized(['load_plugin'])
   async init() {
-    const appsFolder = await resolveResource('apps/');
-    const entries = await tauri.fs.readDir(appsFolder);
+    const appsFolder = await environment.path.resolveResource('apps/');
+    const entries = await environment.fs.readDir(appsFolder);
 
     for (const entry of entries) {
       if (entry.name && entry.name.endsWith('.kasif')) {
@@ -184,8 +177,8 @@ export class PluginManager extends BaseManager {
   @trackable
   @authorized(['load_plugin'])
   async importModule(pluginModule: PluginModule): Promise<PluginImport | undefined> {
-    const appsFolder = await resolveResource('apps/');
-    const path = join(appsFolder, pluginModule.path, pluginModule.entry);
+    const appsFolder = await environment.path.resolveResource('apps/');
+    const path = environment.path.join(appsFolder, pluginModule.path, pluginModule.entry);
 
     try {
       const file = (await import(`${path}.js`)) as {
@@ -208,10 +201,10 @@ export class PluginManager extends BaseManager {
   @trackable
   @authorized(['load_plugin'])
   async readManifest(path: string): Promise<PluginModule> {
-    const appsFolder = await resolveResource('apps/');
+    const appsFolder = await environment.path.resolveResource('apps/');
 
-    const raw_manifest = await tauri.fs.readTextFile(`${appsFolder}/${path}/package.json`, {
-      dir: tauri.fs.BaseDirectory.Document,
+    const raw_manifest = await environment.fs.readTextFile(`${appsFolder}/${path}/package.json`, {
+      dir: environment.path.BaseDirectory.Document,
     });
 
     const manifest = JSON.parse(raw_manifest);

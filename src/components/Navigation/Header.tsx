@@ -2,6 +2,7 @@ import { createStyles, Header, ScrollArea } from '@mantine/core';
 import { Tabs } from '@kasif/components/ViewController/Tabs';
 import { useSlice } from '@kasif/util/cinq-react';
 import { app } from '@kasif/config/app';
+import { environment } from '@kasif/util/environment';
 
 const useStyles = createStyles((theme, { isHomeView }: { isHomeView: boolean }) => ({
   header: {
@@ -41,7 +42,9 @@ export function KasifHeader() {
       height={60}
       p="sm"
     >
-      <div data-tauri-drag-region className={classes.titlebar} />
+      {environment.currentEnvironment === 'desktop' && (
+        <div data-tauri-drag-region className={classes.titlebar} />
+      )}
       <ScrollArea
         offsetScrollbars
         scrollbarSize={8}
