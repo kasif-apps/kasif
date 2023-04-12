@@ -61,14 +61,17 @@ export class Environment {
   }
 
   init() {
-    const originalIPC = window.__TAURI_IPC__;
+    const originalIPC = window.__TAURI_IPC__ as ((message: any) => void) | undefined;
 
     try {
+      if (originalIPC) {
+        this.fs = tauriFs;
+        this.path = tauriPath;
+        this.currentEnvironment = 'desktop';
+      }
+
       window.__TAURI_IPC__ = (message: any) => {
         if (originalIPC) {
-          this.fs = tauriFs;
-          this.path = tauriPath;
-          this.currentEnvironment = 'desktop';
           originalIPC(message);
         } else {
           app.notificationManager.error(

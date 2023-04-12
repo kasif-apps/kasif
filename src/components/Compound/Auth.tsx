@@ -26,6 +26,7 @@ import {
 import React, { useCallback, useEffect, useState } from 'react';
 import { backend, BackendError } from '@kasif/config/backend';
 import { invoke } from '@tauri-apps/api';
+import { environment } from '@kasif/util/environment';
 
 interface AuthProvider {
   authUrl: string;
@@ -84,9 +85,14 @@ export function SignInLogin(props: PaperProps) {
         }
       });
 
-      invoke('launch_auth', {
-        path: provider.authUrl + redirectUrl,
-      });
+      if (environment.currentEnvironment === 'desktop') {
+        invoke('launch_auth', {
+          path: provider.authUrl + redirectUrl,
+        });
+      } else {
+        window.open(provider.authUrl + redirectUrl, '_blank', 'noopener,noreferrer');
+      }
+
       setLoading(true);
     }
   }, []);
