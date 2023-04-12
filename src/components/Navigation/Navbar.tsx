@@ -91,8 +91,8 @@ export function KasifNavbar() {
     <Navbar
       className={classes.navbar}
       withBorder={false}
-      height="100%"
-      sx={{ top: 0 }}
+      height="calc(100% - var(--titlebar-height))"
+      sx={{ top: 'var(--titlebar-height)' }}
       width={{ base: 64 }}
     >
       <Center mt="md">

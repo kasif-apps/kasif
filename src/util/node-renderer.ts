@@ -86,9 +86,9 @@ export interface PrebuiltIcon {
   props?: TablerIconProps;
 }
 
-export type RenderableNode = CustomRender | PrebuiltRender;
+export type RenderableNode = CustomRender | PrebuiltRender | React.FC;
 
-export function DisplayRenderableNode({ node }: { node: RenderableNode | React.FC }) {
+export function DisplayRenderableNode({ node }: { node: RenderableNode }) {
   if (isPrebuiltRender(node)) {
     return React.createElement(PrebuiltRenderer, node);
   }

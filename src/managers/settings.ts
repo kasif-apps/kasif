@@ -1,4 +1,3 @@
-import React from 'react';
 import { createRecordSlice, RecordSlice, StorageTransactor } from '@kasif-apps/cinq';
 import { initialCategories, initialSettings } from '@kasif/config/settings';
 import { BaseManager } from '@kasif/managers/base';
@@ -19,7 +18,7 @@ export interface SettingsItem<T> {
   title: string;
   description: string;
   value: T;
-  render: React.FC | RenderableNode;
+  render: RenderableNode;
 }
 
 export interface SettingController<T> {

@@ -67,7 +67,8 @@ const CustomScrollArea = (props: ScrollAreaProps) => (
   <ScrollArea
     scrollbarSize={10}
     sx={{
-      height: 'calc(100vh - var(--mantine-header-height) - var(--mantine-footer-height))',
+      height:
+        'calc(100vh - var(--mantine-header-height) - var(--titlebar-height) - var(--mantine-footer-height))',
     }}
     {...props}
   >
@@ -158,7 +159,7 @@ export function Layout() {
       styles={(them) => ({
         main: {
           backgroundColor: them.colorScheme === 'dark' ? them.colors.dark[8] : them.colors.gray[0],
-          paddingTop: 'calc(var(--mantine-header-height, 0px))',
+          paddingTop: 'calc(var(--mantine-header-height, 0px) + var(--titlebar-height, 0px))',
           paddingBottom: 'calc(var(--mantine-footer-height, 0px))',
           paddingLeft: 'calc(var(--mantine-navbar-width, 0px))',
           paddingRight: 'calc(var(--mantine-aside-width, 0px))',

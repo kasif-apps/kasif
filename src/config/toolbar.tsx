@@ -9,13 +9,14 @@ import {
   IconRefresh,
 } from '@tabler/icons';
 import { App } from '@kasif/config/app';
+import { RenderableNode } from '@kasif/util/node-renderer';
 
 export type ToolbarItemPlacement = 'navigation' | 'action' | 'custom' | 'contextual';
 
 export interface ToolbarItem {
   id: string;
   label: string;
-  icon: React.FC<any>;
+  icon: RenderableNode;
   onClick: () => void;
   placement: ToolbarItemPlacement;
   disabled?: (app: App) => boolean;

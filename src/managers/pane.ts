@@ -7,7 +7,7 @@ import { RenderableNode } from '@kasif/util/node-renderer';
 
 export interface Pane {
   id: string;
-  render: React.FC | RenderableNode;
+  render: RenderableNode;
   width?: number;
 }
 

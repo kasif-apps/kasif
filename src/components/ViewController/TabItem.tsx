@@ -82,7 +82,7 @@ const useStyles = createStyles(
 export interface TabItemProps {
   id: string;
   title: string;
-  icon: React.FC | RenderableNode | null;
+  icon: RenderableNode | null;
   active?: boolean;
   dragging?: boolean;
   beforeActive?: boolean;

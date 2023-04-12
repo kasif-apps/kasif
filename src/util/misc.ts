@@ -82,6 +82,10 @@ export function createShortcutLabel(...keys: string[]): string {
 
 export function createGlobalStyles(): CSSObject {
   return {
+    ':root': {
+      '--titlebar-height': '30px',
+    },
+
     '*': {
       userSelect: 'none',
     },

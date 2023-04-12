@@ -14,7 +14,7 @@ export interface Command {
   shortCut?: string;
   onTrigger: () => Promise<unknown>;
   source: typeof kasif;
-  icon?: React.FC | RenderableNode;
+  icon?: RenderableNode;
 }
 
 @tracker('commandManager')

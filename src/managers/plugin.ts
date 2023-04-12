@@ -164,17 +164,17 @@ export class PluginManager extends BaseManager {
             try {
               plugin.file.init(subapp);
               this.plugins.push(plugin);
+
+              this.app.notificationManager.log(
+                `App '${instance.name}:${instance.id}' loaded successfully`,
+                'App loaded'
+              );
             } catch (error) {
               this.app.notificationManager.error(
                 String(error),
                 `Error running '${instance.name}' (${instance.id}) plugin script`
               );
             }
-
-            this.app.notificationManager.log(
-              `App '${instance.name}:${instance.id}' loaded successfully`,
-              'App loaded'
-            );
           }
         });
       }
@@ -185,11 +185,10 @@ export class PluginManager extends BaseManager {
   @authorized(['load_plugin'])
   async importModule(pluginModule: PluginModule): Promise<PluginImport | undefined> {
     const appsFolder = await resolveResource('apps/');
+    const path = join(appsFolder, pluginModule.path, pluginModule.entry);
 
     try {
-      const file = (await import(
-        `${appsFolder}/${pluginModule.path}/${pluginModule.entry}.js`
-      )) as {
+      const file = (await import(`${path}.js`)) as {
         init: (app: App) => void;
       };
 

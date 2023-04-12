@@ -84,17 +84,26 @@ fn load_plugins(app: &tauri::AppHandle) {
     unpack_plugins(&resource_path, plugin_source_path);
 }
 
+#[tauri::command]
+async fn close_splashscreen(window: tauri::Window) {
+    if let Some(splashscreen) = window.get_window("splashscreen") {
+        splashscreen.close().unwrap();
+    }
+}
+
 fn main() {
     tauri::Builder::default()
         .setup(|app| {
             let app_handle = app.app_handle();
             load_plugins(&app_handle);
+
             Ok(())
         })
         .invoke_handler(tauri::generate_handler![
             open_devtools,
             load_plugins_remote,
-            launch_auth
+            launch_auth,
+            close_splashscreen
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

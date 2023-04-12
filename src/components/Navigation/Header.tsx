@@ -12,6 +12,20 @@ const useStyles = createStyles((theme, { isHomeView }: { isHomeView: boolean }) 
 
     backdropFilter: 'blur(5px)',
   },
+
+  titlebar: {
+    position: 'fixed',
+    width: '100vw',
+    height: 'var(--titlebar-height)',
+    top: 0,
+    left: 0,
+    userSelect: 'none',
+    backgroundColor:
+      theme.colorScheme === 'dark'
+        ? theme.fn.rgba(theme.colors.dark[6], isHomeView ? 0.3 : 1)
+        : theme.fn.rgba(theme.colors.gray[1], isHomeView ? 0.3 : 1),
+    backdropFilter: 'blur(5px)',
+  },
 }));
 
 export function KasifHeader() {
@@ -23,10 +37,11 @@ export function KasifHeader() {
       data-contextmenu-field="view-handle-bar"
       className={classes.header}
       withBorder={false}
-      sx={{ left: 'var(--mantine-navbar-width)' }}
+      sx={{ left: 'var(--mantine-navbar-width)', top: 'var(--titlebar-height)' }}
       height={60}
       p="sm"
     >
+      <div data-tauri-drag-region className={classes.titlebar} />
       <ScrollArea
         offsetScrollbars
         scrollbarSize={8}

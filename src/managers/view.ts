@@ -1,4 +1,3 @@
-import React from 'react';
 import { createRecordSlice } from '@kasif-apps/cinq';
 import { WelcomePage } from '@kasif/pages/WelcomePage';
 import { BaseManager } from '@kasif/managers/base';
@@ -8,8 +7,8 @@ import { authorized, trackable, tracker } from '@kasif/util/decorators';
 export interface View {
   id: string;
   title: string;
-  icon: React.FC | RenderableNode | null;
-  render: React.FC | RenderableNode;
+  icon: RenderableNode | null;
+  render: RenderableNode;
 }
 
 export interface ViewStore {

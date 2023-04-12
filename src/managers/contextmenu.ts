@@ -31,7 +31,7 @@ export interface ContextMenuItem {
   onTrigger: () => Promise<unknown>;
   category: string;
   shortCut?: string;
-  icon?: React.FC | RenderableNode;
+  icon?: RenderableNode;
   registerCommand?: boolean;
   condition?: () => Promise<boolean>;
 }

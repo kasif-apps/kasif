@@ -23,6 +23,17 @@
         "all": false,
         "open": true
       },
+      "window": {
+        "all": false,
+        "close": true,
+        "hide": true,
+        "show": true,
+        "maximize": true,
+        "minimize": true,
+        "unmaximize": true,
+        "unminimize": true,
+        "startDragging": true
+      },
       "all": false
     },
     "bundle": {
@@ -70,7 +81,8 @@
         "width": 1100,
         "height": 660,
         "resizable": true,
-        "title": "Kasif | UI Tool"
+        "title": "Kasif | UI Tool",
+        "decorations": false
       }
     ]
   }
