@@ -122,63 +122,85 @@ export class PluginManager extends BaseManager {
     this.init();
   }
 
-  @trackable
-  @authorized(['load_plugin'])
-  async init() {
-    const appsFolder = await environment.path.resolveResource('apps/');
-    const entries = await environment.fs.readDir(appsFolder);
+  async initSingleModule(name: string, remote: boolean) {
+    const manifest = await this.readManifest(name, remote);
+    const plugin = await this.importModule(manifest, remote);
 
-    for (const entry of entries) {
-      if (entry.name && entry.name.endsWith('.kasif')) {
-        this.readManifest(entry.name).then(async (manifest) => {
-          const plugin = await this.importModule(manifest);
+    if (plugin) {
+      const instance = plugin.meta;
 
-          if (plugin) {
-            const instance = plugin.meta;
+      this.app.notificationManager.log(
+        `App '${instance.name}:${instance.id}' began loading`,
+        'App loading'
+      );
 
-            this.app.notificationManager.log(
-              `App '${instance.name}:${instance.id}' began loading`,
-              'App loading'
-            );
+      const subapp = new App(this.app, {
+        id: instance.id,
+        name: instance.name,
+        version: '0.0.1',
+      });
 
-            const subapp = new App(this.app, {
-              id: instance.id,
-              name: instance.name,
-              version: '0.0.1',
-            });
+      const currentPermissions = this.app.permissionManager.store.get()[instance.id] || [];
+      const permissions = plugin.meta.permissions || [];
+      this.app.permissionManager.store.setKey(
+        plugin.meta.id,
+        Array.from(new Set([...currentPermissions, ...permissions]))
+      );
 
-            const currentPermissions = this.app.permissionManager.store.get()[instance.id] || [];
-            const permissions = plugin.meta.permissions || [];
-            this.app.permissionManager.store.setKey(
-              plugin.meta.id,
-              Array.from(new Set([...currentPermissions, ...permissions]))
-            );
+      try {
+        plugin.file.init(subapp);
+        this.plugins.push(plugin);
 
-            try {
-              plugin.file.init(subapp);
-              this.plugins.push(plugin);
-
-              this.app.notificationManager.log(
-                `App '${instance.name}:${instance.id}' loaded successfully`,
-                'App loaded'
-              );
-            } catch (error) {
-              this.app.notificationManager.error(
-                String(error),
-                `Error running '${instance.name}' (${instance.id}) plugin script`
-              );
-            }
-          }
-        });
+        this.app.notificationManager.log(
+          `App '${instance.name}:${instance.id}' loaded successfully`,
+          'App loaded'
+        );
+      } catch (error) {
+        this.app.notificationManager.error(
+          String(error),
+          `Error running '${instance.name}' (${instance.id}) plugin script`
+        );
       }
     }
   }
 
   @trackable
   @authorized(['load_plugin'])
-  async importModule(pluginModule: PluginModule): Promise<PluginImport | undefined> {
-    const appsFolder = await environment.path.resolveResource('apps/');
-    const path = environment.path.join(appsFolder, pluginModule.path, pluginModule.entry);
+  async init() {
+    if (environment.currentEnvironment === 'desktop') {
+      const appsFolder = await environment.path.resolveResource('apps/');
+      const entries = await environment.fs.readDir(appsFolder);
+
+      for await (const entry of entries) {
+        if (entry.name && entry.name.endsWith('.kasif')) {
+          await this.initSingleModule(entry.name, false);
+        }
+      }
+    } else {
+      const entries = ['quick_notes_gGmWZCGoaB'];
+
+      for await (const entry of entries) {
+        await this.initSingleModule(entry, true);
+      }
+    }
+  }
+
+  @trackable
+  @authorized(['load_plugin'])
+  async importModule(
+    pluginModule: PluginModule,
+    remote: boolean
+  ): Promise<PluginImport | undefined> {
+    let path: string;
+
+    if (remote) {
+      path = `${import.meta.env.VITE_REACT_API_URL}/public/${pluginModule.path}/${
+        pluginModule.entry
+      }`;
+    } else {
+      const appsFolder = await environment.path.resolveResource('apps/');
+      path = await environment.path.join(appsFolder, pluginModule.path, pluginModule.entry);
+    }
 
     try {
       const file = (await import(`${path}.js`)) as {
@@ -200,14 +222,23 @@ export class PluginManager extends BaseManager {
 
   @trackable
   @authorized(['load_plugin'])
-  async readManifest(path: string): Promise<PluginModule> {
-    const appsFolder = await environment.path.resolveResource('apps/');
+  async readManifest(path: string, remote: boolean): Promise<PluginModule> {
+    let manifest: any;
 
-    const raw_manifest = await environment.fs.readTextFile(`${appsFolder}/${path}/package.json`, {
-      dir: environment.path.BaseDirectory.Document,
-    });
+    if (remote) {
+      const request = await fetch(
+        `${import.meta.env.VITE_REACT_API_URL}/public/${path}/package.json`
+      );
+      manifest = await request.json();
+    } else {
+      const appsFolder = await environment.path.resolveResource('apps/');
 
-    const manifest = JSON.parse(raw_manifest);
+      const raw_manifest = await environment.fs.readTextFile(`${appsFolder}/${path}/package.json`, {
+        dir: environment.path.BaseDirectory.Document,
+      });
+      manifest = JSON.parse(raw_manifest);
+    }
+
     manifest.kasif.path = path;
 
     return manifest.kasif as PluginModule;
