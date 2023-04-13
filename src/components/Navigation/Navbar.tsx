@@ -13,14 +13,14 @@ import {
   Divider,
 } from '@mantine/core';
 
-const useStyles = createStyles((theme, { isHomeView }: { isHomeView: boolean }) => ({
+const useStyles = createStyles((theme) => ({
   navbar: {
-    backgroundColor:
-      theme.colorScheme === 'dark'
-        ? theme.fn.rgba(theme.colors.dark[7], isHomeView ? 0.2 : 1)
-        : theme.fn.rgba(theme.colors.gray[0], isHomeView ? 0.2 : 1),
-
-    backdropFilter: 'blur(5px)',
+    // backgroundColor:
+    //   theme.colorScheme === 'dark'
+    //     ? theme.fn.rgba(theme.colors.dark[7], isHomeView ? 0.2 : 1)
+    //     : theme.fn.rgba(theme.colors.gray[0], isHomeView ? 0.2 : 1),
+    // backdropFilter: 'blur(5px)',
+    backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[7] : theme.white,
   },
 
   link: {
@@ -30,18 +30,19 @@ const useStyles = createStyles((theme, { isHomeView }: { isHomeView: boolean }) 
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    color: isHomeView
-      ? theme.white
-      : theme.colorScheme === 'dark'
-      ? theme.colors.dark[0]
-      : theme.colors.gray[7],
+    // color: isHomeView
+    //   ? theme.white
+    //   : theme.colorScheme === 'dark'
+    //   ? theme.colors.dark[0]
+    //   : theme.colors.gray[7],
 
     '&:hover': {
-      backgroundColor:
-        theme.colorScheme === 'dark'
-          ? theme.fn.rgba(theme.colors.dark[5], isHomeView ? 0.2 : 1)
-          : theme.fn.rgba(theme.colors.gray[0], isHomeView ? 0.2 : 1),
-      backdropFilter: 'blur(5px)',
+      // backgroundColor:
+      //   theme.colorScheme === 'dark'
+      //     ? theme.fn.rgba(theme.colors.dark[5], isHomeView ? 0.2 : 1)
+      //     : theme.fn.rgba(theme.colors.gray[0], isHomeView ? 0.2 : 1),
+      // backdropFilter: 'blur(5px)',
+      backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[5] : theme.colors.gray[0],
     },
   },
 
@@ -53,13 +54,8 @@ const useStyles = createStyles((theme, { isHomeView }: { isHomeView: boolean }) 
   },
 }));
 
-function NavbarLink({
-  icon: Icon,
-  label,
-  onClick,
-  isHomeView,
-}: NavbarItem & { isHomeView: boolean }) {
-  const { classes } = useStyles({ isHomeView });
+function NavbarLink({ icon: Icon, label, onClick }: NavbarItem) {
+  const { classes } = useStyles();
   return (
     <Tooltip withinPortal label={label} position="right">
       <UnstyledButton onClick={onClick} className={classes.link}>
@@ -70,15 +66,11 @@ function NavbarLink({
 }
 
 export function KasifNavbar() {
-  const [viewStore] = useSlice(app.viewManager.store);
-  const isHomeView = viewStore.currentView === null;
-  const { classes } = useStyles({ isHomeView });
+  const { classes } = useStyles();
   const [navbarStore] = useSlice(app.navbarManager.store);
-  const topItems = navbarStore.topItems.map((link) => (
-    <NavbarLink isHomeView={isHomeView} {...link} key={link.label} />
-  ));
+  const topItems = navbarStore.topItems.map((link) => <NavbarLink {...link} key={link.label} />);
   const bottomItems = navbarStore.bottomItems.map((link) => (
-    <NavbarLink isHomeView={isHomeView} {...link} key={link.label} />
+    <NavbarLink {...link} key={link.label} />
   ));
 
   const upperDividedTop = topItems.slice(0, app.navbarManager.initialTopItemsCount);
@@ -108,14 +100,14 @@ export function KasifNavbar() {
           {upperDividedTop}
           {upperDividedBottom.length > 0 && (
             <Divider
-              sx={(theme) => ({
-                borderColor:
-                  theme.colorScheme === 'dark'
-                    ? theme.fn.rgba(
-                        isHomeView ? theme.colors.gray[2] : theme.colors.dark[5],
-                        isHomeView ? 0.2 : 1
-                      )
-                    : theme.fn.rgba(theme.colors.gray[2], isHomeView ? 0.2 : 1),
+              sx={() => ({
+                // borderColor:
+                //   theme.colorScheme === 'dark'
+                //     ? theme.fn.rgba(
+                //         isHomeView ? theme.colors.gray[2] : theme.colors.dark[5],
+                //         isHomeView ? 0.2 : 1
+                //       )
+                //     : theme.fn.rgba(theme.colors.gray[2], isHomeView ? 0.2 : 1),
                 width: '60%',
               })}
             />

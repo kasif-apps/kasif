@@ -1,9 +1,7 @@
-import { app } from '@kasif/config/app';
-import { useSlice } from '@kasif/util/cinq-react';
 import { ActionIcon, createStyles, Footer, Tooltip, Box, Group } from '@mantine/core';
 import { IconLicense } from '@tabler/icons';
 
-const useStyles = createStyles((theme, { isHomeView }: { isHomeView: boolean }) => ({
+const useStyles = createStyles((theme) => ({
   footer: {
     left: 'var(--mantine-navbar-width)',
     display: 'flex',
@@ -11,22 +9,16 @@ const useStyles = createStyles((theme, { isHomeView }: { isHomeView: boolean }) 
     alignItems: 'center',
     backdropFilter: 'blur(5px)',
 
-    backgroundColor:
-      theme.colorScheme === 'dark'
-        ? theme.fn.rgba(theme.colors.dark[8], isHomeView ? 0.2 : 1)
-        : theme.fn.rgba(theme.colors.gray[0], isHomeView ? 0.2 : 1),
+    backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[8] : theme.colors.gray[0],
 
     borderTop: `1px solid ${
-      theme.colorScheme === 'dark'
-        ? theme.fn.rgba(theme.colors.dark[5], isHomeView ? 0.2 : 1)
-        : theme.fn.rgba(theme.colors.gray[0], isHomeView ? 0.1 : 1)
+      theme.colorScheme === 'dark' ? theme.colors.dark[5] : theme.colors.gray[0]
     }`,
   },
 }));
 
 export function KasifFooter() {
-  const [viewStore] = useSlice(app.viewManager.store);
-  const { classes } = useStyles({ isHomeView: viewStore.currentView === null });
+  const { classes } = useStyles();
 
   return (
     <Footer withBorder={false} className={classes.footer} height={32} px="sm">

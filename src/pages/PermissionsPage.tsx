@@ -137,7 +137,7 @@ export function PermissionsPage() {
 
   return (
     <Transition transition={animations.scale}>
-      <Box p="sm" pt={0} sx={{ maxWidth: 1200, margin: 'auto' }}>
+      <Box p="sm" sx={{ maxWidth: 1200, margin: 'auto' }}>
         <Card data-non-capture-source radius="md" p="xl" className={classes.card}>
           <Text size="xl" className={classes.title} weight={800}>
             Edit Permissions

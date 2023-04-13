@@ -16,7 +16,7 @@ export interface ThemeOption {
 @tracker('themeManager')
 export class ThemeManager extends BaseManager {
   commonTheme: MantineProviderProps['theme'] = {
-    primaryColor: 'kasif',
+    primaryColor: 'cyan',
     colors: {
       kasif: [
         '#f8d1d0',

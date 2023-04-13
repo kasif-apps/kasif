@@ -177,7 +177,7 @@ export class PluginManager extends BaseManager {
         }
       }
     } else {
-      const entries = ['quick_notes_gGmWZCGoaB'];
+      const entries: string[] = [];
 
       for await (const entry of entries) {
         await this.initSingleModule(entry, true);

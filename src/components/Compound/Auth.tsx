@@ -22,6 +22,7 @@ import {
   GoogleButton,
   TwitterButton,
   GithubButton,
+  DiscordButton,
 } from '@kasif/components/Primitive/SocialButtons';
 import React, { useCallback, useEffect, useState } from 'react';
 import { backend, BackendError } from '@kasif/config/backend';
@@ -33,7 +34,7 @@ interface AuthProvider {
   codeChallenge: string;
   codeChallengeMethod: string;
   codeVerifier: string;
-  name: 'github' | 'google' | 'twitter';
+  name: 'github' | 'google' | 'twitter' | 'discord';
   state: string;
 }
 
@@ -41,6 +42,7 @@ const globalAuthMethods = {
   github: (props: any) => <GithubButton {...props} />,
   google: (props: any) => <GoogleButton {...props} />,
   twitter: (props: any) => <TwitterButton {...props} />,
+  discord: (props: any) => <DiscordButton {...props} />,
 };
 
 export function SignInLogin(props: PaperProps) {
@@ -143,7 +145,7 @@ export function SignInLogin(props: PaperProps) {
             React.createElement(
               globalAuthMethods[provider.name],
               { onClick: () => handleOAuthLogin(provider), radius: 'xl' },
-              `Login with ${upperFirst(provider.name)}`
+              `${upperFirst(provider.name)}`
             )
           )}
         </Group>

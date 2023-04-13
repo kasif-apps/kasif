@@ -41,7 +41,7 @@ export function StorePage() {
 
   return (
     <div ref={ref}>
-      <Box p="sm" pt={0} sx={{ maxWidth: 1200, margin: 'auto' }}>
+      <Box p="sm" sx={{ maxWidth: 1200, margin: 'auto' }}>
         <Stack>
           <Title>Popular</Title>
           <Hero data={popular} />

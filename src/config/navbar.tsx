@@ -33,7 +33,18 @@ export const initialBottomItems: NavbarItem[] = [
       const [avatar] = useSlice(app.authManager.avatar);
 
       if (avatar.length > 0) {
-        return <Avatar size={24} radius="xl" src={avatar} />;
+        return (
+          <Avatar
+            size={24}
+            radius="xl"
+            src={avatar}
+            sx={(theme) => ({
+              border: `1px solid ${
+                theme.colorScheme === 'dark' ? theme.colors.dark[4] : theme.colors.gray[4]
+              }`,
+            })}
+          />
+        );
       }
 
       return <IconUser size={20} stroke={1.5} />;

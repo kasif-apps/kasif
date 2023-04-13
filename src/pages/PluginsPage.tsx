@@ -1,5 +1,5 @@
 import { app } from '@kasif/config/app';
-import { Button } from '@mantine/core';
+import { Box, Button } from '@mantine/core';
 import { open } from '@tauri-apps/api/dialog';
 import { useState } from 'react';
 
@@ -32,10 +32,10 @@ export function PluginsPage() {
   };
 
   return (
-    <div>
+    <Box p="sm" sx={{ margin: 'auto', height: '100%' }}>
       <Button loading={loading} onClick={handleClick}>
         Load Local Plugin
       </Button>
-    </div>
+    </Box>
   );
 }

@@ -1,17 +1,13 @@
 import { createStyles, Header, ScrollArea } from '@mantine/core';
 import { Tabs } from '@kasif/components/ViewController/Tabs';
-import { useSlice } from '@kasif/util/cinq-react';
-import { app } from '@kasif/config/app';
 import { environment } from '@kasif/util/environment';
 
-const useStyles = createStyles((theme, { isHomeView }: { isHomeView: boolean }) => ({
+const useStyles = createStyles((theme) => ({
   header: {
-    backgroundColor:
-      theme.colorScheme === 'dark'
-        ? theme.fn.rgba(theme.colors.dark[8], isHomeView ? 0.2 : 1)
-        : theme.fn.rgba(theme.colors.gray[0], isHomeView ? 0.2 : 1),
-
-    backdropFilter: 'blur(5px)',
+    backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[8] : theme.colors.gray[0],
+    borderBottom: `1px solid ${
+      theme.colorScheme === 'dark' ? theme.colors.dark[5] : theme.colors.gray[1]
+    }`,
   },
 
   titlebar: {
@@ -21,17 +17,15 @@ const useStyles = createStyles((theme, { isHomeView }: { isHomeView: boolean }) 
     top: 0,
     left: 0,
     userSelect: 'none',
-    backgroundColor:
-      theme.colorScheme === 'dark'
-        ? theme.fn.rgba(theme.colors.dark[6], isHomeView ? 0.3 : 1)
-        : theme.fn.rgba(theme.colors.gray[1], isHomeView ? 0.3 : 1),
-    backdropFilter: 'blur(5px)',
+    backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[8] : theme.white,
+    borderBottom: `1px solid ${
+      theme.colorScheme === 'dark' ? theme.colors.dark[5] : theme.colors.gray[1]
+    }`,
   },
 }));
 
 export function KasifHeader() {
-  const [viewStore] = useSlice(app.viewManager.store);
-  const { classes } = useStyles({ isHomeView: viewStore.currentView === null });
+  const { classes } = useStyles();
 
   return (
     <Header
