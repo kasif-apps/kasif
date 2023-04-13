@@ -27,9 +27,11 @@ const useStyles = createStyles((theme) => ({
 
 export function KasifHeader() {
   const { classes } = useStyles();
+  const os = getOS();
 
   return (
     <Header
+      data-tauri-drag-region={os === 'macos'}
       data-contextmenu-field="view-handle-bar"
       className={classes.header}
       withBorder={false}
@@ -37,7 +39,7 @@ export function KasifHeader() {
       height={60}
       p="sm"
     >
-      {environment.currentEnvironment === 'desktop' && getOS() !== 'macos' && (
+      {environment.currentEnvironment === 'desktop' && os !== 'macos' && (
         <div data-tauri-drag-region className={classes.titlebar} />
       )}
       <ScrollArea

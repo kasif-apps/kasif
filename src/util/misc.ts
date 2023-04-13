@@ -132,6 +132,7 @@ export async function createGlobalStyles(): Promise<{ styles: CSSObject; kill: (
     'html, body, #root': {
       overflow: 'hidden',
       borderRadius: 'var(--window-border-radius)',
+      backgroundColor: 'transparent',
     },
 
     nav: {
@@ -140,12 +141,10 @@ export async function createGlobalStyles(): Promise<{ styles: CSSObject; kill: (
     },
 
     footer: {
-      borderBottomLeftRadius: 'var(--window-border-radius)',
       borderBottomRightRadius: 'var(--window-border-radius)',
     },
 
     header: {
-      borderTopLeftRadius: 'var(--window-border-radius)',
       borderTopRightRadius: 'var(--window-border-radius)',
     },
 

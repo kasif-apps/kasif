@@ -18,6 +18,8 @@ import { appWindow } from '@tauri-apps/api/window';
 const useStyles = createStyles((theme) => ({
   navbar: {
     backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[7] : theme.white,
+    // backgroundColor: 'transparent',
+    backdropFilter: 'blur(10px)',
   },
 
   link: {

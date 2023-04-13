@@ -2,11 +2,13 @@ import { Group } from '@mantine/core';
 import { app } from '@kasif/config/app';
 import { useSlice } from '@kasif/util/cinq-react';
 import { Droppable, Draggable, DroppableProvided, DraggableProvided } from 'react-beautiful-dnd';
+import { getOS } from '@kasif/util/misc';
 import { TabItem } from './TabItem';
 
 export function Tabs() {
   const [{ views: items, currentView }] = useSlice(app.viewManager.store);
   const [draggedItemId] = useSlice(app.dndManager.draggedItem);
+  const os = getOS();
 
   return (
     <Group
@@ -16,7 +18,7 @@ export function Tabs() {
         gap: 6,
         flexWrap: 'nowrap',
       }}
-      data-tauri-drag-region
+      data-tauri-drag-region={os === 'macos'}
     >
       <Droppable droppableId="tabs" direction="horizontal">
         {(provided: DroppableProvided) => (

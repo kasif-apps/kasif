@@ -154,9 +154,10 @@ export function Layout() {
       navbar={<KasifNavbar />}
       header={<KasifHeader />}
       footer={<KasifFooter />}
-      styles={(them) => ({
+      styles={() => ({
         main: {
-          backgroundColor: them.colorScheme === 'dark' ? them.colors.dark[8] : them.colors.gray[0],
+          backgroundColor:
+            theme.colorScheme === 'dark' ? theme.colors.dark[8] : theme.colors.gray[0],
           paddingTop: 'calc(var(--mantine-header-height, 0px) + var(--titlebar-height, 0px))',
           paddingBottom: 'calc(var(--mantine-footer-height, 0px))',
           paddingLeft: 'calc(var(--mantine-navbar-width, 0px))',
