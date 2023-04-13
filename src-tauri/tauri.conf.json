@@ -7,10 +7,11 @@
     "distDir": "../build"
   },
   "package": {
-    "productName": "Kasif",
+    "productName": "Kâşif UI Tool",
     "version": "0.1.0"
   },
   "tauri": {
+    "macOSPrivateApi": true,
     "allowlist": {
       "fs": {
         "all": true,
@@ -82,6 +83,7 @@
         "height": 660,
         "resizable": true,
         "title": "Kasif | UI Tool",
+        "transparent": true,
         "decorations": false
       }
     ]

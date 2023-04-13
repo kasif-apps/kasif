@@ -1,5 +1,5 @@
 import '@kasif/config/i18n';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import ReactDOM from 'react-dom/client';
 import { CSSObject, MantineProvider, MantineTheme } from '@mantine/core';
 import { Layout } from '@kasif/pages/Layout';
@@ -28,6 +28,8 @@ function Wrapper() {
   const { theme } = app.themeManager.getTheme(themeID);
   const [themeSetting] = useSetting<ThemeSetting.Type>('theme');
   const [commands] = useSlice(app.commandManager.commands);
+  const [globalStyles, setGlobalStyles] = useState<CSSObject>({});
+  const killer = useRef<(() => void) | null>(null);
 
   useHotkeys(
     commands
@@ -37,7 +39,15 @@ function Wrapper() {
 
   useEffect(() => {
     setThemeID(themeSetting.value);
-    setReady(true);
+    createGlobalStyles().then(({ styles, kill }) => {
+      setGlobalStyles(styles);
+      killer.current = kill;
+      setReady(true);
+    });
+
+    return () => {
+      if (killer.current) killer.current();
+    };
   }, [themeSetting.value]);
 
   useEffect(() => {
@@ -56,7 +66,7 @@ function Wrapper() {
         theme={{
           ...theme.ui,
           globalStyles: ((t) => ({
-            ...createGlobalStyles(),
+            ...globalStyles,
             ...createPaneStyles(t),
           })) as (theme: MantineTheme) => CSSObject,
         }}

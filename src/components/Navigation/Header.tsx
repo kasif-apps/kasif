@@ -1,6 +1,7 @@
 import { createStyles, Header, ScrollArea } from '@mantine/core';
 import { Tabs } from '@kasif/components/ViewController/Tabs';
 import { environment } from '@kasif/util/environment';
+import { getOS } from '@kasif/util/misc';
 
 const useStyles = createStyles((theme) => ({
   header: {
@@ -36,7 +37,7 @@ export function KasifHeader() {
       height={60}
       p="sm"
     >
-      {environment.currentEnvironment === 'desktop' && (
+      {environment.currentEnvironment === 'desktop' && getOS() !== 'macos' && (
         <div data-tauri-drag-region className={classes.titlebar} />
       )}
       <ScrollArea

@@ -165,17 +165,6 @@ export function Layout() {
       })}
     >
       <ContextMenu />
-      {/* <SplitPane split="vertical" sizes={sizes} onChange={setSizes}>
-        <SplitPaneView minSize={200}>
-          <div>hello 1</div>
-        </SplitPaneView>
-        <SplitPaneView minSize={200}>
-          <div>hello 2</div>
-        </SplitPaneView>
-        <SplitPaneView minSize={200}>
-          <div>hello 3</div>
-        </SplitPaneView>
-      </SplitPane> */}
 
       {panes.length > 1 ? (
         // @ts-ignore

@@ -1,6 +1,8 @@
-import { CSSObject } from '@emotion/react';
 import { OS } from '@mantine/hooks';
 import { environment } from '@kasif/util/environment';
+import { listen } from '@tauri-apps/api/event';
+import { app } from '@kasif/config/app';
+import { CSSObject } from '@mantine/core';
 
 export function getCssVar(varaible: string): string {
   const root = document.querySelector(':root')!;
@@ -13,7 +15,7 @@ export function setCssVar(variable: string, value: string) {
   root.style.setProperty(variable, value);
 }
 
-function getOS(): OS {
+export function getOS(): OS {
   const { userAgent } = window.navigator;
   const macosPlatforms = /(Macintosh)|(MacIntel)|(MacPPC)|(Mac68K)/i;
   const windowsPlatforms = /(Win32)|(Win64)|(Windows)|(WinCE)/i;
@@ -81,10 +83,42 @@ export function createShortcutLabel(...keys: string[]): string {
   return result.map((key) => key.toUpperCase()).join(' + ');
 }
 
-export function createGlobalStyles(): CSSObject {
-  return {
+export async function createGlobalStyles(): Promise<{ styles: CSSObject; kill: () => void }> {
+  const os = getOS();
+  let titlebarHeight: string = '0px';
+
+  if (environment.currentEnvironment === 'web') {
+    titlebarHeight = '0px';
+  } else {
+    switch (os) {
+      case 'macos':
+        titlebarHeight = '0px';
+        break;
+      case 'windows':
+      case 'linux':
+        titlebarHeight = '30px';
+        break;
+    }
+  }
+  setCssVar('--action-color', 'inherit');
+
+  const unListenFocus = await listen('tauri://focus', () => {
+    setCssVar('--action-color', 'inherit');
+  });
+
+  const unListenBlur = await listen('tauri://blur', () => {
+    const ui = app.themeManager.interface.get();
+
+    if (ui) {
+      const blurColor = ui.colorScheme === 'dark' ? ui.colors.dark[4] : ui.colors.gray[2];
+      setCssVar('--action-color', blurColor);
+    }
+  });
+
+  const styles = {
     ':root': {
-      '--titlebar-height': environment.currentEnvironment === 'desktop' ? '30px' : '0px',
+      '--titlebar-height': titlebarHeight,
+      '--window-border-radius': '8px',
     },
 
     '*': {
@@ -95,12 +129,111 @@ export function createGlobalStyles(): CSSObject {
       pointerEvents: 'var(--app-pointer-events, auto)' as 'auto' | 'none',
     },
 
-    'html, body': {
+    'html, body, #root': {
       overflow: 'hidden',
+      borderRadius: 'var(--window-border-radius)',
+    },
+
+    nav: {
+      borderTopLeftRadius: 'var(--window-border-radius)',
+      borderBottomLeftRadius: 'var(--window-border-radius)',
+    },
+
+    footer: {
+      borderBottomLeftRadius: 'var(--window-border-radius)',
+      borderBottomRightRadius: 'var(--window-border-radius)',
+    },
+
+    header: {
+      borderTopLeftRadius: 'var(--window-border-radius)',
+      borderTopRightRadius: 'var(--window-border-radius)',
     },
 
     'main .mantine-ScrollArea-viewport > div': {
       height: '100%',
+    },
+
+    '.titlebar': { display: 'flex', justifyContent: 'center' },
+    '.titlebar.webkit-draggable': { WebkitAppRegion: 'drag' },
+    '.titlebar-stoplight': { display: 'flex' },
+    '.titlebar-stoplight:hover svg,\n.titlebar-stoplight:hover svg.fullscreen-svg,\n.titlebar-stoplight:hover svg.maximize-svg':
+      {
+        opacity: 1,
+      },
+    '.titlebar.alt svg.fullscreen-svg': { display: 'none' },
+    '.titlebar.alt svg.maximize-svg': { display: 'block' },
+    '.titlebar-close,\n.titlebar-minimize,\n.titlebar-fullscreen': {
+      cssFloat: 'left',
+      width: '12px',
+      height: '12px',
+      borderRadius: '50%',
+      margin: '6px 4px',
+      lineHeight: 0,
+    },
+    '.titlebar.webkit-draggable .titlebar-close,\n.titlebar.webkit-draggable .titlebar-minimize,\n.titlebar.webkit-draggable .titlebar-fullscreen':
+      {
+        WebkitAppRegion: 'no-drag',
+      },
+    '.titlebar-close': {
+      border: '1px solid var(--action-color, #e2463f)',
+      backgroundColor: 'var(--action-color, #ff5f57)',
+    },
+    '.titlebar-close:active': {
+      borderColor: '#ad3934',
+      backgroundColor: 'var(--action-color, #bf4943)',
+    },
+    '.titlebar-close svg': {
+      width: '6px',
+      height: '6px',
+      marginTop: '2px',
+      marginLeft: '2px',
+      opacity: 0,
+    },
+    '.titlebar-minimize': {
+      border: '1px solid var(--action-color, #e1a116)',
+      backgroundColor: 'var(--action-color, #ffbd2e)',
+    },
+    '.titlebar-minimize:active': {
+      borderColor: '#ad7d15',
+      backgroundColor: 'var(--action-color, #bf9123)',
+    },
+    '.titlebar-minimize svg': {
+      width: '8px',
+      height: '8px',
+      marginTop: '1px',
+      marginLeft: '1px',
+      opacity: 0,
+    },
+    '.titlebar-fullscreen,\n.titlebar-maximize': {
+      border: '1px solid var(--action-color, #12ac28)',
+      backgroundColor: 'var(--action-color, #28c940)',
+    },
+    '.titlebar-fullscreen:active': {
+      borderColor: '#128622',
+      backgroundColor: 'var(--action-color, #1f9a31)',
+    },
+    '.titlebar-fullscreen svg.fullscreen-svg': {
+      width: '6px',
+      height: '6px',
+      marginTop: '2px',
+      marginLeft: '2px',
+      opacity: 0,
+    },
+    '.titlebar-fullscreen svg.maximize-svg': {
+      width: '8px',
+      height: '8px',
+      marginTop: '1px',
+      marginLeft: '1px',
+      opacity: 0,
+      display: 'none',
+    },
+  } as CSSObject;
+
+  return {
+    styles,
+    kill() {
+      unListenFocus();
+      unListenBlur();
     },
   };
 }

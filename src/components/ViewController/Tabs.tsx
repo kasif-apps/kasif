@@ -11,10 +11,12 @@ export function Tabs() {
   return (
     <Group
       sx={{
+        position: 'relative',
         height: '100%',
         gap: 6,
         flexWrap: 'nowrap',
       }}
+      data-tauri-drag-region
     >
       <Droppable droppableId="tabs" direction="horizontal">
         {(provided: DroppableProvided) => (
