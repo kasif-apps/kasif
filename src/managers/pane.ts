@@ -27,8 +27,8 @@ export class PaneManager extends BaseManager {
   @trackable
   @authorized(['push_pane'])
   pushPane(pane: Pane) {
-    this.store.upsert(() => ({
-      panes: [pane],
+    this.store.upsert((oldState) => ({
+      panes: [...(oldState.panes || []), pane],
     }));
     this.dispatchEvent(new CustomEvent('push-pane', { detail: pane }));
     this.app.notificationManager.log(`Pane (${pane.id}) pushed`, 'Pane Pushed');
@@ -37,7 +37,10 @@ export class PaneManager extends BaseManager {
   @trackable
   @authorized(['remove_pane'])
   removePane(paneId: Pane['id']) {
-    this.store.setKey('panes', []);
+    this.store.setKey(
+      'panes',
+      (this.store.get().panes || []).filter((item) => item.id !== paneId)
+    );
 
     this.dispatchEvent(new CustomEvent('remove-pane', { detail: paneId }));
     this.app.notificationManager.log(`Pane (${paneId}) removed`, 'Pane Removed');

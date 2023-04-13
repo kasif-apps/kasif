@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { KasifHeader, KasifNavbar, KasifFooter } from '@kasif/components/Navigation';
 import {
   AppShell,
@@ -9,7 +9,7 @@ import {
 } from '@mantine/core';
 import { app } from '@kasif/config/app';
 import { useSlice } from '@kasif/util/cinq-react';
-import SplitPane from 'react-split-pane';
+import SplitPane, { Pane as SplitPaneView } from 'split-pane-react';
 import { Pane } from '@kasif/managers/pane';
 import { useHover } from '@mantine/hooks';
 import { Droppable, DroppableProvided } from 'react-beautiful-dnd';
@@ -21,7 +21,7 @@ import { useTranslation } from 'react-i18next';
 const useStyles = createStyles((theme, { isDragging }: { isDragging: boolean }) => ({
   paneFreeDropArea: {
     position: 'absolute',
-    top: 'var(--mantine-header-height)',
+    top: 'calc(var(--mantine-header-height, 0px) + var(--titlebar-height, 0px))',
     right: 0,
     width: 140,
     height:
@@ -83,28 +83,30 @@ const PaneItem = (props: { children: React.ReactNode; id: string; droppable: boo
   const { hovered, ref: paneDropAreaRef } = useHover();
 
   if (!props.droppable) {
-    return <>{props.children}</>;
+    return <SplitPaneView minSize={50}>{props.children}</SplitPaneView>;
   }
 
   return (
-    <Droppable droppableId={`busy-pane-id:${props.id}`}>
-      {(provided: DroppableProvided) => (
-        <div
-          data-pane-id={props.id}
-          data-contextmenu-field="pane"
-          className={cx(classes.paneBusyDropArea)}
-          ref={provided.innerRef}
-          {...provided.droppableProps}
-        >
+    <SplitPaneView minSize={50}>
+      <Droppable droppableId={`busy-pane-id:${props.id}`}>
+        {(provided: DroppableProvided) => (
           <div
-            style={{ zIndex: isDragging ? 99 : -1 }}
-            ref={paneDropAreaRef}
-            className={cx('overlay', isDragging && hovered && 'active')}
-          />
-          {props.children}
-        </div>
-      )}
-    </Droppable>
+            data-pane-id={props.id}
+            data-contextmenu-field="pane"
+            className={cx(classes.paneBusyDropArea)}
+            ref={provided.innerRef}
+            {...provided.droppableProps}
+          >
+            <div
+              style={{ zIndex: isDragging ? 99 : -1 }}
+              ref={paneDropAreaRef}
+              className={cx('overlay', isDragging && hovered && 'active')}
+            />
+            {props.children}
+          </div>
+        )}
+      </Droppable>
+    </SplitPaneView>
   );
 };
 
@@ -114,6 +116,9 @@ export function Layout() {
   const [{ currentView }] = useSlice(app.viewManager.store);
   const { hovered, ref: paneDropAreaRef } = useHover();
   const [paneStore] = useSlice(app.paneManager.store);
+  const [sizes, setSizes] = useState(
+    paneStore.panes.map((pane) => pane.width || `calc(100% / ${paneStore.panes.length})`)
+  );
 
   const { i18n } = useTranslation();
 
@@ -144,14 +149,6 @@ export function Layout() {
     setInterface(theme);
   }, [theme]);
 
-  const getPaneSize = (size: number | undefined) => {
-    if (size) {
-      return `${size}px`;
-    }
-
-    return '50%';
-  };
-
   return (
     <AppShell
       navbar={<KasifNavbar />}
@@ -168,9 +165,21 @@ export function Layout() {
       })}
     >
       <ContextMenu />
+      {/* <SplitPane split="vertical" sizes={sizes} onChange={setSizes}>
+        <SplitPaneView minSize={200}>
+          <div>hello 1</div>
+        </SplitPaneView>
+        <SplitPaneView minSize={200}>
+          <div>hello 2</div>
+        </SplitPaneView>
+        <SplitPaneView minSize={200}>
+          <div>hello 3</div>
+        </SplitPaneView>
+      </SplitPane> */}
+
       {panes.length > 1 ? (
         // @ts-ignore
-        <SplitPane size={`calc(100% - ${getPaneSize(panes[1]?.width)})`} split="vertical">
+        <SplitPane split="vertical" sizes={sizes} onChange={setSizes}>
           {panes.map((pane, index) => (
             <PaneItem droppable={index !== 0} id={pane.id} key={pane.id}>
               <CustomScrollArea>

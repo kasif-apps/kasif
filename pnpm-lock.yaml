@@ -41,7 +41,7 @@ specifiers:
   react-beautiful-dnd: ^13.1.1
   react-dom: ^18.2.0
   react-i18next: ^12.2.0
-  react-split-pane: ^0.1.92
+  split-pane-react: ^0.1.3
   typescript: ^4.9.3
   vite: ^4.0.0
   vite-plugin-dts: ^2.1.0
@@ -70,7 +70,7 @@ dependencies:
   react-beautiful-dnd: 13.1.1_biqbaboplfbrettd7655fr4n2y
   react-dom: 18.2.0_react@18.2.0
   react-i18next: 12.2.0_57ubdvajp6562okxygabugvlve
-  react-split-pane: 0.1.92_biqbaboplfbrettd7655fr4n2y
+  split-pane-react: 0.1.3_biqbaboplfbrettd7655fr4n2y
   vite-plugin-svgr: 2.4.0_vite@4.0.1
 
 devDependencies:
@@ -3904,10 +3904,6 @@ packages:
     resolution: {integrity: sha512-w2GsyukL62IJnlaff/nRegPQR94C/XXamvMWmSHRJ4y7Ts/4ocGRmTHvOs8PSE6pB3dWOrD/nueuU5sduBsQ4w==}
     dev: false
 
-  /react-lifecycles-compat/3.0.4:
-    resolution: {integrity: sha512-fBASbA6LnOU9dOU2eW7aQ8xmYBSXUIWr+UmF9b1efZBazGNO+rcXT/icdKnYm2pTwcRylVUYwW7H1PHfLekVzA==}
-    dev: false
-
   /react-redux/7.2.9_biqbaboplfbrettd7655fr4n2y:
     resolution: {integrity: sha512-Gx4L3uM182jEEayZfRbI/G11ZpYdNAnBs70lFVMNdHJI76XYtR+7m0MN+eAs7UHBPhWXcnFPaS+9owSCJQHNpQ==}
     peerDependencies:
@@ -3968,25 +3964,6 @@ packages:
       tslib: 2.4.1
       use-callback-ref: 1.3.0_kzbn2opkn2327fwg5yzwzya5o4
       use-sidecar: 1.1.2_kzbn2opkn2327fwg5yzwzya5o4
-    dev: false
-
-  /react-split-pane/0.1.92_biqbaboplfbrettd7655fr4n2y:
-    resolution: {integrity: sha512-GfXP1xSzLMcLJI5BM36Vh7GgZBpy+U/X0no+VM3fxayv+p1Jly5HpMofZJraeaMl73b3hvlr+N9zJKvLB/uz9w==}
-    peerDependencies:
-      react: ^16.0.0-0
-      react-dom: ^16.0.0-0
-    dependencies:
-      prop-types: 15.8.1
-      react: 18.2.0
-      react-dom: 18.2.0_react@18.2.0
-      react-lifecycles-compat: 3.0.4
-      react-style-proptype: 3.2.2
-    dev: false
-
-  /react-style-proptype/3.2.2:
-    resolution: {integrity: sha512-ywYLSjNkxKHiZOqNlso9PZByNEY+FTyh3C+7uuziK0xFXu9xzdyfHwg4S9iyiRRoPCR4k2LqaBBsWVmSBwCWYQ==}
-    dependencies:
-      prop-types: 15.8.1
     dev: false
 
   /react-style-singleton/2.2.1_kzbn2opkn2327fwg5yzwzya5o4:
@@ -4274,6 +4251,16 @@ packages:
   /spdx-license-ids/3.0.12:
     resolution: {integrity: sha512-rr+VVSXtRhO4OHbXUiAF7xW3Bo9DuuF6C5jH+q/x15j2jniycgKbxU09Hr0WqlSLUs4i4ltHGXqTe7VHclYWyA==}
     dev: true
+
+  /split-pane-react/0.1.3_biqbaboplfbrettd7655fr4n2y:
+    resolution: {integrity: sha512-+50VW9+1yglO+2AgL7MhvJ3UazYTqJ4LBJTs44od/D/CTvsqQ9xoDlaHdIpJ5SbXxUqBxvdJD5zoIVnoG+mNTg==}
+    peerDependencies:
+      react: ^16.8 || ^17.0 || ^18.0
+      react-dom: ^16.8 || ^17.0 || ^18.0
+    dependencies:
+      react: 18.2.0
+      react-dom: 18.2.0_react@18.2.0
+    dev: false
 
   /split2/3.2.2:
     resolution: {integrity: sha512-9NThjpgZnifTkJpzTZ7Eue85S49QwpNhZTq6GRJwObb6jnLFNGB7Qm73V5HewTROPyxD0C29xqmaI68bQtV+hg==}
