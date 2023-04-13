@@ -76,11 +76,11 @@ export function LogsPage() {
   const { classes } = useStyles();
   const [logs] = useSlice(app.notificationManager.logs);
 
-  const items = logs.reverse();
+  // const items = logs.reverse();
 
   return (
     <Transition duration={200} transition={animations.scale}>
-      <Box p="sm" pt={0} sx={{ maxWidth: 1200, margin: 'auto' }}>
+      <Box p="sm" sx={{ maxWidth: 1200, margin: 'auto' }}>
         <Card data-non-capture-source radius="md" p="xl" className={classes.card}>
           <Text size="xl" className={classes.title} weight={800}>
             Logs
@@ -93,7 +93,7 @@ export function LogsPage() {
             </Center>
           )}
           <Stack spacing={4}>
-            {items.map((log, i) => (
+            {logs.map((log, i) => (
               <Transition key={i} delay={200} transition={animations.fallDown(i, logs.length)}>
                 <Notification
                   className={classes.notification}

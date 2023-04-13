@@ -65,7 +65,7 @@ export class NotificationManager extends BaseManager {
       });
     }
 
-    this.logs.push({ message, title, type: 'error', source, time: new Date() });
+    this.logs.unshift({ message, title, type: 'error', source, time: new Date() });
     this.dispatchEvent(new CustomEvent('error', { detail: { message, title, options } }));
   }
 
@@ -88,7 +88,7 @@ export class NotificationManager extends BaseManager {
       });
     }
 
-    this.logs.push({ message, title, type: 'warn', source, time: new Date() });
+    this.logs.unshift({ message, title, type: 'warn', source, time: new Date() });
     this.dispatchEvent(new CustomEvent('warn', { detail: { message, title, options } }));
   }
 
@@ -111,7 +111,7 @@ export class NotificationManager extends BaseManager {
       });
     }
 
-    this.logs.push({ message, title, type: 'success', source, time: new Date() });
+    this.logs.unshift({ message, title, type: 'success', source, time: new Date() });
     this.dispatchEvent(new CustomEvent('success', { detail: { message, title, options } }));
   }
 
@@ -134,7 +134,7 @@ export class NotificationManager extends BaseManager {
       });
     }
 
-    this.logs.push({ message, title, type: 'log', source, time: new Date() });
+    this.logs.unshift({ message, title, type: 'log', source, time: new Date() });
     this.dispatchEvent(new CustomEvent('log', { detail: { message, title, options } }));
   }
 }
