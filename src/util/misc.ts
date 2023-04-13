@@ -102,18 +102,32 @@ export async function createGlobalStyles(): Promise<{ styles: CSSObject; kill: (
   }
   setCssVar('--action-color', 'inherit');
 
-  const unListenFocus = await listen('tauri://focus', () => {
-    setCssVar('--action-color', 'inherit');
-  });
+  let unListenFocus: () => void;
+  let unListenBlur: () => void;
 
-  const unListenBlur = await listen('tauri://blur', () => {
+  const focusHandler = () => {
+    setCssVar('--action-color', 'inherit');
+  };
+
+  const blurHandler = () => {
     const ui = app.themeManager.interface.get();
 
     if (ui) {
       const blurColor = ui.colorScheme === 'dark' ? ui.colors.dark[4] : ui.colors.gray[2];
       setCssVar('--action-color', blurColor);
     }
-  });
+  };
+
+  if (environment.currentEnvironment === 'desktop') {
+    unListenFocus = await listen('tauri://focus', focusHandler);
+    unListenBlur = await listen('tauri://blur', blurHandler);
+  } else {
+    document.addEventListener('focus', focusHandler);
+    document.addEventListener('blur', blurHandler);
+
+    unListenFocus = () => document.removeEventListener('focus', focusHandler);
+    unListenFocus = () => document.removeEventListener('blur', blurHandler);
+  }
 
   const styles = {
     ':root': {
@@ -303,8 +317,7 @@ export function getFirstNodeInPath(
 ): HTMLElement | null {
   let found: HTMLElement | null = null;
 
-  // eslint-disable-next-line no-plusplus
-  for (let i = 0; i < path.length; i++) {
+  for (let i = 0; i < path.length; i += 1) {
     const element = path[i];
 
     if (element.hasAttribute(attributeName)) {

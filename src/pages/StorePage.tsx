@@ -1,3 +1,4 @@
+import { useNetworkGuard } from '@kasif/components/Compound/NoNetwork';
 import { Hero, PluginCard } from '@kasif/components/Compound/PluginCard';
 import { app } from '@kasif/config/app';
 import { PluginDTO } from '@kasif/managers/plugin';
@@ -19,6 +20,9 @@ export function StorePage() {
       });
     });
   }, []);
+
+  const guard = useNetworkGuard();
+  if (guard) return guard;
 
   const getColumnCount = (w: number) => {
     if (w > 800) return 3;

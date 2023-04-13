@@ -1,6 +1,7 @@
 import { app } from '@kasif/config/app';
 import { NavbarItem } from '@kasif/managers/navbar';
 import { useSlice } from '@kasif/util/cinq-react';
+import { environment } from '@kasif/util/environment';
 import { getOS } from '@kasif/util/misc';
 import { DisplayRenderableNode } from '@kasif/util/node-renderer';
 import {
@@ -115,6 +116,8 @@ export function KasifNavbar() {
   const lowerDividedTop = bottomItems.slice(0, app.navbarManager.initialBottomItemsCount);
   const lowerDividedBottom = bottomItems.slice(app.navbarManager.initialBottomItemsCount);
 
+  const titleBarVisible = os === 'macos' && environment.currentEnvironment === 'desktop';
+
   return (
     <Navbar
       className={classes.navbar}
@@ -123,13 +126,13 @@ export function KasifNavbar() {
       sx={{ top: 'var(--titlebar-height)' }}
       width={{ base: 76 }}
     >
-      {os === 'macos' && <MacOSTitleBar />}
+      {titleBarVisible && <MacOSTitleBar />}
       <Navbar.Section
         mb="lg"
         grow
         component={(props: any) => <ScrollArea {...props} scrollbarSize={8} />}
       >
-        <Stack justify="center" align="center" spacing={4}>
+        <Stack mt={titleBarVisible ? 0 : 'xs'} justify="center" align="center" spacing={4}>
           {upperDividedTop}
           {upperDividedBottom.length > 0 && (
             <Divider

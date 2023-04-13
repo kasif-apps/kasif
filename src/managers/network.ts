@@ -1,4 +1,4 @@
-import { createSlice } from '@kasif-apps/cinq';
+import { createRecordSlice } from '@kasif-apps/cinq';
 import { App } from '@kasif/config/app';
 import { BaseManager } from '@kasif/managers/base';
 import { authorized, trackable, tracker } from '@kasif/util/decorators';
@@ -15,13 +15,14 @@ interface NetworkStatus {
 
 @tracker('networkManager')
 export class NetworkManager extends BaseManager {
-  store = createSlice<NetworkStatus>(this.#getConnection(), { key: 'network-store' });
+  store = createRecordSlice<NetworkStatus>(this.#getConnection(), { key: 'network-store' });
 
   constructor(app: App, parent?: App) {
     super(app, parent);
 
-    window.addEventListener('online', this.#handleOnline);
-    window.addEventListener('offline', this.#handleOffline);
+    this.store.setKey('online', navigator.onLine);
+    window.addEventListener('online', this.#handleOnline.bind(this));
+    window.addEventListener('offline', this.#handleOffline.bind(this));
   }
 
   #getConnectionInstance() {
@@ -37,7 +38,7 @@ export class NetworkManager extends BaseManager {
   init() {
     const connection = this.#getConnectionInstance();
     if (typeof connection !== 'undefined') {
-      connection.addEventListener('change', this.#handleConnectionChange);
+      connection.addEventListener('change', this.#handleConnectionChange.bind(this));
     }
   }
 
