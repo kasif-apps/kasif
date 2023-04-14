@@ -5,6 +5,9 @@
 use std::{
     fs,
     path::{Path, PathBuf},
+    process::Command,
+    thread,
+    time::Duration,
 };
 
 use tauri::Manager;
@@ -84,6 +87,14 @@ fn load_plugins(app: &tauri::AppHandle) {
     unpack_plugins(&resource_path, plugin_source_path);
 }
 
+async fn run_conductor() {
+    let output = Command::new("conductor")
+        .output()
+        .expect("failed to launch conductor");
+
+    println!("{}", String::from_utf8_lossy(&output.stdout));
+}
+
 #[tauri::command]
 async fn close_splashscreen(window: tauri::Window) {
     if let Some(splashscreen) = window.get_window("splashscreen") {
@@ -91,10 +102,13 @@ async fn close_splashscreen(window: tauri::Window) {
     }
 }
 
-fn main() {
+#[tokio::main]
+async fn main() {
     tauri::Builder::default()
         .setup(|app| {
             let app_handle = app.app_handle();
+
+            tokio::spawn(run_conductor());
             load_plugins(&app_handle);
 
             Ok(())

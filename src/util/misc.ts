@@ -126,7 +126,7 @@ export async function createGlobalStyles(): Promise<{ styles: CSSObject; kill: (
     document.addEventListener('blur', blurHandler);
 
     unListenFocus = () => document.removeEventListener('focus', focusHandler);
-    unListenFocus = () => document.removeEventListener('blur', blurHandler);
+    unListenBlur = () => document.removeEventListener('blur', blurHandler);
   }
 
   const styles = {
@@ -266,6 +266,28 @@ export function getRelativeTime(timestamp: Date) {
   );
 
   return rtf.format(daysDifference, 'seconds');
+}
+
+export function findNearestParent(
+  element: HTMLElement,
+  predicate: (element: HTMLElement) => boolean
+) {
+  let maxAttempts = 100;
+  let done = false;
+  let currentElement: HTMLElement = element;
+
+  while (!done) {
+    maxAttempts -= 1;
+    if (currentElement.parentElement) {
+      currentElement = currentElement.parentElement;
+      if (predicate(currentElement) || maxAttempts <= 0) {
+        done = true;
+        break;
+      }
+    }
+  }
+
+  return currentElement;
 }
 
 export const reorder = (list: any[], startIndex: number, endIndex: number) => {

@@ -8,13 +8,20 @@ import { RenderableNode } from '@kasif/util/node-renderer';
 export interface Pane {
   id: string;
   render: RenderableNode;
-  width?: number;
+  size: number | string;
+  position: 'right' | 'left' | 'top' | 'bottom';
 }
 
 export interface PaneStore {
   panes: Pane[];
 }
 
+export interface PaneSizes {
+  horizontal: Array<number | string>;
+  vertical: Array<number | string>;
+}
+
+type Optional<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>;
 @tracker('paneManager')
 export class PaneManager extends BaseManager {
   store = createRecordSlice<PaneStore>(
@@ -24,11 +31,26 @@ export class PaneManager extends BaseManager {
     { key: 'pane-store' }
   );
 
+  paneSizes = createRecordSlice<PaneSizes>(
+    {
+      horizontal: [],
+      vertical: [],
+    },
+    { key: 'pane-sizes' }
+  );
+
   @trackable
   @authorized(['push_pane'])
-  pushPane(pane: Pane) {
+  pushPane(pane: Optional<Optional<Pane, 'position'>, 'size'>) {
     this.store.upsert((oldState) => ({
-      panes: [...(oldState.panes || []), pane],
+      panes: [
+        ...(oldState.panes || []),
+        {
+          ...pane,
+          position: pane.position || 'right',
+          size: `calc(100% / ${oldState.panes?.length || 1})`,
+        },
+      ],
     }));
     this.dispatchEvent(new CustomEvent('push-pane', { detail: pane }));
     this.app.notificationManager.log(`Pane (${pane.id}) pushed`, 'Pane Pushed');
@@ -60,7 +82,7 @@ export class PaneManager extends BaseManager {
   }
 
   @trackable
-  createPaneFromView(viewId: View['id']): Pane | undefined {
+  createPaneFromView(viewId: View['id']): Optional<Optional<Pane, 'position'>, 'size'> | undefined {
     const instance = app.viewManager.store.get();
     const view = instance.views.find((v) => v.id === viewId);
     if (!view) {

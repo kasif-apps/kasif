@@ -34,8 +34,17 @@ export class DndManager extends BaseManager {
       const pane = app.paneManager.createPaneFromView(result.draggableId);
 
       if (pane) {
-        app.paneManager.replacePane(id, pane);
-        app.viewManager.removeView(result.draggableId);
+        const { panes } = app.paneManager.store.get();
+        const previousPane = panes.find((item) => item.id === id);
+
+        if (previousPane) {
+          app.paneManager.replacePane(id, {
+            ...pane,
+            position: previousPane.position,
+            size: previousPane.size,
+          });
+          app.viewManager.removeView(result.draggableId);
+        }
       }
       return;
     }

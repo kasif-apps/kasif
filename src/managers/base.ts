@@ -1,11 +1,8 @@
 import { App } from '@kasif/config/app';
 
-export class BaseManager extends EventTarget {
-  parent?: App;
+export abstract class BaseManager extends EventTarget {
   identifier!: keyof App;
-  constructor(public app: App, parent?: App) {
+  constructor(public app: App, public parent?: App) {
     super();
-
-    this.parent = parent;
   }
 }

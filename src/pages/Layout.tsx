@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { KasifHeader, KasifNavbar, KasifFooter } from '@kasif/components/Navigation';
 import {
   AppShell,
+  Box,
   createStyles,
   ScrollArea,
   ScrollAreaProps,
@@ -10,7 +11,6 @@ import {
 import { app } from '@kasif/config/app';
 import { useSlice } from '@kasif/util/cinq-react';
 import SplitPane, { Pane as SplitPaneView } from 'split-pane-react';
-import { Pane } from '@kasif/managers/pane';
 import { useHover } from '@mantine/hooks';
 import { Droppable, DroppableProvided } from 'react-beautiful-dnd';
 import { DisplayRenderableNode } from '@kasif/util/node-renderer';
@@ -64,18 +64,49 @@ const useStyles = createStyles((theme, { isDragging }: { isDragging: boolean }) 
   },
 }));
 
-const CustomScrollArea = (props: ScrollAreaProps) => (
-  <ScrollArea
-    scrollbarSize={10}
-    sx={{
-      height:
-        'calc(100vh - var(--mantine-header-height) - var(--titlebar-height) - var(--mantine-footer-height))',
-    }}
-    {...props}
-  >
-    {props.children}
-  </ScrollArea>
-);
+const CustomScrollArea = ({
+  scrollType,
+  paneIndex,
+  paneId,
+  ...rest
+}: ScrollAreaProps & {
+  scrollType: 'vertical' | 'horizontal';
+  paneIndex: number;
+  paneId: string;
+}) => {
+  const ref = useRef<HTMLDivElement | null>(null);
+  const [paneSizes] = useSlice(app.paneManager.paneSizes);
+
+  const size = paneSizes[scrollType][paneIndex];
+
+  if (!size) return null;
+  let total = 0;
+
+  if (scrollType === 'horizontal') {
+    for (let i = 0; i < paneSizes.horizontal.length; i += 1) {
+      if (i !== paneIndex) {
+        const element = paneSizes.horizontal[i];
+        if (typeof element === 'number') {
+          total += element;
+        }
+      }
+    }
+  }
+
+  return (
+    <Box ref={ref} sx={{ width: '100%', overflow: 'hidden' }}>
+      <ScrollArea
+        scrollbarSize={10}
+        sx={{
+          height: `calc(100vh - var(--mantine-header-height) - ${total}px - var(--titlebar-height) - var(--mantine-footer-height))`,
+        }}
+        {...rest}
+      >
+        {rest.children}
+      </ScrollArea>
+    </Box>
+  );
+};
 
 const PaneItem = (props: { children: React.ReactNode; id: string; droppable: boolean }) => {
   const [isDragging] = useSlice(app.dndManager.isDragging);
@@ -83,11 +114,15 @@ const PaneItem = (props: { children: React.ReactNode; id: string; droppable: boo
   const { hovered, ref: paneDropAreaRef } = useHover();
 
   if (!props.droppable) {
-    return <SplitPaneView minSize={50}>{props.children}</SplitPaneView>;
+    return (
+      <SplitPaneView minSize={100}>
+        <div data-pane-id={props.id}>{props.children}</div>
+      </SplitPaneView>
+    );
   }
 
   return (
-    <SplitPaneView minSize={50}>
+    <SplitPaneView minSize={100}>
       <Droppable droppableId={`busy-pane-id:${props.id}`}>
         {(provided: DroppableProvided) => (
           <div
@@ -110,20 +145,133 @@ const PaneItem = (props: { children: React.ReactNode; id: string; droppable: boo
   );
 };
 
-export function Layout() {
+function PaneView() {
   const [isDragging] = useSlice(app.dndManager.isDragging);
+  const [paneSizes, setPaneSizes] = useSlice(app.paneManager.paneSizes);
   const { classes, cx } = useStyles({ isDragging });
-  const [{ currentView }] = useSlice(app.viewManager.store);
   const { hovered, ref: paneDropAreaRef } = useHover();
-  const [paneStore] = useSlice(app.paneManager.store);
-  const [sizes, setSizes] = useState(
-    paneStore.panes.map((pane) => pane.width || `calc(100% / ${paneStore.panes.length})`)
-  );
 
-  const { i18n } = useTranslation();
+  const [{ currentView }] = useSlice(app.viewManager.store);
+  const [{ panes }] = useSlice(app.paneManager.store);
 
   const Component = app.viewManager.getViewComponent(currentView);
-  const panes: Pane[] = [{ id: '0', render: Component }, ...paneStore.panes];
+
+  const verticalPanes = [
+    ...panes.filter((pane) => pane.position === 'left'),
+    { id: 'main_view', render: Component, position: 'right', size: '30%' },
+    ...panes.filter((pane) => pane.position === 'right'),
+  ];
+  const horizontalPanes = [
+    ...panes.filter((pane) => pane.position === 'top'),
+    { id: 'main_view', render: Component, position: 'top', size: '50%' },
+    ...panes.filter((pane) => pane.position === 'bottom'),
+  ];
+
+  useEffect(() => {
+    const verticalPaneSizes =
+      paneSizes.vertical.length === verticalPanes.length
+        ? paneSizes.vertical
+        : verticalPanes.map((pane) => pane.size || `calc(100% / ${horizontalPanes.length})`);
+    const horizontalPaneSizes =
+      paneSizes.horizontal.length === horizontalPanes.length
+        ? paneSizes.horizontal
+        : horizontalPanes.map((pane) => pane.size || `calc(100% / ${horizontalPanes.length})`);
+
+    setPaneSizes({
+      horizontal: horizontalPaneSizes,
+      vertical: verticalPaneSizes,
+    });
+  }, [panes]);
+
+  const setPaneSize = (sizes: number[], type: 'vertical' | 'horizontal') => {
+    app.paneManager.paneSizes.setKey(type, sizes);
+  };
+
+  return (
+    <>
+      {panes.length > 1 ? (
+        <>
+          {/* @ts-ignore */}
+          <SplitPane
+            split="vertical"
+            sizes={paneSizes.vertical}
+            onChange={(sizes) => setPaneSize(sizes, 'vertical')}
+          >
+            {verticalPanes.map((verticalPane, verticalIndex) => {
+              if (verticalPane.id === 'main_view') {
+                return (
+                  /* @ts-ignore */
+                  <SplitPane
+                    key={`vartical-${verticalPane.id}`}
+                    split="horizontal"
+                    sizes={paneSizes.horizontal}
+                    onChange={(sizes) => setPaneSize(sizes, 'horizontal')}
+                  >
+                    {horizontalPanes.map((horizontalPane, horizontalIndex) => (
+                      <>
+                        <PaneItem
+                          key={`horizontal-${horizontalPane.id}`}
+                          droppable={horizontalPane.id !== 'main_view'}
+                          id={horizontalPane.id}
+                        >
+                          <CustomScrollArea
+                            paneId={horizontalPane.id}
+                            paneIndex={horizontalIndex}
+                            scrollType="horizontal"
+                          >
+                            <DisplayRenderableNode node={horizontalPane.render} />
+                          </CustomScrollArea>
+                        </PaneItem>
+                      </>
+                    ))}
+                  </SplitPane>
+                );
+              }
+
+              return (
+                <PaneItem
+                  key={`vartical-${verticalPane.id}`}
+                  droppable={verticalPane.id !== 'main_view'}
+                  id={verticalPane.id}
+                >
+                  <CustomScrollArea
+                    paneId={verticalPane.id}
+                    paneIndex={verticalIndex}
+                    scrollType="vertical"
+                  >
+                    <DisplayRenderableNode node={verticalPane.render} />
+                  </CustomScrollArea>
+                </PaneItem>
+              );
+            })}
+          </SplitPane>
+        </>
+      ) : (
+        <CustomScrollArea paneId="main_view" paneIndex={0} scrollType="vertical">
+          <DisplayRenderableNode node={Component} />
+        </CustomScrollArea>
+      )}
+
+      <Droppable droppableId="free-pane">
+        {(provided: DroppableProvided) => (
+          <div
+            className={cx(classes.paneFreeDropArea)}
+            ref={provided.innerRef}
+            {...provided.droppableProps}
+          >
+            <div
+              ref={paneDropAreaRef}
+              className={cx('overlay', isDragging && hovered && 'active')}
+            />
+          </div>
+        )}
+      </Droppable>
+    </>
+  );
+}
+
+export function Layout() {
+  const { i18n } = useTranslation();
 
   const [, setInterface] = useSlice(app.themeManager.interface);
   const theme = useMantineTheme();
@@ -166,38 +314,7 @@ export function Layout() {
       })}
     >
       <ContextMenu />
-
-      {panes.length > 1 ? (
-        // @ts-ignore
-        <SplitPane split="vertical" sizes={sizes} onChange={setSizes}>
-          {panes.map((pane, index) => (
-            <PaneItem droppable={index !== 0} id={pane.id} key={pane.id}>
-              <CustomScrollArea>
-                <DisplayRenderableNode node={pane.render} />
-              </CustomScrollArea>
-            </PaneItem>
-          ))}
-        </SplitPane>
-      ) : (
-        <CustomScrollArea>
-          <DisplayRenderableNode node={Component} />
-        </CustomScrollArea>
-      )}
-
-      <Droppable droppableId="free-pane">
-        {(provided: DroppableProvided) => (
-          <div
-            className={cx(classes.paneFreeDropArea)}
-            ref={provided.innerRef}
-            {...provided.droppableProps}
-          >
-            <div
-              ref={paneDropAreaRef}
-              className={cx('overlay', isDragging && hovered && 'active')}
-            />
-          </div>
-        )}
-      </Droppable>
+      <PaneView />
     </AppShell>
   );
 }
