@@ -6,11 +6,9 @@ use std::{
     fs,
     path::{Path, PathBuf},
     process::Command,
-    thread,
-    time::Duration,
 };
 
-use tauri::Manager;
+use tauri::{Manager, WindowEvent};
 
 fn unzip(target: &str, dir: &Path) {
     let mut archive = zip::ZipArchive::new(fs::File::open(target).expect("failed to open target"))
@@ -87,12 +85,19 @@ fn load_plugins(app: &tauri::AppHandle) {
     unpack_plugins(&resource_path, plugin_source_path);
 }
 
+#[derive(Clone, serde::Serialize)]
+struct Payload {
+    message: String,
+}
+
 async fn run_conductor() {
-    let output = Command::new("conductor")
+    Command::new("deno")
+        .arg("run")
+        .arg("-A")
+        .arg("/Users/muhammedalican/Documents/repos/kasif/src-tauri/target/debug/remote/server.ts")
+        .arg("/Users/muhammedalican/Documents/repos/kasif/src-tauri/target/debug")
         .output()
         .expect("failed to launch conductor");
-
-    println!("{}", String::from_utf8_lossy(&output.stdout));
 }
 
 #[tauri::command]
@@ -102,14 +107,30 @@ async fn close_splashscreen(window: tauri::Window) {
     }
 }
 
+fn run(instance: tauri::Builder<tauri::Wry>) {
+    instance
+        .run(tauri::generate_context!())
+        .expect("failed to run tauri");
+}
+
 #[tokio::main]
 async fn main() {
-    tauri::Builder::default()
+    let instance = tauri::Builder::default()
         .setup(|app| {
             let app_handle = app.app_handle();
 
-            tokio::spawn(run_conductor());
             load_plugins(&app_handle);
+            let task = tokio::spawn(run_conductor());
+
+            let windows = app_handle.windows();
+            let window = windows.get("main").expect("failed to get main window");
+
+            window.on_window_event(move |event| match event {
+                WindowEvent::Destroyed => {
+                    task.abort();
+                }
+                _ => {}
+            });
 
             Ok(())
         })
@@ -118,7 +139,7 @@ async fn main() {
             load_plugins_remote,
             launch_auth,
             close_splashscreen
-        ])
-        .run(tauri::generate_context!())
-        .expect("error while running tauri application");
+        ]);
+
+    run(instance);
 }

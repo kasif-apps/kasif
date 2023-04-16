@@ -8,10 +8,11 @@ import { BaseManager } from '@kasif/managers/base';
 import { invoke } from '@tauri-apps/api';
 import { PermissionType } from '@kasif/config/permission';
 import { createVectorSlice } from '@kasif-apps/cinq';
+import { KasifRemote } from '@kasif/util/remote';
 
 export interface PluginModule {
   name: string;
-  id: string;
+  identifier: string;
   description?: string;
   entry: string;
   path: string;
@@ -20,7 +21,7 @@ export interface PluginModule {
 
 export interface PluginImport {
   file: {
-    init: (app: App) => void;
+    init: (app: App, remote?: KasifRemote<any>) => Promise<void>;
   };
   meta: PluginModule;
 }
@@ -125,41 +126,53 @@ export class PluginManager extends BaseManager {
   async initSingleModule(name: string, remote: boolean) {
     const manifest = await this.readManifest(name, remote);
     const plugin = await this.importModule(manifest, remote);
+    const tokensFile = await environment.path.resolveResource('remote/tokens.json');
 
     if (plugin) {
       const instance = plugin.meta;
 
       this.app.notificationManager.log(
-        `App '${instance.name}:${instance.id}' began loading`,
+        `App '${instance.name}:${instance.identifier}' began loading`,
         'App loading'
       );
 
-      const subapp = new App(this.app, {
-        id: instance.id,
-        name: instance.name,
-        version: '0.0.1',
-      });
-
-      const currentPermissions = this.app.permissionManager.store.get()[instance.id] || [];
-      const permissions = plugin.meta.permissions || [];
-      this.app.permissionManager.store.setKey(
-        plugin.meta.id,
-        Array.from(new Set([...currentPermissions, ...permissions]))
-      );
-
       try {
-        plugin.file.init(subapp);
-        this.plugins.push(plugin);
+        const rawTokens = await environment.fs.readTextFile(tokensFile);
+        const tokens = JSON.parse(rawTokens);
 
-        this.app.notificationManager.log(
-          `App '${instance.name}:${instance.id}' loaded successfully`,
-          'App loaded'
-        );
+        const remoteProcess = new KasifRemote(tokens[instance.identifier]);
+        remoteProcess.addEventListener('ready', async () => {
+          const subapp = new App(this.app, {
+            id: instance.identifier,
+            name: instance.name,
+            version: '0.0.1',
+          });
+
+          const currentPermissions =
+            this.app.permissionManager.store.get()[instance.identifier] || [];
+          const permissions = plugin.meta.permissions || [];
+          this.app.permissionManager.store.setKey(
+            plugin.meta.identifier,
+            Array.from(new Set([...currentPermissions, ...permissions]))
+          );
+
+          try {
+            await plugin.file.init(subapp, remoteProcess);
+            this.plugins.push(plugin);
+
+            this.app.notificationManager.log(
+              `App '${instance.name}:${instance.identifier}' loaded successfully`,
+              'App loaded'
+            );
+          } catch (error) {
+            this.app.notificationManager.error(
+              String(error),
+              `Error running '${instance.name}' (${instance.identifier}) plugin script`
+            );
+          }
+        });
       } catch (error) {
-        this.app.notificationManager.error(
-          String(error),
-          `Error running '${instance.name}' (${instance.id}) plugin script`
-        );
+        this.app.notificationManager.error(String(error), 'Error getting tokens');
       }
     }
   }
@@ -204,7 +217,7 @@ export class PluginManager extends BaseManager {
 
     try {
       const file = (await import(`${path}.js`)) as {
-        init: (app: App) => void;
+        init: (app: App, remote?: KasifRemote<any>) => Promise<void>;
       };
 
       return { file, meta: pluginModule };
@@ -215,7 +228,7 @@ export class PluginManager extends BaseManager {
       );
       this.app.notificationManager.log(
         String((error as any).stack),
-        `Loading '${pluginModule.name}' (${pluginModule.id}) app failed`
+        `Loading '${pluginModule.name}' (${pluginModule.identifier}) app failed`
       );
     }
   }

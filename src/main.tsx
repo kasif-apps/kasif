@@ -4,7 +4,7 @@ import ReactDOM from 'react-dom/client';
 import { CSSObject, MantineProvider, MantineTheme } from '@mantine/core';
 import { Layout } from '@kasif/pages/Layout';
 import { Notifications } from '@mantine/notifications';
-import { app, kasif, useSetting } from '@kasif/config/app';
+import { app, kasif, tokens, useSetting } from '@kasif/config/app';
 import { ThemeSetting } from '@kasif//config/settings';
 import { SpotlightProvider } from '@mantine/spotlight';
 import { IconSearch } from '@tabler/icons';
@@ -16,11 +16,16 @@ import { DisplayRenderableNode } from '@kasif/util/node-renderer';
 import { useSlice } from '@kasif/util/cinq-react';
 import { ActionComponent } from '@kasif/components/Overlay/Spotlight';
 import { ModalsProvider } from '@mantine/modals';
+import { emit, listen } from '@tauri-apps/api/event';
 
 app.notificationManager.log(
   `Kasif skeleton initialized. Version: ${kasif.version}`,
   'Skeleton initialized'
 );
+
+listen('tokens', ({ payload }: { payload: { message: string } }) => {
+  tokens.set(JSON.parse(payload.message));
+});
 
 function Wrapper() {
   const [ready, setReady] = useState(false);
@@ -57,6 +62,12 @@ function Wrapper() {
       app.kill();
     };
   }, []);
+
+  useEffect(() => {
+    if (ready) {
+      emit('ready');
+    }
+  }, [ready]);
 
   return (
     <div data-contextmenu-field="app">

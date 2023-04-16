@@ -13,12 +13,15 @@ import { AuthManager } from '@kasif/managers/auth';
 import { ContextMenuManager } from '@kasif/managers/contextmenu';
 import { PluginManager } from '@kasif/managers/plugin';
 import { PermissionManager } from '@kasif/managers/permission';
+import { createRecordSlice } from '@kasif-apps/cinq';
 
 export const kasif = {
   id: 'kasif@v0.0.1',
   name: 'Kasif',
   version: '0.0.1',
 };
+
+export const tokens = createRecordSlice<Record<string, string>>({}, { key: 'app-tokens' });
 
 export class App {
   id: string;
