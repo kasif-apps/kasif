@@ -14,14 +14,21 @@ export interface PluginModule {
   name: string;
   identifier: string;
   description?: string;
-  entry: string;
+  lib: {
+    dir: string;
+    entry: string;
+  };
+  remote: {
+    dir: string;
+    entry: string;
+  };
   path: string;
   permissions?: PermissionType[];
 }
 
 export interface PluginImport {
   file: {
-    init: (app: App, remote?: KasifRemote<any>) => Promise<void>;
+    init: (app: App) => Promise<void>;
   };
   meta: PluginModule;
 }
@@ -123,10 +130,21 @@ export class PluginManager extends BaseManager {
     this.init();
   }
 
-  async initSingleModule(name: string, remote: boolean) {
-    const manifest = await this.readManifest(name, remote);
-    const plugin = await this.importModule(manifest, remote);
-    const tokensFile = await environment.path.resolveResource('remote/tokens.json');
+  async initSingleModule(name: string, isWebBased: boolean) {
+    const manifest = await this.readManifest(name, isWebBased);
+    const tokensFile = await environment.path.resolveResource('remote/stdout.json');
+    const rawTokens = await environment.fs.readTextFile(tokensFile);
+    const credentials = JSON.parse(rawTokens);
+
+    const remoteProcess = new KasifRemote(
+      credentials.tokens[manifest.identifier],
+      credentials.port
+    );
+    // @ts-expect-error
+    window[manifest.identifier] = {
+      remote: remoteProcess,
+    };
+    const plugin = await this.importModule(manifest, isWebBased);
 
     if (plugin) {
       const instance = plugin.meta;
@@ -137,40 +155,34 @@ export class PluginManager extends BaseManager {
       );
 
       try {
-        const rawTokens = await environment.fs.readTextFile(tokensFile);
-        const tokens = JSON.parse(rawTokens);
-
-        const remoteProcess = new KasifRemote(tokens[instance.identifier]);
-        remoteProcess.addEventListener('ready', async () => {
-          const subapp = new App(this.app, {
-            id: instance.identifier,
-            name: instance.name,
-            version: '0.0.1',
-          });
-
-          const currentPermissions =
-            this.app.permissionManager.store.get()[instance.identifier] || [];
-          const permissions = plugin.meta.permissions || [];
-          this.app.permissionManager.store.setKey(
-            plugin.meta.identifier,
-            Array.from(new Set([...currentPermissions, ...permissions]))
-          );
-
-          try {
-            await plugin.file.init(subapp, remoteProcess);
-            this.plugins.push(plugin);
-
-            this.app.notificationManager.log(
-              `App '${instance.name}:${instance.identifier}' loaded successfully`,
-              'App loaded'
-            );
-          } catch (error) {
-            this.app.notificationManager.error(
-              String(error),
-              `Error running '${instance.name}' (${instance.identifier}) plugin script`
-            );
-          }
+        const subapp = new App(this.app, {
+          id: instance.identifier,
+          name: instance.name,
+          version: '0.0.1',
         });
+
+        const currentPermissions =
+          this.app.permissionManager.store.get()[instance.identifier] || [];
+        const permissions = plugin.meta.permissions || [];
+        this.app.permissionManager.store.setKey(
+          plugin.meta.identifier,
+          Array.from(new Set([...currentPermissions, ...permissions]))
+        );
+
+        try {
+          await plugin.file.init(subapp);
+          this.plugins.push(plugin);
+
+          this.app.notificationManager.log(
+            `App '${instance.name}:${instance.identifier}' loaded successfully`,
+            'App loaded'
+          );
+        } catch (error) {
+          this.app.notificationManager.error(
+            String(error),
+            `Error running '${instance.name}' (${instance.identifier}) plugin script`
+          );
+        }
       } catch (error) {
         this.app.notificationManager.error(String(error), 'Error getting tokens');
       }
@@ -202,22 +214,22 @@ export class PluginManager extends BaseManager {
   @authorized(['load_plugin'])
   async importModule(
     pluginModule: PluginModule,
-    remote: boolean
+    isWebBased: boolean
   ): Promise<PluginImport | undefined> {
     let path: string;
 
-    if (remote) {
+    if (isWebBased) {
       path = `${import.meta.env.VITE_REACT_API_URL}/public/${pluginModule.path}/${
-        pluginModule.entry
+        pluginModule.lib.entry
       }`;
     } else {
       const appsFolder = await environment.path.resolveResource('apps/');
-      path = await environment.path.join(appsFolder, pluginModule.path, pluginModule.entry);
+      path = await environment.path.join(appsFolder, pluginModule.path, pluginModule.lib.entry);
     }
 
     try {
       const file = (await import(`${path}.js`)) as {
-        init: (app: App, remote?: KasifRemote<any>) => Promise<void>;
+        init: (app: App) => Promise<void>;
       };
 
       return { file, meta: pluginModule };
@@ -235,10 +247,10 @@ export class PluginManager extends BaseManager {
 
   @trackable
   @authorized(['load_plugin'])
-  async readManifest(path: string, remote: boolean): Promise<PluginModule> {
+  async readManifest(path: string, isWebBased: boolean): Promise<PluginModule> {
     let manifest: any;
 
-    if (remote) {
+    if (isWebBased) {
       const request = await fetch(
         `${import.meta.env.VITE_REACT_API_URL}/public/${path}/package.json`
       );

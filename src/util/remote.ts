@@ -22,9 +22,9 @@ export class KasifRemote<T extends KasifRemoteOptions> extends EventTarget {
   #socket: WebSocket;
   #resolvers: Map<string, (value: ServerMessage) => void> = new Map();
 
-  constructor(public token: string) {
+  constructor(public token: string, public port: number) {
     super();
-    this.#socket = new WebSocket('ws://localhost:8000');
+    this.#socket = new WebSocket(`ws://localhost:${this.port}`);
 
     this.#socket.addEventListener('message', (event) => {
       const response = JSON.parse(event.data);

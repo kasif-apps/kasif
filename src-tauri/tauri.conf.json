@@ -4,7 +4,7 @@
     "beforeBuildCommand": "pnpm run build",
     "beforeDevCommand": "pnpm run dev",
     "devPath": "http://localhost:5010",
-    "distDir": "../build"
+    "distDir": "../dist"
   },
   "package": {
     "productName": "Kâşif UI Tool",

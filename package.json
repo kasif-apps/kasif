@@ -1,6 +1,6 @@
 {
   "name": "kasif",
-  "description": "Modern cross platform file manager.",
+  "description": "Modern cross platform UI toolkit.",
   "private": true,
   "version": "0.0.0",
   "type": "module",

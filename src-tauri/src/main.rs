@@ -5,10 +5,10 @@
 use std::{
     fs,
     path::{Path, PathBuf},
-    process::Command,
 };
 
 use tauri::{Manager, WindowEvent};
+use tokio::process::Command;
 
 fn unzip(target: &str, dir: &Path) {
     let mut archive = zip::ZipArchive::new(fs::File::open(target).expect("failed to open target"))
@@ -90,13 +90,24 @@ struct Payload {
     message: String,
 }
 
-async fn run_conductor() {
+async fn run_conductor(app: tauri::AppHandle) {
+    let root_path = app
+        .path_resolver()
+        .resolve_resource("")
+        .expect("failed to resolve resource");
+
+    let resource_path = root_path.to_str().expect("failed to convert to string");
+
+    let clone = &root_path.clone();
+    let joined = clone.join("remote");
+    let script_path = joined.join("server.ts");
+
     Command::new("deno")
         .arg("run")
         .arg("-A")
-        .arg("/Users/muhammedalican/Documents/repos/kasif/src-tauri/target/debug/remote/server.ts")
-        .arg("/Users/muhammedalican/Documents/repos/kasif/src-tauri/target/debug")
-        .output()
+        .arg(script_path)
+        .arg(resource_path)
+        .spawn()
         .expect("failed to launch conductor");
 }
 
@@ -107,7 +118,7 @@ async fn close_splashscreen(window: tauri::Window) {
     }
 }
 
-fn run(instance: tauri::Builder<tauri::Wry>) {
+async fn run(instance: tauri::Builder<tauri::Wry>) {
     instance
         .run(tauri::generate_context!())
         .expect("failed to run tauri");
@@ -116,11 +127,12 @@ fn run(instance: tauri::Builder<tauri::Wry>) {
 #[tokio::main]
 async fn main() {
     let instance = tauri::Builder::default()
-        .setup(|app| {
+        .setup(move |app| {
             let app_handle = app.app_handle();
 
             load_plugins(&app_handle);
-            let task = tokio::spawn(run_conductor());
+            let handle = app_handle.clone();
+            let task = tokio::spawn(run_conductor(handle));
 
             let windows = app_handle.windows();
             let window = windows.get("main").expect("failed to get main window");
@@ -141,5 +153,5 @@ async fn main() {
             close_splashscreen
         ]);
 
-    run(instance);
+    run(instance).await;
 }

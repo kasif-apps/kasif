@@ -65,7 +65,7 @@ function ValueComponent({
   ...others
 }: MultiSelectValueProps & { value: string; plugin: PluginImport }) {
   const [appPermissions] = useSlice(app.permissionManager.store);
-  const pluginPermissions = appPermissions[plugin.meta.id] || [];
+  const pluginPermissions = appPermissions[plugin.meta.identifier] || [];
   const index = pluginPermissions.indexOf(value as PermissionType);
   const limit = 4;
 
@@ -161,11 +161,11 @@ export function PermissionsPage() {
             </Center>
           )}
           {plugins.map((plugin) => (
-            <Group key={plugin.meta.id} position="apart">
+            <Group key={plugin.meta.identifier} position="apart">
               <Stack spacing={0}>
                 <Text>{plugin.meta.name}</Text>
                 <Text size="sm" color="dimmed">
-                  {plugin.meta.id}
+                  {plugin.meta.identifier}
                 </Text>
               </Stack>
               <MultiSelect
@@ -177,8 +177,10 @@ export function PermissionsPage() {
                 valueComponent={(props) => <ValueComponent plugin={plugin} {...props} />}
                 itemComponent={SelectItem}
                 searchable
-                value={appPermissions[plugin.meta.id]}
-                onChange={(values) => handleChange(plugin.meta.id, values as PermissionType[])}
+                value={appPermissions[plugin.meta.identifier]}
+                onChange={(values) =>
+                  handleChange(plugin.meta.identifier, values as PermissionType[])
+                }
                 data={permissions.map((item) => ({
                   label: permissionDescriptions[item].label,
                   description: permissionDescriptions[item].description,
