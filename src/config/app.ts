@@ -23,6 +23,11 @@ export const kasif = {
 
 export const tokens = createRecordSlice<Record<string, string>>({}, { key: 'app-tokens' });
 
+export interface AppFlags {
+  debug: boolean;
+  plugins: string[];
+}
+
 export class App {
   id: string;
   name: string;
@@ -43,6 +48,14 @@ export class App {
   pluginManager: PluginManager;
 
   customManagers: Map<string, BaseManager> = new Map();
+
+  flags = createRecordSlice<AppFlags>(
+    {
+      debug: false,
+      plugins: [],
+    },
+    { key: 'app-flags' }
+  );
 
   constructor(public parent?: App, options?: typeof kasif) {
     this.id = options?.id ?? kasif.id;
@@ -79,6 +92,10 @@ export class App {
     this.authManager.init();
     this.contextMenuManager.init();
     this.pluginManager.init();
+
+    // for (const plugin of this.flags.get().plugins) {
+    //   this.pluginManager.loadPlugin(plugin);
+    // }
   }
 
   kill() {

@@ -166,6 +166,10 @@ export async function createGlobalStyles(): Promise<{ styles: CSSObject; kill: (
       height: '100%',
     },
 
+    '#notifications > div > div': {
+      bottom: 'calc(var(--mantine-footer-height) + 1rem)',
+    },
+
     '.titlebar': { display: 'flex', justifyContent: 'center' },
     '.titlebar.webkit-draggable': { WebkitAppRegion: 'drag' },
     '.titlebar-stoplight': { display: 'flex' },

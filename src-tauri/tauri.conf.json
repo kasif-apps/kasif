@@ -12,6 +12,21 @@
   },
   "tauri": {
     "macOSPrivateApi": true,
+    "cli": {
+      "description": "Kâşif UI Tool CLI",
+      "longDescription": "Run your Kâşif app with additional flags",
+      "args": [
+        {
+          "name": "debug",
+          "takesValue": false
+        },
+        {
+          "name": "plugin",
+          "takesValue": true,
+          "multiple": true
+        }
+      ]
+    },
     "allowlist": {
       "fs": {
         "all": true,

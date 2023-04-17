@@ -111,8 +111,6 @@ export class PluginManager extends BaseManager {
     const destination = await environment.path.join(localDataDir, 'apps', base);
 
     await environment.fs.copyFile(pluginPath, destination);
-    await invoke('load_plugins_remote');
-    this.init();
   }
 
   @trackable
@@ -127,7 +125,6 @@ export class PluginManager extends BaseManager {
     });
 
     await invoke('load_plugins_remote');
-    this.init();
   }
 
   async initSingleModule(name: string, isWebBased: boolean) {
@@ -197,7 +194,7 @@ export class PluginManager extends BaseManager {
       const entries = await environment.fs.readDir(appsFolder);
 
       for await (const entry of entries) {
-        if (entry.name && entry.name.endsWith('.kasif')) {
+        if (entry.name) {
           await this.initSingleModule(entry.name, false);
         }
       }

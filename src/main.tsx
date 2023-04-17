@@ -16,7 +16,8 @@ import { DisplayRenderableNode } from '@kasif/util/node-renderer';
 import { useSlice } from '@kasif/util/cinq-react';
 import { ActionComponent } from '@kasif/components/Overlay/Spotlight';
 import { ModalsProvider } from '@mantine/modals';
-import { emit, listen } from '@tauri-apps/api/event';
+import { listen } from '@tauri-apps/api/event';
+import { getMatches } from '@tauri-apps/api/cli';
 
 app.notificationManager.log(
   `Kasif skeleton initialized. Version: ${kasif.version}`,
@@ -56,18 +57,19 @@ function Wrapper() {
   }, [themeSetting.value]);
 
   useEffect(() => {
-    app.init();
+    getMatches().then((matches) => {
+      app.flags.set({
+        debug: matches.args.debug.value as boolean,
+        plugins: matches.args.plugin.value as string[],
+      });
+
+      app.init();
+    });
 
     return () => {
       app.kill();
     };
   }, []);
-
-  useEffect(() => {
-    if (ready) {
-      emit('ready');
-    }
-  }, [ready]);
 
   return (
     <div data-contextmenu-field="app">
