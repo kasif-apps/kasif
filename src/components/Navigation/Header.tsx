@@ -1,4 +1,4 @@
-import { createStyles, Header, ScrollArea } from '@mantine/core';
+import { createStyles, Header, ScrollArea, Image, Group } from '@mantine/core';
 import { Tabs } from '@kasif/components/ViewController/Tabs';
 import { environment } from '@kasif/util/environment';
 import { getOS } from '@kasif/util/misc';
@@ -35,20 +35,27 @@ export function KasifHeader() {
       data-contextmenu-field="view-handle-bar"
       className={classes.header}
       withBorder={false}
-      sx={{ left: 'var(--mantine-navbar-width)', top: 'var(--titlebar-height)' }}
+      sx={{
+        left: 'var(--mantine-navbar-width)',
+        top: 'var(--titlebar-height)',
+        width: 'calc(100vw - var(--mantine-navbar-width))',
+      }}
       height={60}
       p="sm"
     >
       {environment.currentEnvironment === 'desktop' && os !== 'macos' && (
         <div data-tauri-drag-region className={classes.titlebar} />
       )}
-      <ScrollArea
-        offsetScrollbars
-        scrollbarSize={8}
-        sx={{ width: 'calc(100vw - var(--mantine-navbar-width))' }}
-      >
-        <Tabs />
-      </ScrollArea>
+      <Group>
+        <ScrollArea
+          offsetScrollbars
+          scrollbarSize={8}
+          sx={{ width: 'calc(100vw - var(--mantine-navbar-width) - 80px)' }}
+        >
+          <Tabs />
+        </ScrollArea>
+        <Image mb={4} height={30} width={30} src="/favicon.png" alt="kasif logo" />
+      </Group>
     </Header>
   );
 }

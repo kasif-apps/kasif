@@ -30,7 +30,7 @@
     "allowlist": {
       "fs": {
         "all": true,
-        "scope": ["**"]
+        "scope": ["**", "$RESOURCE/*", "$APPLOCALDATA/*"]
       },
       "path": {
         "all": true

@@ -129,7 +129,8 @@ export class PluginManager extends BaseManager {
 
   async initSingleModule(name: string, isWebBased: boolean) {
     const manifest = await this.readManifest(name, isWebBased);
-    const tokensFile = await environment.path.resolveResource('remote/stdout.json');
+    const localDataDir = await environment.path.appLocalDataDir();
+    const tokensFile = await environment.path.join(localDataDir, 'remote', 'stdout.json');
     const rawTokens = await environment.fs.readTextFile(tokensFile);
     const credentials = JSON.parse(rawTokens);
 

@@ -136,9 +136,9 @@ async fn run_conductor(app: tauri::AppHandle) {
 
     let resource_path = root_path.to_str().expect("failed to convert to string");
 
-    let clone = &root_path.clone();
-    let joined = clone.join("remote");
-    let script_path = joined.join("server.ts");
+    let mut script_path = app.path_resolver().app_local_data_dir().unwrap();
+    script_path.push("remote");
+    script_path.push("server.ts");
 
     Command::new("deno")
         .arg("run")

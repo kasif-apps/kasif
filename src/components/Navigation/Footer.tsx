@@ -48,7 +48,11 @@ export function KasifFooter() {
       </Group>
       <Group spacing="xs">
         <Tooltip label="Licenses">
-          <ActionIcon variant="transparent" size="sm" color="primary">
+          <ActionIcon
+            variant="transparent"
+            size="sm"
+            sx={{ color: flags.debug ? 'white' : 'primary' }}
+          >
             <IconLicense stroke={1.5} size={16} />
           </ActionIcon>
         </Tooltip>

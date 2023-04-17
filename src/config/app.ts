@@ -21,8 +21,6 @@ export const kasif = {
   version: '0.0.1',
 };
 
-export const tokens = createRecordSlice<Record<string, string>>({}, { key: 'app-tokens' });
-
 export interface AppFlags {
   debug: boolean;
   plugins: string[];
@@ -86,16 +84,12 @@ export class App {
   }
 
   init() {
+    this.contextMenuManager.init();
     this.permissionManager.init();
     this.networkManager.init();
     this.commandManager.init();
     this.authManager.init();
-    this.contextMenuManager.init();
     this.pluginManager.init();
-
-    // for (const plugin of this.flags.get().plugins) {
-    //   this.pluginManager.loadPlugin(plugin);
-    // }
   }
 
   kill() {
