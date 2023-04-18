@@ -44,22 +44,19 @@ fn launch_auth(path: String) {
     opener::open(path).expect("Failed to launch url");
 }
 
-#[tauri::command]
-fn load_plugin(resource_path_: String, plugin_path: String) {
-    let resource_path = Path::new("").join(&resource_path_);
-
-    let path = Path::new("").join(&plugin_path);
-    let name = path
+fn load_plugin(resource_path: &PathBuf, plugin_path: PathBuf) {
+    let name = plugin_path
         .file_name()
         .unwrap()
         .to_str()
         .expect("failed to convert to string");
+
     let dir = Path::new("")
         .join(&resource_path)
         .join(name)
         .with_extension("");
 
-    unzip(&plugin_path, &dir);
+    unzip(&plugin_path.as_os_str().to_str().unwrap().to_string(), &dir);
 }
 
 fn load_installed_plugins(app: &tauri::AppHandle) {
@@ -89,7 +86,7 @@ fn load_installed_plugins(app: &tauri::AppHandle) {
         let fullpath = entry.path().into_os_string().to_str().unwrap().to_string();
 
         if fullpath.ends_with(".kasif") {
-            load_plugin(resource_path.display().to_string(), fullpath);
+            load_plugin(&resource_path, entry.path());
         }
     }
 }
@@ -116,16 +113,21 @@ fn load_external_plugins(app: &tauri::App) {
                     .for_each(|plugin| {
                         let plugin_path = plugin.as_str().unwrap().to_string();
 
-                        load_plugin(
-                            resource_path.as_os_str().to_str().unwrap().to_string(),
-                            plugin_path,
-                        );
+                        load_plugin(&resource_path, Path::new("").join(plugin_path));
                     });
             }
         }
 
         Err(_) => {}
     }
+}
+
+#[tauri::command]
+fn load_plugin_remotely(resource_path: String, plugin_path: String) {
+    load_plugin(
+        &Path::new("").join(resource_path),
+        Path::new("").join(plugin_path),
+    )
 }
 
 async fn run_conductor(app: tauri::AppHandle) {
@@ -186,7 +188,7 @@ async fn main() {
             Ok(())
         })
         .invoke_handler(tauri::generate_handler![
-            load_plugin,
+            load_plugin_remotely,
             open_devtools,
             launch_auth,
             close_splashscreen

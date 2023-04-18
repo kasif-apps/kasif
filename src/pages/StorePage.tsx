@@ -2,13 +2,15 @@ import { useNetworkGuard } from '@kasif/components/Compound/NoNetwork';
 import { Hero, PluginCard } from '@kasif/components/Compound/PluginCard';
 import { app } from '@kasif/config/app';
 import { PluginDTO } from '@kasif/managers/plugin';
+import { useSlice } from '@kasif/util/cinq-react';
 import { Box, LoadingOverlay, SimpleGrid, Stack, Title } from '@mantine/core';
 import { useElementSize } from '@mantine/hooks';
 import { useEffect, useState } from 'react';
 
 export function StorePage() {
-  const [packages, setPackages] = useState<PluginDTO[] | null>(null);
+  const [plugins, setPlugins] = useState<PluginDTO[] | null>(null);
   const [popular, setPopular] = useState<PluginDTO[] | null>(null);
+  const [installedPlugins] = useSlice(app.pluginManager.plugins);
   const { ref, width } = useElementSize();
 
   useEffect(() => {
@@ -16,7 +18,7 @@ export function StorePage() {
       setPopular(popularItems);
 
       app.pluginManager.list().then((items: PluginDTO[]) => {
-        setPackages(items);
+        setPlugins(items);
       });
     });
   }, []);
@@ -32,7 +34,7 @@ export function StorePage() {
 
   const columnCount = width === 0 ? 3 : getColumnCount(width);
 
-  if (!packages || !popular) {
+  if (!plugins || !popular) {
     return (
       <LoadingOverlay
         overlayOpacity={0}
@@ -51,10 +53,13 @@ export function StorePage() {
           <Hero data={popular} />
           <Title>Discover</Title>
           <SimpleGrid cols={columnCount}>
-            {packages.map((item) => (
+            {plugins.map((item) => (
               <PluginCard
                 key={item.id}
                 // author={item.author.username}
+                installed={installedPlugins
+                  .map((plugin) => plugin.meta.identifier)
+                  .includes(item.app_id)}
                 author=""
                 title={item.title}
                 description={item.description}

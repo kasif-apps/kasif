@@ -192,11 +192,11 @@ export async function createGlobalStyles(): Promise<{ styles: CSSObject; kill: (
         WebkitAppRegion: 'no-drag',
       },
     '.titlebar-close': {
-      border: '1px solid var(--action-color, #e2463f)',
+      border: '1px solid var(--action-color, transparent)',
       backgroundColor: 'var(--action-color, #ff5f57)',
     },
     '.titlebar-close:active': {
-      borderColor: '#ad3934',
+      borderColor: 'transparent',
       backgroundColor: 'var(--action-color, #bf4943)',
     },
     '.titlebar-close svg': {
@@ -207,11 +207,11 @@ export async function createGlobalStyles(): Promise<{ styles: CSSObject; kill: (
       opacity: 0,
     },
     '.titlebar-minimize': {
-      border: '1px solid var(--action-color, #e1a116)',
+      border: '1px solid var(--action-color, transparent)',
       backgroundColor: 'var(--action-color, #ffbd2e)',
     },
     '.titlebar-minimize:active': {
-      borderColor: '#ad7d15',
+      borderColor: 'transparent',
       backgroundColor: 'var(--action-color, #bf9123)',
     },
     '.titlebar-minimize svg': {
@@ -222,11 +222,11 @@ export async function createGlobalStyles(): Promise<{ styles: CSSObject; kill: (
       opacity: 0,
     },
     '.titlebar-fullscreen,\n.titlebar-maximize': {
-      border: '1px solid var(--action-color, #12ac28)',
+      border: '1px solid var(--action-color, transparent)',
       backgroundColor: 'var(--action-color, #28c940)',
     },
     '.titlebar-fullscreen:active': {
-      borderColor: '#128622',
+      borderColor: 'transparent',
       backgroundColor: 'var(--action-color, #1f9a31)',
     },
     '.titlebar-fullscreen svg.fullscreen-svg': {

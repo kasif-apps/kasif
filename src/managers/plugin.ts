@@ -5,10 +5,10 @@ import { backend } from '@kasif/config/backend';
 import { Record } from 'pocketbase';
 import { authorized, trackable, tracker } from '@kasif/util/decorators';
 import { BaseManager } from '@kasif/managers/base';
-import { invoke } from '@tauri-apps/api';
 import { PermissionType } from '@kasif/config/permission';
 import { createVectorSlice } from '@kasif-apps/cinq';
 import { KasifRemote } from '@kasif/util/remote';
+import { invoke } from '@tauri-apps/api';
 
 export interface PluginModule {
   name: string;
@@ -35,6 +35,7 @@ export interface PluginImport {
 
 export interface PluginDTO {
   // author: User;
+  app_id: string;
   created: Date;
   category: string[];
   description: string;
@@ -49,6 +50,7 @@ export interface PluginDTO {
 
 export interface PluginRawDTO {
   author: string;
+  app_id: string;
   created: string;
   category: string[];
   description: string;
@@ -111,6 +113,9 @@ export class PluginManager extends BaseManager {
     const destination = await environment.path.join(localDataDir, 'apps', base);
 
     await environment.fs.copyFile(pluginPath, destination);
+
+    const appsFolder = await environment.path.resolveResource('apps/');
+    await invoke('load_plugin_remotely', { resourcePath: appsFolder, pluginPath: destination });
   }
 
   @trackable
@@ -119,12 +124,13 @@ export class PluginManager extends BaseManager {
     const base = await environment.path.basename(url);
     const request = await fetch(url);
     const file = await request.blob();
+    const localDataDir = await environment.path.appLocalDataDir();
+    const destination = await environment.path.join(localDataDir, 'apps', base);
 
-    await environment.fs.writeBinaryFile(`apps/${base}`, await file.arrayBuffer(), {
-      dir: environment.path.BaseDirectory.AppLocalData,
-    });
+    await environment.fs.writeBinaryFile(destination, await file.arrayBuffer());
 
-    await invoke('load_plugins_remote');
+    const appsFolder = await environment.path.resolveResource('apps/');
+    await invoke('load_plugin_remotely', { resourcePath: appsFolder, pluginPath: destination });
   }
 
   async initSingleModule(name: string, isWebBased: boolean) {

@@ -43,16 +43,18 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
-interface BadgeCardProps {
+interface PluginCardProps {
   image: string;
   title: string;
   author: string;
   category: string[];
   description: string;
   url: string;
+  installed: boolean;
 }
 
-export function PluginCard({ image, title, description, category, author, url }: BadgeCardProps) {
+export function PluginCard(props: PluginCardProps) {
+  const { image, title, description, category, author, url, installed } = props;
   const [loading, setLoading] = useState(false);
   const { classes } = useStyles();
 
@@ -92,14 +94,17 @@ export function PluginCard({ image, title, description, category, author, url }:
             <Button
               loading={loading}
               onClick={async () => {
-                setLoading(true);
-                await app.pluginManager.installPlugin(url);
-                setLoading(false);
+                if (!installed) {
+                  setLoading(true);
+                  await app.pluginManager.installPlugin(url);
+                  setLoading(false);
+                }
               }}
               radius="md"
+              variant={installed ? 'outline' : 'filled'}
               style={{ flex: 1 }}
             >
-              Install
+              {installed ? 'Uninstall' : 'Install'}
             </Button>
             <ActionIcon variant="default" radius="md" size={36}>
               <IconHeart size="1.1rem" className={classes.like} stroke={1.5} />
