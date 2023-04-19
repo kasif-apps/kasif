@@ -1,106 +1,199 @@
-interface ServerMessage {
-  error: string | null;
-  message: string;
-  id: string;
+import { PluginImport } from '@kasif/managers/plugin';
+
+interface ClientResponse {
+  token: string;
+  action: ClientAction;
 }
 
-export type KasifRemoteOptions = {
-  functions: Record<string, Function>;
-  constants: Record<string, any>;
-};
+type ClientAction = CallAction | ResponseAction;
 
-type PromisedReturnFunctions<T extends KasifRemoteOptions['functions']> = {
-  // @ts-ignore ignore
-  [K in keyof T]: (...args: Parameters<T[K]>) => Promise<Awaited<ReturnType<T[K]>>>;
-};
+interface CallAction {
+  id: string;
+  type: 'call';
+  name: string;
+  arguments: unknown[];
+}
 
-type PromisedReturnConstants<T extends KasifRemoteOptions['constants']> = {
-  [K in keyof T]: Promise<T[K]>;
-};
+interface ResponseAction {
+  id: string;
+  type: 'response';
+  error: string | null;
+  message: string;
+}
 
-export class KasifRemote<T extends KasifRemoteOptions> extends EventTarget {
+type ClientMessage = CallResponse | ResponseResponse | ConnectResponse | RetrieveResponse;
+
+interface CallResponse {
+  type: 'call';
+  id: string;
+  error: string | null;
+  message: unknown;
+}
+
+interface ResponseResponse {
+  id: string;
+  type: 'response';
+  name: string;
+  arguments: unknown[];
+}
+
+interface ConnectResponse {
+  id: string;
+  type: 'connect';
+  error: string | null;
+  message: string;
+}
+
+interface RetrieveResponse {
+  type: 'retrieve';
+  id: string;
+  error: string | null;
+  message: unknown;
+}
+
+export class KasifRemote extends EventTarget {
+  #token = '';
   #socket: WebSocket;
-  #resolvers: Map<string, (value: ServerMessage) => void> = new Map();
 
-  constructor(public token: string, public port: number) {
+  #resolvers: Map<string, (value: unknown) => void> = new Map();
+  #mod: PluginImport['file'] | undefined;
+
+  constructor(public port: number, public name: string) {
     super();
     this.#socket = new WebSocket(`ws://localhost:${this.port}`);
 
-    this.#socket.addEventListener('message', (event) => {
-      const response = JSON.parse(event.data);
-
-      const resolver = this.#resolvers.get(response.id);
-
-      if (resolver) {
-        if (response.error) {
-          throw new Error(response.error);
-        } else {
-          resolver(response.message);
-        }
-        this.#resolvers.delete(response.id);
-      }
-    });
+    this.#socket.addEventListener('message', (event) => this.handleMessage(event.data));
 
     this.#socket.addEventListener('open', () => {
-      this.dispatchEvent(new CustomEvent('ready'));
+      const payload = {
+        token: this.#token,
+        action: {
+          id: 'connect',
+          type: 'connect',
+          name: this.name,
+        },
+      };
+      this.#socket.send(JSON.stringify(payload));
     });
   }
 
-  functions = new Proxy({} as PromisedReturnFunctions<T['functions']>, {
+  handleMessage(data: string) {
+    const message: ClientMessage = JSON.parse(data);
+
+    switch (message.type) {
+      case 'connect':
+        // server responds with credentials
+        this.handleConnectAction(message);
+        break;
+      case 'call':
+        // server responds with function return
+        this.handleCallAction(message);
+        break;
+      case 'retrieve':
+        // server responds with constant value
+        break;
+      case 'response':
+        // server requests a function's return value
+        this.handleResponseAction(message).then((response) =>
+          this.#socket.send(JSON.stringify(response))
+        );
+        break;
+    }
+  }
+
+  setModule(mod: PluginImport['file'] | undefined) {
+    this.#mod = mod;
+  }
+
+  handleConnectAction(response: ConnectResponse) {
+    this.#token = response.message;
+    this.dispatchEvent(new CustomEvent('ready'));
+  }
+
+  handleCallAction(response: CallResponse) {
+    const resolver = this.#resolvers.get(response.id);
+
+    if (resolver) {
+      if (response.error) {
+        throw new Error(response.error);
+      }
+
+      resolver(response.message);
+    }
+  }
+
+  async handleResponseAction(response: ResponseResponse): Promise<ClientResponse> {
+    if (!this.#mod) {
+      return this.createErrorResponse({ id: response.id, type: 'response' }, 'no module found');
+    }
+
+    if (!this.#mod[response.name]) {
+      return this.createErrorResponse(
+        { id: response.id, type: 'response' },
+        `no function named ${response.name} found`
+      );
+    }
+
+    try {
+      const result = await this.#mod[response.name].call(window, response.arguments);
+      return this.createHealthyResponse({ id: response.id, type: 'response' }, result);
+    } catch (error) {
+      return this.createErrorResponse({ id: response.id, type: 'response' }, String(error));
+    }
+  }
+
+  // deno-lint-ignore ban-types
+  functions = new Proxy({} as Record<string, Function>, {
     get:
       (_, key: string) =>
-      (...args: any[]) =>
-        this.#call(key, args),
+      (...args: unknown[]) =>
+        new Promise<unknown>((resolve) => {
+          const payload = this.createCallPayload(key, args || []);
+
+          this.#resolvers.set(payload.action.id, resolve);
+          this.#socket.send(JSON.stringify(payload));
+        }),
     set() {
       throw new Error('cannot set function');
     },
   });
 
-  constants = new Proxy({} as PromisedReturnConstants<T['constants']>, {
-    get: (_, key: string) => {
-      if (key !== '__proto__') {
-        return this.#retrieve(key);
-      }
-    },
-    set() {
-      throw new Error('cannot set constant');
-    },
-  });
-
-  #retrieve(name: string) {
-    return new Promise<ServerMessage>((resolve) => {
-      const id = `${name}-${Date.now()}`;
-
-      const payload = {
-        token: this.token,
-        action: {
-          id,
-          name,
-          type: 'retrieve',
-        },
-      };
-
-      this.#socket.send(JSON.stringify(payload));
-      this.#resolvers.set(id, resolve);
-    });
+  createCallPayload(name: string, ...args: unknown[]): ClientResponse {
+    return {
+      token: this.#token,
+      action: {
+        type: 'call',
+        id: crypto.randomUUID(),
+        name,
+        arguments: args,
+      },
+    };
   }
 
-  #call<K>(name: string, args?: K[]) {
-    return new Promise<ServerMessage>((resolve) => {
-      const id = `${name}-${Date.now()}`;
+  createHealthyResponse(
+    action: Pick<ClientAction, 'id' | 'type'>,
+    message: unknown
+  ): ClientResponse {
+    return {
+      token: this.#token,
+      action: {
+        id: action.id,
+        type: action.type,
+        error: null,
+        message,
+      },
+    } as ClientResponse;
+  }
 
-      const payload = {
-        token: this.token,
-        action: {
-          id,
-          name,
-          type: 'call',
-          arguments: args || [],
-        },
-      };
-
-      this.#socket.send(JSON.stringify(payload));
-      this.#resolvers.set(id, resolve);
-    });
+  createErrorResponse(action: Pick<ClientAction, 'id' | 'type'>, error: string): ClientResponse {
+    return {
+      token: this.#token,
+      action: {
+        id: action.id,
+        type: action.type,
+        error,
+        message: error,
+      },
+    } as ClientResponse;
   }
 }

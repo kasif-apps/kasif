@@ -131,10 +131,12 @@ fn load_plugin_remotely(resource_path: String, plugin_path: String) {
 }
 
 async fn run_conductor(app: tauri::AppHandle) {
-    let root_path = app
+    let mut root_path = app
         .path_resolver()
         .resolve_resource("")
         .expect("failed to resolve resource");
+
+    root_path.push("apps");
 
     let resource_path = root_path.to_str().expect("failed to convert to string");
 
