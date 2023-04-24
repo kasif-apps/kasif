@@ -1,5 +1,7 @@
 import { app } from '@kasif/config/app';
 
+import { getOS } from './misc';
+
 import { Transactor } from '@kasif-apps/cinq';
 import { TransactorOptions } from '@kasif-apps/cinq/dist/src/lib/transactor/base/transactor';
 import { invoke, fs as tauriFs, path as tauriPath } from '@tauri-apps/api';
@@ -125,6 +127,20 @@ export class Environment {
     } catch (error) {
       return 'no-op';
     }
+  }
+
+  fontDir() {
+    if (this.currentEnvironment === 'desktop') {
+      const os = getOS();
+
+      if (os === 'macos') {
+        return Promise.resolve('/System/Library/Fonts/Supplemental');
+      }
+
+      return tauriPath.fontDir();
+    }
+
+    return Promise.resolve('');
   }
 }
 

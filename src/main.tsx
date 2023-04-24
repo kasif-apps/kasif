@@ -35,6 +35,7 @@ function Wrapper() {
   const [settingsReady] = useSlice(app.settingsManager.ready);
   const [permissionsReady] = useSlice(app.permissionManager.ready);
   const [globalStyles, setGlobalStyles] = useState<CSSObject>({});
+  const [font] = useSetting<string>('font');
   const killer = useRef<(() => void) | null>(null);
 
   useHotkeys(
@@ -85,6 +86,7 @@ function Wrapper() {
         withNormalizeCSS
         theme={{
           ...theme.ui,
+          fontFamily: font.value,
           globalStyles: (t => ({
             ...globalStyles,
             ...createPaneStyles(t),

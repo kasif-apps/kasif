@@ -1,4 +1,4 @@
-import { forwardRef } from 'react';
+import { forwardRef, useEffect, useState } from 'react';
 
 import { Group, Select, Switch, Text } from '@mantine/core';
 
@@ -6,6 +6,7 @@ import { app, useSetting } from '@kasif/config/app';
 import { Log } from '@kasif/managers/notification';
 import { SettingCategory, SettingsItem } from '@kasif/managers/settings';
 import { ThemeOption } from '@kasif/managers/theme';
+import { environment } from '@kasif/util/environment';
 
 export interface BooleanActionProps {
   id: string;
@@ -118,26 +119,76 @@ export namespace ThemeSetting {
 }
 
 export namespace FontSetting {
-  export type Type = 'roboto' | 'open-sans' | 'raleway';
+  export type Type = string;
   const id = 'font';
+
+  interface ItemProps extends React.ComponentPropsWithoutRef<'div'> {
+    label: string;
+  }
+
+  const RenderItem = forwardRef<HTMLDivElement, ItemProps>(
+    ({ label, ...others }: ItemProps, ref) => (
+      <div ref={ref} {...others}>
+        <Group noWrap>
+          <div>
+            <Text size="sm">{label}</Text>
+          </div>
+        </Group>
+      </div>
+    )
+  );
 
   export const definition: SettingsItem<Type> = {
     id,
     category: 'appearance',
     title: 'Font',
     description: 'Change the font of the app.',
-    value: 'open-sans',
-    render: () => (
-      <SelectAction
-        id={id}
-        data={[
-          { value: 'open-sans', label: 'Open Sans' },
-          { value: 'roboto', label: 'Roboto' },
-          { value: 'raleway', label: 'Raleway' },
-        ]}
-        placeholder="Select Font"
-      />
-    ),
+    value: 'San Fransisco',
+    render: () => {
+      const [font, setFont] = useSetting<Type>(id);
+      const [fonts, setFonts] = useState<{ value: string; label: string }[]>([
+        { value: 'Quicksand', label: 'Quicksand' },
+        { value: 'Open Sans', label: 'Open Sans' },
+        { value: '-apple-system', label: 'San Fransisco' },
+      ]);
+
+      useEffect(() => {
+        environment.fontDir().then(async path => {
+          const raw = await environment.fs.readDir(path);
+          const data = raw.filter(file => file.name && file.name.endsWith('.ttf')) as {
+            name: string;
+          }[];
+
+          const founFonts = data.map(item => {
+            const name = item.name.split('.')[0];
+
+            return { value: name, label: name };
+          });
+
+          founFonts.push(...fonts);
+
+          setFonts(founFonts);
+        });
+      }, []);
+
+      return (
+        <Select
+          placeholder="Select Font"
+          value={font.value}
+          itemComponent={RenderItem}
+          searchable
+          nothingFound="Couldn't find any font."
+          sx={{ width: 300 }}
+          filter={(value, item) => item.label?.toLowerCase().includes(value.toLowerCase().trim())!}
+          onChange={value => {
+            if (value) {
+              setFont(value as Type);
+            }
+          }}
+          data={fonts}
+        />
+      );
+    },
   };
 }
 
