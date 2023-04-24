@@ -59,7 +59,7 @@ export class AuthManager extends BaseManager {
       backend.authStore.model ? new User(backend.authStore.model as unknown as UserDTO) : null
     );
 
-    backend.authStore.onChange((_, record) => {
+    backend.authStore.onChange(() => {
       this.#user.set(
         backend.authStore.model ? new User(backend.authStore.model as unknown as UserDTO) : null
       );

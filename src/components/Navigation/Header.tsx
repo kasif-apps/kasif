@@ -3,8 +3,6 @@ import { useEffect, useRef } from 'react';
 import { Group, Header, Image, ScrollArea, createStyles } from '@mantine/core';
 
 import { Tabs } from '@kasif/components/ViewController/Tabs';
-import { app } from '@kasif/config/app';
-import { useSlice } from '@kasif/util/cinq-react';
 import { environment } from '@kasif/util/environment';
 import { getOS } from '@kasif/util/misc';
 

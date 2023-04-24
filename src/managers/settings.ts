@@ -5,13 +5,7 @@ import { authorized, trackable, tracker } from '@kasif/util/decorators';
 import { FSTransactor, environment } from '@kasif/util/environment';
 import { RenderableNode } from '@kasif/util/node-renderer';
 
-import {
-  RecordSlice,
-  Slice,
-  StorageTransactor,
-  createRecordSlice,
-  createSlice,
-} from '@kasif-apps/cinq';
+import { RecordSlice, createRecordSlice, createSlice } from '@kasif-apps/cinq';
 
 export interface SettingCategory {
   id: string;
@@ -56,7 +50,7 @@ export class SettingsManager extends BaseManager {
       initialSettings.forEach(setting => this.defineSetting(setting));
     }
 
-    this.store.subscribe(e => {
+    this.store.subscribe(() => {
       const settings = this.store.get();
 
       for (const [key, setting] of Object.entries(settings)) {

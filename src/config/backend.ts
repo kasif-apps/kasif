@@ -19,7 +19,7 @@ export class CustomAuthStore extends BaseAuthStore {
       const path = await environment.path.join(dir, 'user.json');
       this.path = path;
 
-      let exists = await environment.fs.exists(path);
+      const exists = await environment.fs.exists(path);
 
       if (!exists) {
         await environment.fs.writeTextFile(path, '{}');

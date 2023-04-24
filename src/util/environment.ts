@@ -1,6 +1,6 @@
 import { app } from '@kasif/config/app';
 
-import { Slice, Transactor } from '@kasif-apps/cinq';
+import { Transactor } from '@kasif-apps/cinq';
 import { TransactorOptions } from '@kasif-apps/cinq/dist/src/lib/transactor/base/transactor';
 import { invoke, fs as tauriFs, path as tauriPath } from '@tauri-apps/api';
 import { getMatches as getArgMatches } from '@tauri-apps/api/cli';
