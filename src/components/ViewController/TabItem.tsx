@@ -1,18 +1,19 @@
-import { ActionIcon, createStyles, Sx, Tooltip, UnstyledButton, getStylesRef } from '@mantine/core';
-import { IconX } from '@tabler/icons';
-
-import { app } from '@kasif/config/app';
 import { useEffect, useRef } from 'react';
+import { DraggableProvided } from 'react-beautiful-dnd';
+
+import { ActionIcon, Sx, Tooltip, UnstyledButton, createStyles, getStylesRef } from '@mantine/core';
 import { useMergedRef } from '@mantine/hooks';
 
-import { DraggableProvided } from 'react-beautiful-dnd';
+import { app } from '@kasif/config/app';
 import { DisplayRenderableNode, RenderableNode } from '@kasif/util/node-renderer';
+
+import { IconX } from '@tabler/icons';
 
 const useStyles = createStyles((theme, { dragging }: { dragging: boolean }) => ({
   tab: {
-    height: '100%',
-    display: 'flex',
-    fontSize: 12,
+    'height': '100%',
+    'display': 'flex',
+    'fontSize': 12,
 
     '& .tab-icon': {
       display: 'flex',
@@ -32,25 +33,25 @@ const useStyles = createStyles((theme, { dragging }: { dragging: boolean }) => (
     },
 
     '& .content': {
-      display: 'flex',
-      alignItems: 'center',
-      gap: theme.spacing.xs,
-      lineHeight: 1,
-      fontWeight: 500,
-      padding: `0 4px 0 ${theme.spacing.xs}`,
-      borderRadius: theme.radius.sm,
-      transition: 'background-color 200ms ease',
+      'display': 'flex',
+      'alignItems': 'center',
+      'gap': theme.spacing.xs,
+      'lineHeight': 1,
+      'fontWeight': 500,
+      'padding': `0 4px 0 ${theme.spacing.xs}`,
+      'borderRadius': theme.radius.sm,
+      'transition': 'background-color 200ms ease',
       // backgroundColor:
       //   theme.colorScheme === 'dark'
       //     ? theme.fn.rgba(theme.colors.dark[8], isHomeView ? 0.3 : 1)
       //     : theme.fn.rgba(theme.colors.gray[0], isHomeView ? 0.1 : 1),
 
       // backdropFilter: 'blur(5px)',
-      backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[8] : theme.colors.gray[0],
-      maxWidth: 400,
-      overflow: 'hidden',
-      textOverflow: 'ellipsis',
-      cursor: 'initial',
+      'backgroundColor': theme.colorScheme === 'dark' ? theme.colors.dark[8] : theme.colors.gray[0],
+      'maxWidth': 400,
+      'overflow': 'hidden',
+      'textOverflow': 'ellipsis',
+      'cursor': 'initial',
       // color: isHomeView ? theme.white : 'auto',
 
       '&.active': {
@@ -114,8 +115,7 @@ export function TabItem(props: TabItemProps) {
       component="div"
       data-contextmenu-field="view-handle"
       data-view-id={id}
-      className={cx(classes.tab, active && 'active', beforeActive && 'before-active')}
-    >
+      className={cx(classes.tab, active && 'active', beforeActive && 'before-active')}>
       <Tooltip openDelay={1000} sx={{ maxWidth: 400 }} multiline withinPortal label={title}>
         <div className={cx('content', active && 'active')}>
           {icon && (

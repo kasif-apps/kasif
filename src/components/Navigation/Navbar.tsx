@@ -1,35 +1,36 @@
+import {
+  Box,
+  Divider,
+  Navbar,
+  ScrollArea,
+  Stack,
+  Tooltip,
+  UnstyledButton,
+  createStyles,
+} from '@mantine/core';
+
 import { app } from '@kasif/config/app';
 import { NavbarItem } from '@kasif/managers/navbar';
 import { useSlice } from '@kasif/util/cinq-react';
 import { environment } from '@kasif/util/environment';
 import { getOS } from '@kasif/util/misc';
 import { DisplayRenderableNode } from '@kasif/util/node-renderer';
-import {
-  Navbar,
-  Tooltip,
-  UnstyledButton,
-  createStyles,
-  Stack,
-  ScrollArea,
-  Divider,
-  Box,
-} from '@mantine/core';
+
 import { appWindow } from '@tauri-apps/api/window';
 
-const useStyles = createStyles((theme) => ({
+const useStyles = createStyles(theme => ({
   navbar: {
     backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[7] : theme.white,
-    // backgroundColor: 'transparent',
     backdropFilter: 'blur(10px)',
   },
 
   link: {
-    width: 40,
-    height: 40,
-    borderRadius: theme.radius.md,
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
+    'width': 40,
+    'height': 40,
+    'borderRadius': theme.radius.md,
+    'display': 'flex',
+    'alignItems': 'center',
+    'justifyContent': 'center',
 
     '&:hover': {
       backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[5] : theme.colors.gray[0],
@@ -62,8 +63,7 @@ function MacOSTitleBar() {
         <UnstyledButton
           component="div"
           onClick={() => appWindow.close()}
-          className="titlebar-close"
-        >
+          className="titlebar-close">
           <svg x="0px" y="0px" viewBox="0 0 6.4 6.4">
             <polygon
               fill="#4d0000"
@@ -74,8 +74,7 @@ function MacOSTitleBar() {
         <UnstyledButton
           component="div"
           onClick={() => appWindow.minimize()}
-          className="titlebar-minimize"
-        >
+          className="titlebar-minimize">
           <svg x="0px" y="0px" viewBox="0 0 8 1.1">
             <rect fill="#995700" width="8" height="1.1" />
           </svg>
@@ -83,8 +82,7 @@ function MacOSTitleBar() {
         <UnstyledButton
           component="div"
           onClick={() => appWindow.toggleMaximize()}
-          className="titlebar-fullscreen"
-        >
+          className="titlebar-fullscreen">
           <svg className="fullscreen-svg" x="0px" y="0px" viewBox="0 0 6 5.9">
             <path fill="#006400" d="M5.4,0h-4L6,4.5V0.6C5.7,0.6,5.3,0.3,5.4,0z" />
             <path fill="#006400" d="M0.6,5.9h4L0,1.4l0,3.9C0.3,5.3,0.6,5.6,0.6,5.9z" />
@@ -105,8 +103,8 @@ export function KasifNavbar() {
   const { classes } = useStyles();
   const os = getOS();
   const [navbarStore] = useSlice(app.navbarManager.store);
-  const topItems = navbarStore.topItems.map((link) => <NavbarLink {...link} key={link.label} />);
-  const bottomItems = navbarStore.bottomItems.map((link) => (
+  const topItems = navbarStore.topItems.map(link => <NavbarLink {...link} key={link.label} />);
+  const bottomItems = navbarStore.bottomItems.map(link => (
     <NavbarLink {...link} key={link.label} />
   ));
 
@@ -124,19 +122,17 @@ export function KasifNavbar() {
       withBorder={false}
       height="calc(100% - var(--titlebar-height))"
       sx={{ top: 'var(--titlebar-height)' }}
-      width={{ base: 76 }}
-    >
+      width={{ base: 76 }}>
       {titleBarVisible && <MacOSTitleBar />}
       <Navbar.Section
         mb="lg"
         grow
-        component={(props: any) => <ScrollArea {...props} scrollbarSize={8} />}
-      >
+        component={(props: any) => <ScrollArea {...props} scrollbarSize={8} />}>
         <Stack mt={titleBarVisible ? 0 : 'xs'} justify="center" align="center" spacing={4}>
           {upperDividedTop}
           {upperDividedBottom.length > 0 && (
             <Divider
-              sx={(theme) => ({
+              sx={theme => ({
                 borderColor:
                   theme.colorScheme === 'dark' ? theme.colors.dark[5] : theme.colors.gray[2],
                 width: '60%',
@@ -151,7 +147,7 @@ export function KasifNavbar() {
           {lowerDividedBottom}
           {lowerDividedBottom.length > 0 && (
             <Divider
-              sx={(theme) => ({
+              sx={theme => ({
                 borderColor:
                   theme.colorScheme === 'dark' ? theme.colors.dark[5] : theme.colors.gray[2],
                 width: '60%',

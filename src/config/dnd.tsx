@@ -1,4 +1,5 @@
 import { DragDropContext } from 'react-beautiful-dnd';
+
 import { app } from '@kasif/config/app';
 
 export interface DndProviderProps {
@@ -10,8 +11,7 @@ export function DndProvider(props: DndProviderProps) {
     <DragDropContext
       onDragStart={app.dndManager.onDragStart}
       onDragUpdate={app.dndManager.onDragUpdate}
-      onDragEnd={app.dndManager.onDragEnd}
-    >
+      onDragEnd={app.dndManager.onDragEnd}>
       {props.children}
     </DragDropContext>
   );

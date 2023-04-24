@@ -1,10 +1,11 @@
-import { app } from '@kasif/config/app';
+import { Box, Card, Group, Text, createStyles } from '@mantine/core';
+
 import { Transition } from '@kasif/components/Transition/TransitionWrapper';
-import { createStyles, Card, Group, Text, Box } from '@mantine/core';
+import { app } from '@kasif/config/app';
 import { animations } from '@kasif/util/misc';
 import { DisplayRenderableNode } from '@kasif/util/node-renderer';
 
-const useStyles = createStyles((theme) => ({
+const useStyles = createStyles(theme => ({
   card: {
     backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[7] : theme.white,
     display: 'flex',
@@ -13,8 +14,8 @@ const useStyles = createStyles((theme) => ({
   },
 
   itemMeta: {
-    display: 'flex',
-    alignItems: 'center',
+    'display': 'flex',
+    'alignItems': 'center',
 
     '&::before': {
       content: '""',
@@ -50,10 +51,10 @@ const useStyles = createStyles((theme) => ({
 export function SettingsPage() {
   const { classes } = useStyles();
 
-  const categories = app.settingsManager.categories.map((category) => {
+  const categories = app.settingsManager.categories.map(category => {
     const items = app.settingsManager.controllers
-      .filter((item) => item.category === category.id)
-      .map((_item) => {
+      .filter(item => item.category === category.id)
+      .map(_item => {
         const item = _item.instance.get();
 
         return (
@@ -76,12 +77,11 @@ export function SettingsPage() {
     return (
       <div key={category.id}>
         <Box
-          sx={(theme) => ({
+          sx={theme => ({
             '--setting-category-color': theme.colors[category.color || 'orange'][5],
           })}
           mb="xl"
-          className={classes.itemMeta}
-        >
+          className={classes.itemMeta}>
           <div>
             <Text size="md" className={classes.title} weight={600}>
               {category.title}

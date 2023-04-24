@@ -1,5 +1,5 @@
 module.exports = {
-  extends: ['mantine'],
+  extends: ['mantine', 'prettier'],
   overrides: [
     {
       files: ['**/?(*.)+(spec|test).[jt]s?(x)'],
@@ -14,12 +14,6 @@ module.exports = {
     'max-classes-per-file': ['error', 5],
     'jsx-a11y/click-events-have-key-events': 'off',
     'consistent-return': 'off',
-    'no-restricted-syntax': [
-      'off',
-      {
-        selector: 'ForOfStatement',
-        message: 'AAaaaaaaaaa',
-      },
-    ],
+    'no-restricted-syntax': ['off'],
   },
 };

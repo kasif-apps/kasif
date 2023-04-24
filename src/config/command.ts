@@ -1,6 +1,8 @@
-import { app } from '@kasif/config/app';
-import { IconWindowMaximize, IconWindowMinimize } from '@tabler/icons';
 import React from 'react';
+
+import { app } from '@kasif/config/app';
+
+import { IconWindowMaximize, IconWindowMinimize } from '@tabler/icons';
 
 export function initCommands() {
   app.commandManager.defineCommand({
@@ -10,7 +12,7 @@ export function initCommands() {
     onTrigger: async () => {
       const store = app.viewManager.store.get();
 
-      store.views.forEach((view) => {
+      store.views.forEach(view => {
         app.viewManager.removeView(view.id);
       });
     },

@@ -1,6 +1,8 @@
+import { ActionIcon, Footer, Group, Text, Tooltip, createStyles } from '@mantine/core';
+
 import { app } from '@kasif/config/app';
 import { useSlice } from '@kasif/util/cinq-react';
-import { ActionIcon, Text, createStyles, Footer, Tooltip, Group } from '@mantine/core';
+
 import { IconLicense } from '@tabler/icons';
 
 const useStyles = createStyles((theme, { isDebug }: { isDebug: boolean }) => {
@@ -51,8 +53,7 @@ export function KasifFooter() {
           <ActionIcon
             variant="transparent"
             size="sm"
-            sx={{ color: flags.debug ? 'white' : 'primary' }}
-          >
+            sx={{ color: flags.debug ? 'white' : 'primary' }}>
             <IconLicense stroke={1.5} size={16} />
           </ActionIcon>
         </Tooltip>

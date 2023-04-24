@@ -1,25 +1,33 @@
-import { getFirstNodeInPath } from '@kasif/util/misc';
+import React from 'react';
+
+import { notifications } from '@mantine/notifications';
 import { openSpotlight } from '@mantine/spotlight';
+
+import { App } from '@kasif/config/app';
+import { prebuiltViews } from '@kasif/config/view';
+import { environment } from '@kasif/util/environment';
+import { getFirstNodeInPath } from '@kasif/util/misc';
+
 import {
   IconCode,
   IconLicense,
   IconMessages,
+  IconNotification,
+  IconNotificationOff,
   IconRefresh,
   IconSettings,
   IconTerminal2,
   IconWindowMinimize,
 } from '@tabler/icons';
-import React from 'react';
+
 import { invoke } from '@tauri-apps/api';
-import { environment } from '@kasif/util/environment';
-import { App } from './app';
-import { prebuiltViews } from './view';
 
 export function initAppContextMenu(app: App) {
   app.contextMenuManager.defineField('app');
   app.contextMenuManager.defineField('pane');
   app.contextMenuManager.defineField('view-handle');
   app.contextMenuManager.defineField('view-handle-bar');
+  app.contextMenuManager.defineField('notifications');
 
   app.contextMenuManager.defineCategory({
     id: 'app',
@@ -121,7 +129,7 @@ export function initAppContextMenu(app: App) {
     onTrigger: async () => {
       const store = app.viewManager.store.get();
 
-      store.views.forEach((view) => {
+      store.views.forEach(view => {
         app.viewManager.removeView(view.id);
       });
     },
@@ -129,6 +137,32 @@ export function initAppContextMenu(app: App) {
       return app.viewManager.store.get().views.length > 0;
     },
     category: 'view',
+  });
+
+  app.contextMenuManager.defineItem('notifications', {
+    id: 'clear-this-notification',
+    title: 'Clear This Notification',
+    icon: () => React.createElement(IconNotification, { size: 14 }),
+    onTrigger: async () => {
+      const path = app.contextMenuManager.currentPath.get();
+      const element = getFirstNodeInPath(path, 'id');
+      const id = element?.getAttribute('id');
+
+      if (id) {
+        notifications.hide(id);
+      }
+    },
+    category: 'app',
+  });
+
+  app.contextMenuManager.defineItem('notifications', {
+    id: 'clear-all-notifications',
+    title: 'Clear All Notifications',
+    icon: () => React.createElement(IconNotificationOff, { size: 14 }),
+    onTrigger: async () => {
+      notifications.clean();
+    },
+    category: 'app',
   });
 
   app.contextMenuManager.defineItem('app', {

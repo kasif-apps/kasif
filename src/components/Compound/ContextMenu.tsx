@@ -1,17 +1,18 @@
+import { Menu, Text, createStyles } from '@mantine/core';
+import { useClickOutside } from '@mantine/hooks';
+
 import { app } from '@kasif/config/app';
 import { useContextMenuItems } from '@kasif/managers/contextmenu';
 import { useSlice } from '@kasif/util/cinq-react';
 import { createShortcutLabelFromString } from '@kasif/util/misc';
 import { DisplayRenderableNode } from '@kasif/util/node-renderer';
-import { createStyles, Menu, Text } from '@mantine/core';
-import { useClickOutside } from '@mantine/hooks';
 
 const useStyles = createStyles(() => ({
   root: {
     position: 'absolute',
     top: 0,
     left: 0,
-    zIndex: 9999,
+    zIndex: 99999,
   },
 
   item: {
@@ -42,15 +43,13 @@ export function ContextMenu() {
     <div
       ref={ref}
       style={{ top: store.position.y, left: store.position.x }}
-      className={classes.root}
-    >
+      className={classes.root}>
       <Menu
         classNames={{ item: classes.item, label: classes.label }}
         position="bottom-start"
         opened
         shadow="md"
-        width={220}
-      >
+        width={220}>
         <Menu.Target>
           <span />
         </Menu.Target>
@@ -59,11 +58,11 @@ export function ContextMenu() {
           {entries.map(([category, children]) => (
             <span key={category.id}>
               <Menu.Label>{category.title}</Menu.Label>
-              {children.map((item) => (
+              {children.map(item => (
                 <Menu.Item
                   key={item.id}
                   icon={item.icon ? <DisplayRenderableNode node={item.icon} /> : undefined}
-                  onClick={async (e) => {
+                  onClick={async e => {
                     e.preventDefault();
                     await item.onTrigger();
                     app.contextMenuManager.closeMenu();
@@ -74,8 +73,7 @@ export function ContextMenu() {
                         {createShortcutLabelFromString(item.shortCut)}
                       </Text>
                     ) : undefined
-                  }
-                >
+                  }>
                   <Text size="xs">{item.title}</Text>
                 </Menu.Item>
               ))}

@@ -1,6 +1,6 @@
 import { App, kasif } from '@kasif/config/app';
-import { BaseManager } from '@kasif/managers/base';
 import { PermissionType } from '@kasif/config/permission';
+import { BaseManager } from '@kasif/managers/base';
 
 export function trackable(
   target: BaseManager,
@@ -62,7 +62,7 @@ export function authorized(permissions: PermissionType[]) {
         return originalValue.apply(instance, args);
       }
 
-      instance.app.permissionManager.prompt(permissions).then((granted) => {
+      instance.app.permissionManager.prompt(permissions).then(granted => {
         if (granted) {
           originalValue.apply(instance, args);
         }

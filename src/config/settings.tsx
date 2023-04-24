@@ -1,9 +1,11 @@
+import { forwardRef } from 'react';
+
+import { Group, Select, Switch, Text } from '@mantine/core';
+
+import { app, useSetting } from '@kasif/config/app';
 import { Log } from '@kasif/managers/notification';
 import { SettingCategory, SettingsItem } from '@kasif/managers/settings';
 import { ThemeOption } from '@kasif/managers/theme';
-import { Group, Select, Switch, Text } from '@mantine/core';
-import { forwardRef } from 'react';
-import { app, useSetting } from './app';
 
 export interface BooleanActionProps {
   id: string;
@@ -18,7 +20,7 @@ export function BooleanAction(props: BooleanActionProps) {
       offLabel="OFF"
       size="lg"
       checked={state.value}
-      onChange={(e) => setState(e.currentTarget.checked)}
+      onChange={e => setState(e.currentTarget.checked)}
     />
   );
 }
@@ -37,7 +39,7 @@ export function SelectAction<T extends string>(props: SelectActionProps<T>) {
     <Select
       placeholder={props.placeholder}
       value={state.value}
-      onChange={(value) => {
+      onChange={value => {
         if (value) {
           if (props.onChange) {
             props.onChange(value as T);
@@ -77,7 +79,7 @@ export namespace ThemeSetting {
 
   export function Render() {
     const [theme, setTheme] = useSetting<Type>(id);
-    const data = app.themeManager.options.map((option) => ({
+    const data = app.themeManager.options.map(option => ({
       label: option.title,
       description: option.description,
       value: option.id,
@@ -95,7 +97,7 @@ export namespace ThemeSetting {
           item.label?.toLowerCase().includes(value.toLowerCase().trim()) ||
           item.description.toLowerCase().includes(value.toLowerCase().trim())
         }
-        onChange={(value) => {
+        onChange={value => {
           if (value) {
             setTheme(value as Type);
           }

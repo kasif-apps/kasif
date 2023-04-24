@@ -1,4 +1,5 @@
 import { app } from '@kasif/config/app';
+
 import { fs as tauriFs, path as tauriPath } from '@tauri-apps/api';
 
 async function NoOp<T>(): Promise<T> {

@@ -1,7 +1,10 @@
-import { app } from '@kasif/config/app';
-import { Box, Button } from '@mantine/core';
-import { open } from '@tauri-apps/api/dialog';
 import { useState } from 'react';
+
+import { Box, Button } from '@mantine/core';
+
+import { app } from '@kasif/config/app';
+
+import { open } from '@tauri-apps/api/dialog';
 
 export function PluginsPage() {
   const [loading, setLoading] = useState(false);
@@ -25,7 +28,7 @@ export function PluginsPage() {
     }
 
     if (selected) {
-      selected.forEach((path) => {
+      selected.forEach(path => {
         app.pluginManager.uploadPlugin(path);
       });
     }

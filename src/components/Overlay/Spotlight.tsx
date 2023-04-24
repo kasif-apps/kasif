@@ -1,10 +1,10 @@
-import React from 'react';
-import { Group, UnstyledButton, Text, createStyles, Kbd, Center } from '@mantine/core';
+import { Center, Group, Kbd, Text, UnstyledButton, createStyles } from '@mantine/core';
 import { SpotlightActionProps } from '@mantine/spotlight';
+
 import { app } from '@kasif/config/app';
 import { useSlice } from '@kasif/util/cinq-react';
 
-const useStyles = createStyles((theme) => ({
+const useStyles = createStyles(theme => ({
   action: {
     position: 'relative',
     display: 'block',
@@ -34,16 +34,15 @@ export function ActionComponent({
   });
 
   const [commands] = useSlice(app.commandManager.commands);
-  const { source } = commands.find((c) => c.id === action.id)!;
+  const { source } = commands.find(c => c.id === action.id)!;
 
   return (
     <UnstyledButton
       className={cx(classes.action, { [classes.actionHovered]: hovered })}
       tabIndex={-1}
-      onMouseDown={(event) => event.preventDefault()}
+      onMouseDown={event => event.preventDefault()}
       onClick={onTrigger}
-      {...others}
-    >
+      {...others}>
       <Group noWrap spacing="xs">
         {action.icon && <Center>{action.icon}</Center>}
 

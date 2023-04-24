@@ -54,6 +54,7 @@ export class NotificationManager extends BaseManager {
     options?: Omit<Omit<Omit<NotificationProps, 'title'>, 'message'>, 'color'>
   ) {
     const source = { id: this.app.id, name: this.app.name };
+    const id = crypto.randomUUID();
 
     if (this.getLogLevel() >= Log.ERROR) {
       showNotification({
@@ -62,6 +63,7 @@ export class NotificationManager extends BaseManager {
         icon: React.createElement(IconX, { size: 20 }),
         message,
         color: 'red',
+        id,
       });
     }
 
@@ -77,6 +79,7 @@ export class NotificationManager extends BaseManager {
     options?: Omit<Omit<Omit<NotificationProps, 'title'>, 'message'>, 'color'>
   ) {
     const source = { id: this.app.id, name: this.app.name };
+    const id = crypto.randomUUID();
 
     if (this.getLogLevel() >= Log.WARNING) {
       showNotification({
@@ -85,6 +88,7 @@ export class NotificationManager extends BaseManager {
         message,
         icon: React.createElement(IconAlertTriangle, { size: 20 }),
         color: 'orange',
+        id,
       });
     }
 
@@ -100,6 +104,7 @@ export class NotificationManager extends BaseManager {
     options?: Omit<Omit<Omit<NotificationProps, 'title'>, 'message'>, 'color'>
   ) {
     const source = { id: this.app.id, name: this.app.name };
+    const id = crypto.randomUUID();
 
     if (this.getLogLevel() >= Log.SUCCESS) {
       showNotification({
@@ -108,6 +113,8 @@ export class NotificationManager extends BaseManager {
         message,
         icon: React.createElement(IconCheck, { size: 20 }),
         color: 'green',
+        autoClose: false,
+        id,
       });
     }
 
@@ -123,6 +130,7 @@ export class NotificationManager extends BaseManager {
     options?: Omit<Omit<Omit<NotificationProps, 'title'>, 'message'>, 'color'>
   ) {
     const source = { id: this.app.id, name: this.app.name };
+    const id = crypto.randomUUID();
 
     if (this.getLogLevel() >= Log.LOG) {
       showNotification({
@@ -131,6 +139,7 @@ export class NotificationManager extends BaseManager {
         message,
         icon: React.createElement(IconInfoCircle, { size: 20 }),
         color: 'blue',
+        id,
       });
     }
 

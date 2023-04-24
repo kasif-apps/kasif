@@ -3,6 +3,7 @@ export const permissions = [
   'install_plugin',
   'load_plugin',
   'show_notifications',
+  'show_prompts',
   'push_view',
   'push_pane',
   'remove_view',
@@ -33,7 +34,7 @@ export const permissions = [
   'read_setting',
 ] as const;
 
-export type PermissionType = typeof permissions[number];
+export type PermissionType = (typeof permissions)[number];
 
 export const permissionDescriptions: Record<
   PermissionType,
@@ -55,6 +56,11 @@ export const permissionDescriptions: Record<
     label: 'Show Notifications',
     description:
       'Showing notifications to infrom you. These may include infos and success, warning or error messages',
+  },
+  show_prompts: {
+    label: 'Show Prompts',
+    description:
+      'Showing prompts to infrom you or get information from you. These may include inputs, confirmations and alerts',
   },
   push_view: {
     label: 'Push View',

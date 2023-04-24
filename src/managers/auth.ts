@@ -1,7 +1,7 @@
 import { createSlice, Slice } from '@kasif-apps/cinq';
 import { backend } from '@kasif/config/backend';
 import { authorized, trackable, tracker } from '@kasif/util/decorators';
-import { BaseManager } from './base';
+import { BaseManager } from '@kasif/managers/base';
 
 export interface User {
   avatar: string;

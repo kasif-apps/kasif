@@ -1,14 +1,17 @@
-import { animations } from '@kasif/util/misc';
-import { Card, Image, Text, Group, Badge, Button, ActionIcon, createStyles } from '@mantine/core';
-import { IconHeart } from '@tabler/icons';
-import { Transition } from '@kasif/components/Transition/TransitionWrapper';
-import { app } from '@kasif/config/app';
 import { useState } from 'react';
 
-const useStyles = createStyles((theme) => ({
+import { ActionIcon, Badge, Button, Card, Group, Image, Text, createStyles } from '@mantine/core';
+
+import { Transition } from '@kasif/components/Transition/TransitionWrapper';
+import { app } from '@kasif/config/app';
+import { animations } from '@kasif/util/misc';
+
+import { IconHeart } from '@tabler/icons';
+
+const useStyles = createStyles(theme => ({
   card: {
-    backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[7] : theme.white,
-    transition: 'transform 0.3s ease',
+    'backgroundColor': theme.colorScheme === 'dark' ? theme.colors.dark[7] : theme.white,
+    'transition': 'transform 0.3s ease',
 
     '&:hover': {
       transform: 'scale(1.02)',
@@ -35,7 +38,7 @@ const useStyles = createStyles((theme) => ({
   },
 
   author: {
-    cursor: 'pointer',
+    'cursor': 'pointer',
 
     '&:hover, &:focus, &:active': {
       textDecoration: 'underline',
@@ -82,7 +85,7 @@ export function PluginCard(props: PluginCardProps) {
 
           <Card.Section className={classes.section}>
             <Group noWrap spacing="xs" mt="md">
-              {category.map((item) => (
+              {category.map(item => (
                 <Badge key={item} size="sm" color="teal">
                   {item}
                 </Badge>
@@ -102,8 +105,7 @@ export function PluginCard(props: PluginCardProps) {
               }}
               radius="md"
               variant={installed ? 'outline' : 'filled'}
-              style={{ flex: 1 }}
-            >
+              style={{ flex: 1 }}>
               {installed ? 'Uninstall' : 'Install'}
             </Button>
             <ActionIcon variant="default" radius="md" size={36}>
@@ -116,7 +118,7 @@ export function PluginCard(props: PluginCardProps) {
   );
 }
 
-const useHeroStyles = createStyles((theme) => ({
+const useHeroStyles = createStyles(theme => ({
   root: {
     display: 'flex',
     backgroundImage: `linear-gradient(-60deg, ${theme.colors.blue[4]} 0%, ${theme.colors.blue[7]} 100%)`,
@@ -159,7 +161,7 @@ const useHeroStyles = createStyles((theme) => ({
   },
 
   stat: {
-    flex: 1,
+    'flex': 1,
 
     '& + &': {
       paddingLeft: theme.spacing.xl,
@@ -184,14 +186,14 @@ interface HeroProps {
 
 export function Hero({ data }: HeroProps) {
   const { classes } = useHeroStyles();
-  const stats = data.map((stat) => (
+  const stats = data.map(stat => (
     <div key={stat.title} className={classes.stat}>
       <Text className={classes.label}>Downloads</Text>
       <Text className={classes.count}>{stat.downloads}</Text>
       <Text className={classes.title}>{stat.title}</Text>
       <Text className={classes.description}>{stat.description}</Text>
       <Group spacing={6} mt="sm">
-        {stat.category.map((item) => (
+        {stat.category.map(item => (
           <Badge key={item} color="blue" variant="filled">
             {item}
           </Badge>

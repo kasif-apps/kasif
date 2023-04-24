@@ -1,5 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
+
 import { LoadingOverlay, LoadingOverlayProps } from '@mantine/core';
+
 import { TablerIconProps } from '@tabler/icons';
 
 export function isCustomRender(node: RenderableNode | React.FC): node is CustomRender {
@@ -41,7 +43,7 @@ export function PrebuiltRenderer(props: PrebuiltRender) {
 
   useEffect(() => {
     if (props.type === 'icon' && props.render) {
-      import(`../../node_modules/@tabler/icons/icons/${props.render}.svg`).then((icon) => {
+      import(`../../node_modules/@tabler/icons/icons/${props.render}.svg`).then(icon => {
         if (icon && icon.ReactComponent) {
           setComponent(icon);
         }

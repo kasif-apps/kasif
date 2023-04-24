@@ -1,8 +1,10 @@
-import { OS } from '@mantine/hooks';
-import { environment } from '@kasif/util/environment';
-import { listen } from '@tauri-apps/api/event';
-import { app } from '@kasif/config/app';
 import { CSSObject } from '@mantine/core';
+import { OS } from '@mantine/hooks';
+
+import { app } from '@kasif/config/app';
+import { environment } from '@kasif/util/environment';
+
+import { listen } from '@tauri-apps/api/event';
 
 export function getCssVar(varaible: string): string {
   const root = document.querySelector(':root')!;
@@ -41,11 +43,11 @@ export function getOS(): OS {
 }
 
 export function createShortcutLabel(...keys: string[]): string {
-  let result = keys.map((key) => key.toLowerCase());
+  let result = keys.map(key => key.toLowerCase());
   const os = getOS();
 
   if (os === 'macos' || os === 'ios') {
-    result = result.map((key) => {
+    result = result.map(key => {
       switch (key) {
         case 'ctrl':
         case 'control':
@@ -62,7 +64,7 @@ export function createShortcutLabel(...keys: string[]): string {
       }
     });
   } else {
-    result = result.map((key) => {
+    result = result.map(key => {
       switch (key) {
         case 'control':
         case 'ctrl':
@@ -80,7 +82,7 @@ export function createShortcutLabel(...keys: string[]): string {
     });
   }
 
-  return result.map((key) => key.toUpperCase()).join(' + ');
+  return result.map(key => key.toUpperCase()).join(' + ');
 }
 
 export async function createGlobalStyles(): Promise<{ styles: CSSObject; kill: () => void }> {
@@ -149,16 +151,16 @@ export async function createGlobalStyles(): Promise<{ styles: CSSObject; kill: (
       backgroundColor: 'transparent',
     },
 
-    nav: {
+    'nav': {
       borderTopLeftRadius: 'var(--window-border-radius)',
       borderBottomLeftRadius: 'var(--window-border-radius)',
     },
 
-    footer: {
+    'footer': {
       borderBottomRightRadius: 'var(--window-border-radius)',
     },
 
-    header: {
+    'header': {
       borderTopRightRadius: 'var(--window-border-radius)',
     },
 
@@ -167,7 +169,10 @@ export async function createGlobalStyles(): Promise<{ styles: CSSObject; kill: (
     },
 
     '#notifications > div > div': {
-      bottom: 'calc(var(--mantine-footer-height) + 1rem)',
+      bottom: 'calc(var(--mantine-footer-height) + 0.5rem)',
+      right: '0.5rem',
+      maxWidth: '28.5rem',
+      width: '22rem',
     },
 
     '.titlebar': { display: 'flex', justifyContent: 'center' },
@@ -256,7 +261,7 @@ export async function createGlobalStyles(): Promise<{ styles: CSSObject; kill: (
 }
 
 export function createShortcutLabelFromString(shortCut: string) {
-  return createShortcutLabel(...shortCut.split('+').map((key) => key.trim()));
+  return createShortcutLabel(...shortCut.split('+').map(key => key.trim()));
 }
 
 export function getRelativeTime(timestamp: Date) {
@@ -365,6 +370,6 @@ export function getFirstNodeInPath(
 export function snakeToPascal(input: string) {
   return input
     .split('-')
-    .map((substr) => substr.charAt(0).toUpperCase() + substr.slice(1))
+    .map(substr => substr.charAt(0).toUpperCase() + substr.slice(1))
     .join('');
 }

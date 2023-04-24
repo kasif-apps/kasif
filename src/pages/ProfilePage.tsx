@@ -1,7 +1,8 @@
+import { Box, Group } from '@mantine/core';
+
 import { SignInLogin, UserCard } from '@kasif/components/Compound/Auth';
 import { app } from '@kasif/config/app';
 import { useSlice } from '@kasif/util/cinq-react';
-import { Box, Group } from '@mantine/core';
 
 export function ProfilePage() {
   const [user] = useSlice(app.authManager.getUserSlice());

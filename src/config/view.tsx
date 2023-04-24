@@ -1,21 +1,23 @@
+import { Avatar } from '@mantine/core';
+
+import { app } from '@kasif/config/app';
 import { View } from '@kasif/managers/view';
+import { LogsPage } from '@kasif/pages/LogsPage';
+import { PermissionsPage } from '@kasif/pages/PermissionsPage';
+import { PluginsPage } from '@kasif/pages/PluginsPage';
 import { ProfilePage } from '@kasif/pages/ProfilePage';
 import { SettingsPage } from '@kasif/pages/SettingsPage';
 import { StorePage } from '@kasif/pages/StorePage';
-import { LogsPage } from '@kasif/pages/LogsPage';
-import { PermissionsPage } from '@kasif/pages/PermissionsPage';
+import { useSlice } from '@kasif/util/cinq-react';
+
 import {
-  IconSettings,
-  IconUser,
-  IconShoppingBag,
+  IconLicense,
   IconMessages,
   IconPuzzle,
-  IconLicense,
+  IconSettings,
+  IconShoppingBag,
+  IconUser,
 } from '@tabler/icons';
-import { PluginsPage } from '@kasif/pages/PluginsPage';
-import { Avatar } from '@mantine/core';
-import { app } from '@kasif/config/app';
-import { useSlice } from '@kasif/util/cinq-react';
 
 export const prebuiltViews: Record<string, View> = {
   settings: {

@@ -1,42 +1,45 @@
 import React, { useEffect, useRef } from 'react';
-import { KasifHeader, KasifNavbar, KasifFooter } from '@kasif/components/Navigation';
+import { Droppable, DroppableProvided } from 'react-beautiful-dnd';
+import { useTranslation } from 'react-i18next';
+
 import {
   AppShell,
   Box,
-  createStyles,
   ScrollArea,
   ScrollAreaProps,
+  createStyles,
   useMantineTheme,
 } from '@mantine/core';
-import { app } from '@kasif/config/app';
-import { useSlice } from '@kasif/util/cinq-react';
-import SplitPane, { Pane as SplitPaneView } from 'split-pane-react';
 import { useHover } from '@mantine/hooks';
-import { Droppable, DroppableProvided } from 'react-beautiful-dnd';
-import { DisplayRenderableNode } from '@kasif/util/node-renderer';
+
 import { ContextMenu } from '@kasif/components/Compound/ContextMenu';
+import { KasifFooter, KasifHeader, KasifNavbar } from '@kasif/components/Navigation';
+import { app } from '@kasif/config/app';
 import { LanguageSetting } from '@kasif/config/settings';
-import { useTranslation } from 'react-i18next';
+import { useSlice } from '@kasif/util/cinq-react';
+import { DisplayRenderableNode } from '@kasif/util/node-renderer';
+
+import SplitPane, { Pane as SplitPaneView } from 'split-pane-react';
 
 const useStyles = createStyles((theme, { isDragging }: { isDragging: boolean }) => ({
   paneFreeDropArea: {
-    position: 'absolute',
-    top: 'calc(var(--mantine-header-height, 0px) + var(--titlebar-height, 0px))',
-    right: 0,
-    width: 140,
-    height:
+    'position': 'absolute',
+    'top': 'calc(var(--mantine-header-height, 0px) + var(--titlebar-height, 0px))',
+    'right': 0,
+    'width': 140,
+    'height':
       'calc(100vh - var(--mantine-header-height) - var(--titlebar-height) - var(--mantine-footer-height))',
-    pointerEvents: isDragging ? 'auto' : 'none',
-    backgroundColor: 'transparent',
+    'pointerEvents': isDragging ? 'auto' : 'none',
+    'backgroundColor': 'transparent',
 
     '& .overlay': {
-      pointerEvents: isDragging ? 'auto' : 'none',
-      backgroundColor: 'transparent',
-      width: '100%',
-      height: '100%',
-      transition: 'background-color 300ms ease',
-      position: 'relative',
-      zIndex: 999,
+      'pointerEvents': isDragging ? 'auto' : 'none',
+      'backgroundColor': 'transparent',
+      'width': '100%',
+      'height': '100%',
+      'transition': 'background-color 300ms ease',
+      'position': 'relative',
+      'zIndex': 999,
 
       '&.active': {
         backgroundColor: theme.fn.rgba(theme.colors[theme.primaryColor][5], 0.2),
@@ -45,17 +48,17 @@ const useStyles = createStyles((theme, { isDragging }: { isDragging: boolean }) 
   },
 
   paneBusyDropArea: {
-    width: '100%',
-    height: '100%',
+    'width': '100%',
+    'height': '100%',
 
     '& .overlay': {
-      width: '100%',
-      height: '100%',
-      backgroundColor: 'transparent',
-      transition: 'background-color 300ms ease',
-      position: 'absolute',
-      top: 0,
-      left: 0,
+      'width': '100%',
+      'height': '100%',
+      'backgroundColor': 'transparent',
+      'transition': 'background-color 300ms ease',
+      'position': 'absolute',
+      'top': 0,
+      'left': 0,
 
       '&.active': {
         backgroundColor: theme.fn.rgba(theme.colors[theme.primaryColor][5], 0.2),
@@ -100,8 +103,7 @@ const CustomScrollArea = ({
         sx={{
           height: `calc(100vh - var(--mantine-header-height) - ${total}px - var(--titlebar-height) - var(--mantine-footer-height))`,
         }}
-        {...rest}
-      >
+        {...rest}>
         {rest.children}
       </ScrollArea>
     </Box>
@@ -130,8 +132,7 @@ const PaneItem = (props: { children: React.ReactNode; id: string; droppable: boo
             data-contextmenu-field="pane"
             className={cx(classes.paneBusyDropArea)}
             ref={provided.innerRef}
-            {...provided.droppableProps}
-          >
+            {...provided.droppableProps}>
             <div
               style={{ zIndex: isDragging ? 99 : -1 }}
               ref={paneDropAreaRef}
@@ -157,25 +158,25 @@ function PaneView() {
   const Component = app.viewManager.getViewComponent(currentView);
 
   const verticalPanes = [
-    ...panes.filter((pane) => pane.position === 'left'),
+    ...panes.filter(pane => pane.position === 'left'),
     { id: 'main_view', render: Component, position: 'right', size: '30%' },
-    ...panes.filter((pane) => pane.position === 'right'),
+    ...panes.filter(pane => pane.position === 'right'),
   ];
   const horizontalPanes = [
-    ...panes.filter((pane) => pane.position === 'top'),
+    ...panes.filter(pane => pane.position === 'top'),
     { id: 'main_view', render: Component, position: 'top', size: '50%' },
-    ...panes.filter((pane) => pane.position === 'bottom'),
+    ...panes.filter(pane => pane.position === 'bottom'),
   ];
 
   useEffect(() => {
     const verticalPaneSizes =
       paneSizes.vertical.length === verticalPanes.length
         ? paneSizes.vertical
-        : verticalPanes.map((pane) => pane.size || `calc(100% / ${horizontalPanes.length})`);
+        : verticalPanes.map(pane => pane.size || `calc(100% / ${horizontalPanes.length})`);
     const horizontalPaneSizes =
       paneSizes.horizontal.length === horizontalPanes.length
         ? paneSizes.horizontal
-        : horizontalPanes.map((pane) => pane.size || `calc(100% / ${horizontalPanes.length})`);
+        : horizontalPanes.map(pane => pane.size || `calc(100% / ${horizontalPanes.length})`);
 
     setPaneSizes({
       horizontal: horizontalPaneSizes,
@@ -195,8 +196,7 @@ function PaneView() {
           <SplitPane
             split="vertical"
             sizes={paneSizes.vertical}
-            onChange={(sizes) => setPaneSize(sizes, 'vertical')}
-          >
+            onChange={sizes => setPaneSize(sizes, 'vertical')}>
             {verticalPanes.map((verticalPane, verticalIndex) => {
               if (verticalPane.id === 'main_view') {
                 return (
@@ -205,20 +205,17 @@ function PaneView() {
                     key={`vartical-${verticalPane.id}`}
                     split="horizontal"
                     sizes={paneSizes.horizontal}
-                    onChange={(sizes) => setPaneSize(sizes, 'horizontal')}
-                  >
+                    onChange={sizes => setPaneSize(sizes, 'horizontal')}>
                     {horizontalPanes.map((horizontalPane, horizontalIndex) => (
                       <>
                         <PaneItem
                           key={`horizontal-${horizontalPane.id}`}
                           droppable={horizontalPane.id !== 'main_view'}
-                          id={horizontalPane.id}
-                        >
+                          id={horizontalPane.id}>
                           <CustomScrollArea
                             paneId={horizontalPane.id}
                             paneIndex={horizontalIndex}
-                            scrollType="horizontal"
-                          >
+                            scrollType="horizontal">
                             <DisplayRenderableNode node={horizontalPane.render} />
                           </CustomScrollArea>
                         </PaneItem>
@@ -232,13 +229,11 @@ function PaneView() {
                 <PaneItem
                   key={`vartical-${verticalPane.id}`}
                   droppable={verticalPane.id !== 'main_view'}
-                  id={verticalPane.id}
-                >
+                  id={verticalPane.id}>
                   <CustomScrollArea
                     paneId={verticalPane.id}
                     paneIndex={verticalIndex}
-                    scrollType="vertical"
-                  >
+                    scrollType="vertical">
                     <DisplayRenderableNode node={verticalPane.render} />
                   </CustomScrollArea>
                 </PaneItem>
@@ -257,8 +252,7 @@ function PaneView() {
           <div
             className={cx(classes.paneFreeDropArea)}
             ref={provided.innerRef}
-            {...provided.droppableProps}
-          >
+            {...provided.droppableProps}>
             <div
               ref={paneDropAreaRef}
               className={cx('overlay', isDragging && hovered && 'active')}
@@ -311,8 +305,7 @@ export function Layout() {
           paddingLeft: 'calc(var(--mantine-navbar-width, 0px))',
           paddingRight: 'calc(var(--mantine-aside-width, 0px))',
         },
-      })}
-    >
+      })}>
       <ContextMenu />
       <PaneView />
     </AppShell>

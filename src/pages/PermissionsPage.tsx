@@ -1,28 +1,31 @@
-import { Transition } from '@kasif/components/Transition/TransitionWrapper';
-import { app } from '@kasif/config/app';
-import { useSlice } from '@kasif/util/cinq-react';
-import { animations } from '@kasif/util/misc';
+import { forwardRef } from 'react';
+
 import {
   Box,
   Button,
   Card,
   Center,
   CloseButton,
-  createStyles,
   Divider,
   Group,
   MultiSelect,
   MultiSelectValueProps,
   Stack,
   Text,
+  createStyles,
 } from '@mantine/core';
-import { permissionDescriptions, permissions, PermissionType } from '@kasif/config/permission';
-import { forwardRef } from 'react';
-import { PluginImport } from '@kasif/managers/plugin';
+
+import { Transition } from '@kasif/components/Transition/TransitionWrapper';
+import { app } from '@kasif/config/app';
+import { PermissionType, permissionDescriptions, permissions } from '@kasif/config/permission';
 import { prebuiltViews } from '@kasif/config/view';
+import { PluginImport } from '@kasif/managers/plugin';
+import { useSlice } from '@kasif/util/cinq-react';
+import { animations } from '@kasif/util/misc';
+
 import { IconShoppingBag } from '@tabler/icons';
 
-const useStyles = createStyles((theme) => ({
+const useStyles = createStyles(theme => ({
   card: {
     backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[7] : theme.white,
     display: 'flex',
@@ -76,7 +79,7 @@ function ValueComponent({
           <Box
             px="xs"
             py={4}
-            sx={(theme) => ({
+            sx={theme => ({
               display: 'flex',
               cursor: 'default',
               alignItems: 'center',
@@ -85,8 +88,7 @@ function ValueComponent({
                 theme.colorScheme === 'dark' ? theme.colors.dark[7] : theme.colors.gray[4]
               }`,
               borderRadius: theme.radius.sm,
-            })}
-          >
+            })}>
             <Box sx={{ lineHeight: 1, fontSize: 12 }}>
               {pluginPermissions.length - limit} more items
             </Box>
@@ -100,7 +102,7 @@ function ValueComponent({
   return (
     <div {...others}>
       <Box
-        sx={(theme) => ({
+        sx={theme => ({
           display: 'flex',
           cursor: 'default',
           alignItems: 'center',
@@ -110,8 +112,7 @@ function ValueComponent({
           }`,
           paddingLeft: theme.spacing.xs,
           borderRadius: theme.radius.sm,
-        })}
-      >
+        })}>
         <Box sx={{ lineHeight: 1, fontSize: 12 }}>{label}</Box>
         <CloseButton
           onMouseDown={onRemove}
@@ -152,15 +153,14 @@ export function PermissionsPage() {
                   <Button
                     size="xs"
                     onClick={() => app.viewManager.pushView({ view: prebuiltViews.store })}
-                    leftIcon={<IconShoppingBag size={16} />}
-                  >
+                    leftIcon={<IconShoppingBag size={16} />}>
                     Go To The Store
                   </Button>
                 </Box>
               </Stack>
             </Center>
           )}
-          {plugins.map((plugin) => (
+          {plugins.map(plugin => (
             <Group key={plugin.meta.identifier} position="apart">
               <Stack spacing={0}>
                 <Text>{plugin.meta.name}</Text>
@@ -174,14 +174,14 @@ export function PermissionsPage() {
                 disableSelectedItemFiltering
                 nothingFound="Nothing found"
                 placeholder="Pick all that you like"
-                valueComponent={(props) => <ValueComponent plugin={plugin} {...props} />}
+                valueComponent={props => <ValueComponent plugin={plugin} {...props} />}
                 itemComponent={SelectItem}
                 searchable
                 value={appPermissions[plugin.meta.identifier]}
-                onChange={(values) =>
+                onChange={values =>
                   handleChange(plugin.meta.identifier, values as PermissionType[])
                 }
-                data={permissions.map((item) => ({
+                data={permissions.map(item => ({
                   label: permissionDescriptions[item].label,
                   description: permissionDescriptions[item].description,
                   value: item,

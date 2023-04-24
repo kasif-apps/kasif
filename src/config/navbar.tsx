@@ -1,9 +1,11 @@
-import { NavbarItem } from '@kasif/managers/navbar';
-import { prebuiltViews } from '@kasif/config/view';
-import { IconHome, IconPuzzle, IconSettings, IconShoppingBag, IconUser } from '@tabler/icons';
 import { Avatar } from '@mantine/core';
+
+import { app } from '@kasif/config/app';
+import { prebuiltViews } from '@kasif/config/view';
+import { NavbarItem } from '@kasif/managers/navbar';
 import { useSlice } from '@kasif/util/cinq-react';
-import { app } from './app';
+
+import { IconHome, IconPuzzle, IconSettings, IconShoppingBag, IconUser } from '@tabler/icons';
 
 export const initialTopItems: NavbarItem[] = [
   {
@@ -38,7 +40,7 @@ export const initialBottomItems: NavbarItem[] = [
             size={24}
             radius="xl"
             src={avatar}
-            sx={(theme) => ({
+            sx={theme => ({
               border: `1px solid ${
                 theme.colorScheme === 'dark' ? theme.colors.dark[4] : theme.colors.gray[4]
               }`,

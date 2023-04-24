@@ -1,23 +1,25 @@
+import { AuthManager } from '@kasif/managers/auth';
+import { BaseManager } from '@kasif/managers/base';
 import { CommandManager } from '@kasif/managers/command';
+import { ContextMenuManager } from '@kasif/managers/contextmenu';
+import { DndManager } from '@kasif/managers/dnd';
 import { NavbarManager } from '@kasif/managers/navbar';
+import { NetworkManager } from '@kasif/managers/network';
 import { NotificationManager } from '@kasif/managers/notification';
 import { PaneManager } from '@kasif/managers/pane';
+import { PermissionManager } from '@kasif/managers/permission';
+import { PluginManager } from '@kasif/managers/plugin';
+import { PromptManager } from '@kasif/managers/prompt';
 import { SettingsItem, SettingsManager } from '@kasif/managers/settings';
 import { ThemeManager } from '@kasif/managers/theme';
 import { ViewManager } from '@kasif/managers/view';
 import { useSlice } from '@kasif/util/cinq-react';
-import { BaseManager } from '@kasif/managers/base';
-import { DndManager } from '@kasif/managers/dnd';
-import { NetworkManager } from '@kasif/managers/network';
-import { AuthManager } from '@kasif/managers/auth';
-import { ContextMenuManager } from '@kasif/managers/contextmenu';
-import { PluginManager } from '@kasif/managers/plugin';
-import { PermissionManager } from '@kasif/managers/permission';
+
 import { createRecordSlice } from '@kasif-apps/cinq';
 
 export const kasif = {
   id: 'kasif@v0.0.1',
-  name: 'Kasif',
+  name: 'Kâşif',
   version: '0.0.1',
 };
 
@@ -43,6 +45,7 @@ export class App {
   dndManager: DndManager;
   networkManager: NetworkManager;
   contextMenuManager: ContextMenuManager;
+  promptManager: PromptManager;
   pluginManager: PluginManager;
 
   customManagers: Map<string, BaseManager> = new Map();
@@ -72,6 +75,7 @@ export class App {
     this.contextMenuManager = new ContextMenuManager(this, this.parent);
     this.dndManager = new DndManager(this, this.parent);
     this.networkManager = new NetworkManager(this, this.parent);
+    this.promptManager = new PromptManager(this, this.parent);
     this.pluginManager = new PluginManager(this, this.parent);
   }
 

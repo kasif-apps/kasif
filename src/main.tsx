@@ -1,23 +1,27 @@
-import '@kasif/config/i18n';
-import { useState, useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import ReactDOM from 'react-dom/client';
+
 import { CSSObject, MantineProvider, MantineTheme } from '@mantine/core';
-import { Layout } from '@kasif/pages/Layout';
-import { Notifications } from '@mantine/notifications';
-import { app, kasif, useSetting } from '@kasif/config/app';
-import { ThemeSetting } from '@kasif//config/settings';
-import { SpotlightProvider } from '@mantine/spotlight';
-import { IconSearch } from '@tabler/icons';
-import { createPaneStyles } from '@kasif/util/pane';
 import { useHotkeys } from '@mantine/hooks';
-import { createGlobalStyles } from '@kasif/util/misc';
-import { DndProvider } from '@kasif/config/dnd';
-import { DisplayRenderableNode } from '@kasif/util/node-renderer';
-import { useSlice } from '@kasif/util/cinq-react';
-import { ActionComponent } from '@kasif/components/Overlay/Spotlight';
 import { ModalsProvider } from '@mantine/modals';
+import { Notifications } from '@mantine/notifications';
+import { SpotlightProvider } from '@mantine/spotlight';
+
+import { ActionComponent } from '@kasif/components/Overlay/Spotlight';
+import { app, kasif, useSetting } from '@kasif/config/app';
+import { DndProvider } from '@kasif/config/dnd';
+import '@kasif/config/i18n';
+import { ThemeSetting } from '@kasif/config/settings';
+import { Layout } from '@kasif/pages/Layout';
+import { useSlice } from '@kasif/util/cinq-react';
+import { environment } from '@kasif/util/environment';
+import { createGlobalStyles } from '@kasif/util/misc';
+import { DisplayRenderableNode } from '@kasif/util/node-renderer';
+import { createPaneStyles } from '@kasif/util/pane';
+
+import { IconSearch } from '@tabler/icons';
+
 import { getMatches } from '@tauri-apps/api/cli';
-import { environment } from './util/environment';
 
 app.notificationManager.log(
   `Kasif skeleton initialized. Version: ${kasif.version}`,
@@ -35,8 +39,8 @@ function Wrapper() {
 
   useHotkeys(
     commands
-      .filter((command) => Boolean(command.shortCut))
-      .map((command) => [command.shortCut!, command.onTrigger])
+      .filter(command => Boolean(command.shortCut))
+      .map(command => [command.shortCut!, command.onTrigger])
   );
 
   useEffect(() => {
@@ -54,7 +58,7 @@ function Wrapper() {
 
   useEffect(() => {
     if (environment.currentEnvironment === 'desktop') {
-      getMatches().then((matches) => {
+      getMatches().then(matches => {
         app.flags.set({
           debug: matches.args.debug.value as boolean,
           plugins: matches.args.plugin.value as string[],
@@ -72,35 +76,33 @@ function Wrapper() {
   }, []);
 
   return (
-    <div data-contextmenu-field="app">
+    <div>
       <MantineProvider
         withGlobalStyles
         withNormalizeCSS
         theme={{
           ...theme.ui,
-          globalStyles: ((t) => ({
+          globalStyles: (t => ({
             ...globalStyles,
             ...createPaneStyles(t),
           })) as (theme: MantineTheme) => CSSObject,
-        }}
-      >
+        }}>
         <SpotlightProvider
           yOffset={10}
-          actions={commands.map((command) => ({
+          actions={commands.map(command => ({
             ...command,
             icon: command.icon ? <DisplayRenderableNode node={command.icon} /> : undefined,
           }))}
           searchIcon={<IconSearch size={18} />}
           searchPlaceholder="Jump..."
-          actionComponent={(props) => <ActionComponent {...props} />}
+          actionComponent={props => <ActionComponent {...props} />}
           overlayProps={{
             blur: 0,
             opacity: 0,
           }}
           shortcut="mod+alt+p"
           shadow="xl"
-          nothingFoundMessage="Nothing found..."
-        >
+          nothingFoundMessage="Nothing found...">
           <ModalsProvider>
             <Notifications target="#notifications" position="bottom-right" zIndex={9999} />
             <DndProvider>{ready && <Layout />}</DndProvider>

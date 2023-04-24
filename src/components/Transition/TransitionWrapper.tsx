@@ -1,6 +1,8 @@
 import React, { forwardRef, useEffect, useRef, useState } from 'react';
+
 import { MantineTransition, Transition as MantineTransitionComponent } from '@mantine/core';
 import { useReducedMotion } from '@mantine/hooks';
+
 import { useSetting } from '@kasif/config/app';
 
 export interface TransitionController {
@@ -33,7 +35,7 @@ export function useTransitionController(delay = 0): TransitionController {
   }, [mounted]);
 
   const unMount = () =>
-    new Promise((resolve) => {
+    new Promise(resolve => {
       setMounted(false);
       setTimeout(() => {
         onUnMountCallback.current();
@@ -97,9 +99,8 @@ export const Transition = forwardRef((props: TransitionProps, ref) => {
       mounted={props.controller?.mounted ?? defaultController.mounted}
       transition={props.transition}
       duration={props.duration}
-      timingFunction="ease-in-out"
-    >
-      {(styles) => clone(styles)}
+      timingFunction="ease-in-out">
+      {styles => clone(styles)}
     </MantineTransitionComponent>
   );
 });

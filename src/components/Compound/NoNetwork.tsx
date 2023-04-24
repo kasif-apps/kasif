@@ -1,7 +1,8 @@
+import { Stack, Text } from '@mantine/core';
+
+import { ReactComponent as NoNetworkImage } from '@kasif/assets/img/no-network.svg';
 import { app } from '@kasif/config/app';
 import { useSlice } from '@kasif/util/cinq-react';
-import { ReactComponent as NoNetworkImage } from '@kasif/assets/img/no-network.svg';
-import { Stack, Text } from '@mantine/core';
 
 export function NoNetwork() {
   return (

@@ -1,5 +1,6 @@
-import { permissionDescriptions, PermissionType } from '@kasif/config/permission';
 import { Stack, Text } from '@mantine/core';
+
+import { PermissionType, permissionDescriptions } from '@kasif/config/permission';
 
 export function Permission({ label, description }: { label: string; description: string }) {
   return (
@@ -15,7 +16,7 @@ export function Permission({ label, description }: { label: string; description:
 export function Permissions({ permissions }: { permissions: PermissionType[] }) {
   return (
     <Stack spacing="sm">
-      {permissions.map((permission) => (
+      {permissions.map(permission => (
         <Permission key={permission} {...permissionDescriptions[permission]} />
       ))}
 

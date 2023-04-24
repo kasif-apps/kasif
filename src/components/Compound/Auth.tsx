@@ -1,33 +1,36 @@
-import { useForm } from '@mantine/form';
-import { useToggle, upperFirst } from '@mantine/hooks';
+import React, { useCallback, useEffect, useState } from 'react';
+
 import {
-  TextInput,
-  PasswordInput,
-  Text,
-  Paper,
-  Group,
-  PaperProps,
-  Button,
-  Divider,
-  Checkbox,
   Anchor,
-  Stack,
-  Box,
   Avatar,
+  Box,
+  Button,
   Card,
-  createStyles,
+  Checkbox,
+  Divider,
+  Group,
   LoadingOverlay,
+  Paper,
+  PaperProps,
+  PasswordInput,
+  Stack,
+  Text,
+  TextInput,
+  createStyles,
 } from '@mantine/core';
+import { useForm } from '@mantine/form';
+import { upperFirst, useToggle } from '@mantine/hooks';
+
 import {
+  DiscordButton,
+  GithubButton,
   GoogleButton,
   TwitterButton,
-  GithubButton,
-  DiscordButton,
 } from '@kasif/components/Primitive/SocialButtons';
-import React, { useCallback, useEffect, useState } from 'react';
-import { backend, BackendError } from '@kasif/config/backend';
-import { invoke } from '@tauri-apps/api';
+import { BackendError, backend } from '@kasif/config/backend';
 import { environment } from '@kasif/util/environment';
+
+import { invoke } from '@tauri-apps/api';
 
 interface AuthProvider {
   authUrl: string;
@@ -56,9 +59,8 @@ export function SignInLogin(props: PaperProps) {
     },
 
     validate: {
-      email: (val) =>
-        val.length <= 2 ? 'Email or username should at least be 2 characters' : null,
-      password: (val) => (val.length <= 6 ? 'Password should include at least 6 characters' : null),
+      email: val => (val.length <= 2 ? 'Email or username should at least be 2 characters' : null),
+      password: val => (val.length <= 6 ? 'Password should include at least 6 characters' : null),
     },
   });
 
@@ -76,7 +78,7 @@ export function SignInLogin(props: PaperProps) {
       const channel = `auth_table/${provider.state}`;
       setSubscriptionChannel(channel);
 
-      backend.realtime.subscribe(channel, (event) => {
+      backend.realtime.subscribe(channel, event => {
         if (event.code) {
           backend
             .collection('users')
@@ -103,7 +105,7 @@ export function SignInLogin(props: PaperProps) {
     backend
       .collection('users')
       .listAuthMethods()
-      .then((authMethods) => {
+      .then(authMethods => {
         setAuthProviders(authMethods.authProviders as AuthProvider[]);
       });
 
@@ -132,8 +134,7 @@ export function SignInLogin(props: PaperProps) {
     <Box
       p="sm"
       pt={0}
-      sx={{ maxWidth: 550, margin: 'auto', height: '100%', display: 'flex', alignItems: 'center' }}
-    >
+      sx={{ maxWidth: 550, margin: 'auto', height: '100%', display: 'flex', alignItems: 'center' }}>
       <Paper radius="md" p="xl" withBorder sx={{ width: '100%' }} {...props}>
         <LoadingOverlay loaderProps={{ variant: 'dots' }} visible={loading} />
         <Text size="lg" weight={500}>
@@ -141,7 +142,7 @@ export function SignInLogin(props: PaperProps) {
         </Text>
 
         <Group sx={{ minHeight: 36 }} grow mb="md" mt="md">
-          {authProviders.map((provider) =>
+          {authProviders.map(provider =>
             React.createElement(
               globalAuthMethods[provider.name],
               { onClick: () => handleOAuthLogin(provider), radius: 'xl' },
@@ -159,7 +160,7 @@ export function SignInLogin(props: PaperProps) {
                 label="Name"
                 placeholder="Your name"
                 value={form.values.name}
-                onChange={(event) => form.setFieldValue('name', event.currentTarget.value)}
+                onChange={event => form.setFieldValue('name', event.currentTarget.value)}
                 radius="md"
               />
             )}
@@ -169,7 +170,7 @@ export function SignInLogin(props: PaperProps) {
               label="Email or username"
               placeholder="hello@kasif.app"
               value={form.values.email}
-              onChange={(event) => form.setFieldValue('email', event.currentTarget.value)}
+              onChange={event => form.setFieldValue('email', event.currentTarget.value)}
               error={form.errors.email}
               radius="md"
             />
@@ -179,7 +180,7 @@ export function SignInLogin(props: PaperProps) {
               label="Password"
               placeholder="Your password"
               value={form.values.password}
-              onChange={(event) => form.setFieldValue('password', event.currentTarget.value)}
+              onChange={event => form.setFieldValue('password', event.currentTarget.value)}
               error={form.errors.password && 'Password should include at least 6 characters'}
               radius="md"
             />
@@ -188,7 +189,7 @@ export function SignInLogin(props: PaperProps) {
               <Checkbox
                 label="I accept terms and conditions"
                 checked={form.values.terms}
-                onChange={(event) => form.setFieldValue('terms', event.currentTarget.checked)}
+                onChange={event => form.setFieldValue('terms', event.currentTarget.checked)}
               />
             )}
           </Stack>
@@ -199,8 +200,7 @@ export function SignInLogin(props: PaperProps) {
               type="button"
               color="dimmed"
               onClick={() => toggle()}
-              size="xs"
-            >
+              size="xs">
               {type === 'register'
                 ? 'Already have an account? Login'
                 : "Don't have an account? Register"}
@@ -215,7 +215,7 @@ export function SignInLogin(props: PaperProps) {
   );
 }
 
-const useStyles = createStyles((theme) => ({
+const useStyles = createStyles(theme => ({
   card: {
     backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[7] : theme.white,
     maxWidth: 400,
@@ -276,8 +276,7 @@ export function UserCard({ avatar, name, title }: UserCardProps) {
             mt="xl"
             size="sm"
             color={theme.colorScheme === 'dark' ? undefined : 'dark'}
-            onClick={() => backend.authStore.clear()}
-          >
+            onClick={() => backend.authStore.clear()}>
             Logout
           </Button>
           <Button
@@ -285,8 +284,7 @@ export function UserCard({ avatar, name, title }: UserCardProps) {
             radius="md"
             mt="xl"
             size="sm"
-            color={theme.colorScheme === 'dark' ? undefined : 'dark'}
-          >
+            color={theme.colorScheme === 'dark' ? undefined : 'dark'}>
             Upload An App
           </Button>
         </Group>

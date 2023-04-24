@@ -1,5 +1,6 @@
 import { Button, ButtonProps, Group } from '@mantine/core';
-import { IconBrandGithub, IconBrandDiscord, IconBrandTwitter } from '@tabler/icons';
+
+import { IconBrandDiscord, IconBrandGithub, IconBrandTwitter } from '@tabler/icons';
 
 export function GoogleIcon(props: React.ComponentPropsWithoutRef<'svg'>) {
   return (
@@ -9,8 +10,7 @@ export function GoogleIcon(props: React.ComponentPropsWithoutRef<'svg'>) {
       viewBox="0 0 256 262"
       width="0.9rem"
       height="0.9rem"
-      {...props}
-    >
+      {...props}>
       <path
         fill="#4285F4"
         d="M255.878 133.451c0-10.734-.871-18.567-2.756-26.69H130.55v48.448h71.947c-1.45 12.04-9.283 30.172-26.69 42.356l-.244 1.622 38.755 30.023 2.685.268c24.659-22.774 38.875-56.282 38.875-96.027"
@@ -39,8 +39,8 @@ export function DiscordButton(props: ButtonProps) {
   return (
     <Button
       leftIcon={<IconBrandDiscord size="1rem" />}
-      sx={(theme) => ({
-        backgroundColor: theme.colorScheme === 'dark' ? '#5865F2' : '#5865F2',
+      sx={theme => ({
+        'backgroundColor': theme.colorScheme === 'dark' ? '#5865F2' : '#5865F2',
         '&:not([data-disabled]):hover': {
           backgroundColor:
             theme.colorScheme === 'dark'
@@ -69,9 +69,9 @@ export function GithubButton(props: ButtonProps) {
     <Button
       {...props}
       leftIcon={<IconBrandGithub size="1rem" />}
-      sx={(theme) => ({
-        backgroundColor: theme.colors.dark[theme.colorScheme === 'dark' ? 9 : 6],
-        color: '#fff',
+      sx={theme => ({
+        'backgroundColor': theme.colors.dark[theme.colorScheme === 'dark' ? 9 : 6],
+        'color': '#fff',
         '&:hover': {
           backgroundColor: theme.colors.dark[theme.colorScheme === 'dark' ? 9 : 6],
         },

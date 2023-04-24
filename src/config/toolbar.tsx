@@ -1,3 +1,6 @@
+import { App } from '@kasif/config/app';
+import { RenderableNode } from '@kasif/util/node-renderer';
+
 import {
   IconArrowLeft,
   IconArrowRight,
@@ -8,8 +11,6 @@ import {
   IconPin,
   IconRefresh,
 } from '@tabler/icons';
-import { App } from '@kasif/config/app';
-import { RenderableNode } from '@kasif/util/node-renderer';
 
 export type ToolbarItemPlacement = 'navigation' | 'action' | 'custom' | 'contextual';
 

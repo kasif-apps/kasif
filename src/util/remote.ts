@@ -62,7 +62,7 @@ export class KasifRemote extends EventTarget {
     super();
     this.#socket = new WebSocket(`ws://localhost:${this.port}`);
 
-    this.#socket.addEventListener('message', (event) => this.handleMessage(event.data));
+    this.#socket.addEventListener('message', event => this.handleMessage(event.data));
 
     this.#socket.addEventListener('open', () => {
       const payload = {
@@ -94,7 +94,7 @@ export class KasifRemote extends EventTarget {
         break;
       case 'response':
         // server requests a function's return value
-        this.handleResponseAction(message).then((response) =>
+        this.handleResponseAction(message).then(response =>
           this.#socket.send(JSON.stringify(response))
         );
         break;
@@ -142,12 +142,11 @@ export class KasifRemote extends EventTarget {
     }
   }
 
-  // deno-lint-ignore ban-types
   functions = new Proxy({} as Record<string, Function>, {
     get:
       (_, key: string) =>
       (...args: unknown[]) =>
-        new Promise<unknown>((resolve) => {
+        new Promise<unknown>(resolve => {
           const payload = this.createCallPayload(key, args || []);
 
           this.#resolvers.set(payload.action.id, resolve);

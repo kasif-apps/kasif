@@ -44,6 +44,7 @@
     "@commitlint/cli": "^17.4.4",
     "@commitlint/config-conventional": "^17.4.4",
     "@tauri-apps/cli": "^1.2.2",
+    "@trivago/prettier-plugin-sort-imports": "^4.1.1",
     "@types/node": "^18.11.14",
     "@types/react": "^18.0.26",
     "@types/react-beautiful-dnd": "^13.1.3",

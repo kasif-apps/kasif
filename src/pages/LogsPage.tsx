@@ -1,12 +1,14 @@
+import { Box, Card, Center, Group, Notification, Stack, Text, createStyles } from '@mantine/core';
+
 import { Transition } from '@kasif/components/Transition/TransitionWrapper';
 import { app } from '@kasif/config/app';
 import { NotificationType } from '@kasif/managers/notification';
 import { useSlice } from '@kasif/util/cinq-react';
 import { animations, getRelativeTime } from '@kasif/util/misc';
-import { Box, Card, Center, createStyles, Group, Notification, Stack, Text } from '@mantine/core';
+
 import { IconAlertTriangle, IconCheck, IconInfoCircle, IconX } from '@tabler/icons';
 
-const useStyles = createStyles((theme) => ({
+const useStyles = createStyles(theme => ({
   card: {
     backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[7] : theme.white,
     display: 'flex',
@@ -15,9 +17,9 @@ const useStyles = createStyles((theme) => ({
   },
 
   notification: {
-    border: 'none',
-    borderRadius: 0,
-    backgroundColor: 'transparent',
+    'border': 'none',
+    'borderRadius': 0,
+    'backgroundColor': 'transparent',
 
     '&:not(:last-child)': {
       borderBottom: '1px solid',
@@ -38,7 +40,7 @@ const useStyles = createStyles((theme) => ({
   },
 
   pluginLink: {
-    cursor: 'pointer',
+    'cursor': 'pointer',
 
     '&:hover': {
       textDecoration: 'underline',
@@ -111,8 +113,7 @@ export function LogsPage() {
                             //   console.log(log.source.id);
                             // }}
                             size="xs"
-                            className={classes.pluginLink}
-                          >
+                            className={classes.pluginLink}>
                             {log.source.name}
                           </Text>
                           <Text size="xs" color="dimmed">
@@ -126,8 +127,7 @@ export function LogsPage() {
                     </Group>
                   }
                   withCloseButton={false}
-                  icon={getIcon(log.type)}
-                >
+                  icon={getIcon(log.type)}>
                   {log.message}
                 </Notification>
               </Transition>

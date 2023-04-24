@@ -62,7 +62,7 @@ export class PermissionManager extends BaseManager {
       const { id, name } = this.app;
       const openModal = () =>
         openConfirmModal({
-          title: `${name} Asks for permission the following`,
+          title: `${name} asks for permission of the following`,
           children: React.createElement(Permissions, { permissions: missingPermissions }),
           labels: { confirm: 'Confirm', cancel: 'Cancel' },
           onCancel: () => resolve(false),
