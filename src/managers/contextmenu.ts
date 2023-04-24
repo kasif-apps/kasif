@@ -5,7 +5,7 @@ import { useSlice } from '@kasif/util/cinq-react';
 import { authorized, trackable, tracker } from '@kasif/util/decorators';
 import { RenderableNode } from '@kasif/util/node-renderer';
 
-import { RecordSlice, VectorSlice, createRecordSlice, createVectorSlice } from '@kasif-apps/cinq';
+import { RecordSlice, createRecordSlice, createVectorSlice } from '@kasif-apps/cinq';
 
 export interface ContextMenuState {
   position: {
@@ -23,8 +23,10 @@ export interface ContextMenuCategory {
 
 export interface ContextMenuField {
   id: string;
-  items: ContextMenuItem[];
+  items: ContextMenuItemInstance[];
 }
+
+export type ContextMenuItemInstance = ContextMenuItem | ContextMenuParent;
 
 export interface ContextMenuItem {
   id: string;
@@ -35,6 +37,21 @@ export interface ContextMenuItem {
   icon?: RenderableNode;
   registerCommand?: boolean;
   condition?: () => Promise<boolean>;
+}
+
+export interface ContextMenuParent {
+  id: string;
+  title: string;
+  category: string;
+  icon?: RenderableNode;
+  condition?: () => Promise<boolean>;
+  children: ContextMenuItemInstance[];
+}
+
+export function isContextMenuParent(
+  instance: ContextMenuItemInstance
+): instance is ContextMenuParent {
+  return (instance as ContextMenuParent).children !== undefined;
 }
 
 @tracker('contextMenuManager')
@@ -50,23 +67,23 @@ export class ContextMenuManager extends BaseManager {
     { key: 'context-menu-state' }
   );
 
-  categories: VectorSlice<ContextMenuCategory[]> = createVectorSlice<ContextMenuCategory[]>([], {
+  categories = createVectorSlice<ContextMenuCategory[]>([], {
     key: 'context-menu-categories',
   });
 
-  fields: VectorSlice<ContextMenuField[]> = createVectorSlice<ContextMenuField[]>([], {
+  fields = createVectorSlice<ContextMenuField[]>([], {
     key: 'context-menu-fields',
   });
 
-  currentItems: VectorSlice<ContextMenuItem[]> = createVectorSlice<ContextMenuItem[]>([], {
+  currentItems = createVectorSlice<ContextMenuItemInstance[]>([], {
     key: 'context-menu-current-items',
   });
 
-  currentFields: VectorSlice<Array<string>> = createVectorSlice<Array<string>>([], {
+  currentFields = createVectorSlice<Array<string>>([], {
     key: 'context-menu-current-fields',
   });
 
-  currentPath: VectorSlice<Array<HTMLElement>> = createVectorSlice<Array<HTMLElement>>([], {
+  currentPath = createVectorSlice<Array<HTMLElement>>([], {
     key: 'context-menu-current-path',
   });
 
@@ -92,7 +109,7 @@ export class ContextMenuManager extends BaseManager {
 
     const targets = this.#getTargets(path);
 
-    const items: ContextMenuItem[] = [];
+    const items: ContextMenuItemInstance[] = [];
     const fields = this.fields.get();
     const targetFields: string[] = [];
 
@@ -176,7 +193,7 @@ export class ContextMenuManager extends BaseManager {
 
   @trackable
   @authorized(['define_contextmenu_item'])
-  defineItem(fieldId: string, item: ContextMenuItem) {
+  defineItem(fieldId: string, item: ContextMenuItemInstance) {
     const fields = this.fields.get();
     const categories = this.categories.get();
     const targetFieldIndex = fields.findIndex(field => field.id === fieldId);
@@ -184,7 +201,7 @@ export class ContextMenuManager extends BaseManager {
 
     if (targetFieldIndex >= 0) {
       if (targetCategoryIndex >= 0) {
-        if (item.shortCut && item.registerCommand) {
+        if (!isContextMenuParent(item) && item.shortCut && item.registerCommand) {
           this.app.commandManager.defineCommand(item);
         }
 
@@ -207,8 +224,8 @@ export class ContextMenuManager extends BaseManager {
   }
 }
 
-export function useContextMenuItems(): Map<ContextMenuCategory, ContextMenuItem[]> {
-  const items: Map<ContextMenuCategory, ContextMenuItem[]> = new Map();
+export function useContextMenuItems(): Map<ContextMenuCategory, ContextMenuItemInstance[]> {
+  const items: Map<ContextMenuCategory, ContextMenuItemInstance[]> = new Map();
 
   const [currentItems] = useSlice(app.contextMenuManager.currentItems);
   const [categories] = useSlice(app.contextMenuManager.categories);

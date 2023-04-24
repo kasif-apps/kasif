@@ -11,6 +11,7 @@ import { getFirstNodeInPath } from '@kasif/util/misc';
 import {
   IconCode,
   IconEgg,
+  IconExternalLink,
   IconLicense,
   IconMessages,
   IconNotification,
@@ -66,20 +67,8 @@ export function initAppContextMenu(app: App) {
   });
 
   app.contextMenuManager.defineItem('app', {
-    id: 'open-logs',
-    title: 'Open Logs',
-    shortCut: 'mod+Shift+L',
-    icon: () => React.createElement(IconMessages, { size: 14 }),
-    onTrigger: async () => {
-      app.viewManager.pushView({ view: prebuiltViews.logs });
-    },
-    category: 'app',
-    registerCommand: true,
-  });
-
-  app.contextMenuManager.defineItem('app', {
-    id: 'open-command-center',
-    title: 'Open Command Center',
+    id: 'launch-command-center',
+    title: 'Launch Command Center',
     icon: () => React.createElement(IconTerminal2, { size: 14 }),
     onTrigger: async () => {
       openSpotlight();
@@ -172,40 +161,57 @@ export function initAppContextMenu(app: App) {
   });
 
   app.contextMenuManager.defineItem('app', {
-    id: 'open-settings',
-    title: 'Open Settings',
-    shortCut: 'mod+alt+S',
-    icon: () => React.createElement(IconSettings, { size: 14 }),
-    onTrigger: async () => {
-      app.viewManager.pushView({ view: prebuiltViews.settings });
-    },
+    id: 'open',
+    title: 'Open',
+    icon: () => React.createElement(IconExternalLink, { size: 14 }),
     category: 'settings',
-    registerCommand: true,
-  });
-
-  app.contextMenuManager.defineItem('app', {
-    id: 'edit-permissions',
-    title: 'Edit Permissions',
-    shortCut: 'mod+shift+K',
-    icon: () => React.createElement(IconLicense, { size: 14 }),
-    onTrigger: async () => {
-      app.viewManager.pushView({ view: prebuiltViews.permissions });
-    },
-    category: 'settings',
-    registerCommand: true,
-  });
-
-  app.contextMenuManager.defineItem('app', {
-    id: 'open-devtools',
-    title: 'Open Devtools',
-    shortCut: 'mod+alt+I',
-    icon: () => React.createElement(IconCode, { size: 14 }),
-    onTrigger: async () => {
-      environment.invoke('open_devtools');
-    },
-    category: 'settings',
-    registerCommand: environment.currentEnvironment === 'desktop',
-    condition: async () => environment.currentEnvironment === 'desktop',
+    children: [
+      {
+        id: 'open-settings',
+        title: 'Settings',
+        shortCut: 'mod+alt+S',
+        icon: () => React.createElement(IconSettings, { size: 14 }),
+        onTrigger: async () => {
+          app.viewManager.pushView({ view: prebuiltViews.settings });
+        },
+        category: 'settings',
+        registerCommand: true,
+      },
+      {
+        id: 'open-logs',
+        title: 'Logs',
+        shortCut: 'mod+Shift+L',
+        icon: () => React.createElement(IconMessages, { size: 14 }),
+        onTrigger: async () => {
+          app.viewManager.pushView({ view: prebuiltViews.logs });
+        },
+        category: 'app',
+        registerCommand: true,
+      },
+      {
+        id: 'open-devtools',
+        title: 'Devtools',
+        shortCut: 'mod+alt+I',
+        icon: () => React.createElement(IconCode, { size: 14 }),
+        onTrigger: async () => {
+          environment.invoke('open_devtools');
+        },
+        category: 'settings',
+        registerCommand: environment.currentEnvironment === 'desktop',
+        condition: async () => environment.currentEnvironment === 'desktop',
+      },
+      {
+        id: 'open-permissions',
+        title: 'Permissions',
+        shortCut: 'mod+shift+K',
+        icon: () => React.createElement(IconLicense, { size: 14 }),
+        onTrigger: async () => {
+          app.viewManager.pushView({ view: prebuiltViews.permissions });
+        },
+        category: 'settings',
+        registerCommand: true,
+      },
+    ],
   });
 
   app.contextMenuManager.defineItem('easter-egg', {

@@ -2,10 +2,17 @@ import { Menu, Text, createStyles } from '@mantine/core';
 import { useClickOutside } from '@mantine/hooks';
 
 import { app } from '@kasif/config/app';
-import { useContextMenuItems } from '@kasif/managers/contextmenu';
+import {
+  ContextMenuItem,
+  ContextMenuParent,
+  isContextMenuParent,
+  useContextMenuItems,
+} from '@kasif/managers/contextmenu';
 import { useSlice } from '@kasif/util/cinq-react';
 import { createShortcutLabelFromString } from '@kasif/util/misc';
 import { DisplayRenderableNode } from '@kasif/util/node-renderer';
+
+import { IconChevronRight } from '@tabler/icons';
 
 const useStyles = createStyles(() => ({
   root: {
@@ -29,6 +36,62 @@ const useStyles = createStyles(() => ({
   },
 }));
 
+export function RenderChild({ item }: { item: ContextMenuItem }) {
+  const { classes } = useStyles();
+
+  return (
+    <Menu.Item
+      icon={item.icon ? <DisplayRenderableNode node={item.icon} /> : undefined}
+      onClick={async e => {
+        e.preventDefault();
+        await item.onTrigger();
+        app.contextMenuManager.closeMenu();
+      }}
+      rightSection={
+        item.shortCut ? (
+          <Text className={classes.shortCut} color="dimmed">
+            {createShortcutLabelFromString(item.shortCut)}
+          </Text>
+        ) : undefined
+      }>
+      <Text size="xs">{item.title}</Text>
+    </Menu.Item>
+  );
+}
+
+export function RenderParent({ item }: { item: ContextMenuParent }) {
+  const { classes } = useStyles();
+
+  return (
+    <Menu
+      classNames={{ item: classes.item, label: classes.label }}
+      id={item.id}
+      trigger="hover"
+      position="right-start"
+      shadow="md"
+      width={220}>
+      <Menu.Target>
+        <Menu.Item
+          icon={item.icon ? <DisplayRenderableNode node={item.icon} /> : undefined}
+          rightSection={<IconChevronRight size={14} />}>
+          <Text size="xs">{item.title}</Text>
+        </Menu.Item>
+      </Menu.Target>
+
+      <Menu.Dropdown>
+        <Menu.Label>{item.title}</Menu.Label>
+        {item.children.map(child =>
+          isContextMenuParent(child) ? (
+            <RenderParent key={child.id} item={child} />
+          ) : (
+            <RenderChild key={child.id} item={child} />
+          )
+        )}
+      </Menu.Dropdown>
+    </Menu>
+  );
+}
+
 export function ContextMenu() {
   const { classes } = useStyles();
   const [store] = useSlice(app.contextMenuManager.store);
@@ -45,6 +108,7 @@ export function ContextMenu() {
       style={{ top: store.position.y, left: store.position.x }}
       className={classes.root}>
       <Menu
+        id="context-menu"
         classNames={{ item: classes.item, label: classes.label }}
         position="bottom-start"
         opened
@@ -58,25 +122,13 @@ export function ContextMenu() {
           {entries.map(([category, children]) => (
             <span key={category.id}>
               <Menu.Label>{category.title}</Menu.Label>
-              {children.map(item => (
-                <Menu.Item
-                  key={item.id}
-                  icon={item.icon ? <DisplayRenderableNode node={item.icon} /> : undefined}
-                  onClick={async e => {
-                    e.preventDefault();
-                    await item.onTrigger();
-                    app.contextMenuManager.closeMenu();
-                  }}
-                  rightSection={
-                    item.shortCut ? (
-                      <Text className={classes.shortCut} color="dimmed">
-                        {createShortcutLabelFromString(item.shortCut)}
-                      </Text>
-                    ) : undefined
-                  }>
-                  <Text size="xs">{item.title}</Text>
-                </Menu.Item>
-              ))}
+              {children.map(item =>
+                isContextMenuParent(item) ? (
+                  <RenderParent key={item.id} item={item} />
+                ) : (
+                  <RenderChild key={item.id} item={item} />
+                )
+              )}
             </span>
           ))}
         </Menu.Dropdown>
