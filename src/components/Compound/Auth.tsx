@@ -30,8 +30,6 @@ import {
 import { BackendError, backend } from '@kasif/config/backend';
 import { environment } from '@kasif/util/environment';
 
-import { invoke } from '@tauri-apps/api';
-
 interface AuthProvider {
   authUrl: string;
   codeChallenge: string;
@@ -90,7 +88,7 @@ export function SignInLogin(props: PaperProps) {
       });
 
       if (environment.currentEnvironment === 'desktop') {
-        invoke('launch_auth', {
+        environment.invoke('launch_auth', {
           path: provider.authUrl + redirectUrl,
         });
       } else {

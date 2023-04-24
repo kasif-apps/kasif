@@ -21,8 +21,6 @@ import { createPaneStyles } from '@kasif/util/pane';
 
 import { IconSearch } from '@tabler/icons';
 
-import { getMatches } from '@tauri-apps/api/cli';
-
 app.notificationManager.log(
   `Kasif skeleton initialized. Version: ${kasif.version}`,
   'Skeleton initialized'
@@ -58,7 +56,7 @@ function Wrapper() {
 
   useEffect(() => {
     if (environment.currentEnvironment === 'desktop') {
-      getMatches().then(matches => {
+      environment.getArgMatches().then(matches => {
         app.flags.set({
           debug: matches.args.debug.value as boolean,
           plugins: matches.args.plugin.value as string[],

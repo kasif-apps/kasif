@@ -1,6 +1,10 @@
 import { app } from '@kasif/config/app';
 
-import { fs as tauriFs, path as tauriPath } from '@tauri-apps/api';
+import { invoke, fs as tauriFs, path as tauriPath } from '@tauri-apps/api';
+import { getMatches as getArgMatches } from '@tauri-apps/api/cli';
+import { OpenDialogOptions, open } from '@tauri-apps/api/dialog';
+import { EventCallback, EventName, UnlistenFn, listen } from '@tauri-apps/api/event';
+import { appWindow } from '@tauri-apps/api/window';
 
 async function NoOp<T>(): Promise<T> {
   return 'no-op' as unknown as T;
@@ -32,10 +36,23 @@ interface Fs {
   readDir: (path: string) => Promise<FileEntry[]>;
 }
 
+interface Dialog {
+  open: (options?: OpenDialogOptions) => Promise<null | string | string[]>;
+}
+
+interface EnvironmentEvent {
+  listen: <T>(event: EventName, handler: EventCallback<T>) => Promise<UnlistenFn>;
+}
+
 export class Environment {
   currentEnvironment: 'web' | 'desktop';
   fs: Fs;
   path: Path;
+  dialog: Dialog;
+  event: EnvironmentEvent;
+  invoke: typeof invoke;
+  getArgMatches: typeof getArgMatches;
+  appWindow?: typeof appWindow;
 
   constructor() {
     this.currentEnvironment = 'web';
@@ -58,6 +75,17 @@ export class Environment {
       readDir: NoOp,
     };
 
+    this.dialog = {
+      open: NoOp,
+    };
+
+    this.event = {
+      listen: NoOp,
+    };
+
+    this.invoke = NoOp;
+    this.getArgMatches = NoOp;
+
     this.init();
   }
 
@@ -68,6 +96,11 @@ export class Environment {
       if (originalIPC) {
         this.fs = tauriFs;
         this.path = tauriPath;
+        this.dialog = { open };
+        this.event = { listen };
+        this.invoke = invoke;
+        this.getArgMatches = getArgMatches;
+        this.appWindow = appWindow;
         this.currentEnvironment = 'desktop';
       }
 

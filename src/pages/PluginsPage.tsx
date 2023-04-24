@@ -3,15 +3,14 @@ import { useState } from 'react';
 import { Box, Button } from '@mantine/core';
 
 import { app } from '@kasif/config/app';
-
-import { open } from '@tauri-apps/api/dialog';
+import { environment } from '@kasif/util/environment';
 
 export function PluginsPage() {
   const [loading, setLoading] = useState(false);
 
   const handleClick = async () => {
     setLoading(true);
-    let selected = await open({
+    let selected = await environment.dialog.open({
       multiple: true,
       filters: [
         {

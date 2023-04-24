@@ -8,7 +8,6 @@ import { BaseManager } from '@kasif/managers/base';
 import { PermissionType } from '@kasif/config/permission';
 import { createVectorSlice } from '@kasif-apps/cinq';
 import { KasifRemote } from '@kasif/util/remote';
-import { invoke } from '@tauri-apps/api';
 
 export interface PluginModule {
   name: string;
@@ -117,7 +116,7 @@ export class PluginManager extends BaseManager {
     await environment.fs.copyFile(pluginPath, destination);
 
     const appsFolder = await environment.path.resolveResource('apps/');
-    await invoke('load_plugin_remotely', { resourcePath: appsFolder, pluginPath: destination });
+    await environment.invoke('load_plugin_remotely', { resourcePath: appsFolder, pluginPath: destination });
   }
 
   @trackable
@@ -132,7 +131,7 @@ export class PluginManager extends BaseManager {
     await environment.fs.writeBinaryFile(destination, await file.arrayBuffer());
 
     const appsFolder = await environment.path.resolveResource('apps/');
-    await invoke('load_plugin_remotely', { resourcePath: appsFolder, pluginPath: destination });
+    await environment.invoke('load_plugin_remotely', { resourcePath: appsFolder, pluginPath: destination });
   }
 
   async initSingleModule(name: string, isWebBased: boolean) {

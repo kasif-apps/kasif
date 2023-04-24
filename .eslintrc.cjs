@@ -1,5 +1,5 @@
 module.exports = {
-  extends: ['mantine', 'prettier'],
+  extends: ['mantine', 'prettier', 'plugin:import/recommended', 'plugin:import/typescript'],
   overrides: [
     {
       files: ['**/?(*.)+(spec|test).[jt]s?(x)'],

@@ -20,8 +20,6 @@ import {
   IconWindowMinimize,
 } from '@tabler/icons';
 
-import { invoke } from '@tauri-apps/api';
-
 export function initAppContextMenu(app: App) {
   app.contextMenuManager.defineField('app');
   app.contextMenuManager.defineField('pane');
@@ -195,7 +193,7 @@ export function initAppContextMenu(app: App) {
     shortCut: 'mod+alt+I',
     icon: () => React.createElement(IconCode, { size: 14 }),
     onTrigger: async () => {
-      invoke('open_devtools');
+      environment.invoke('open_devtools');
     },
     category: 'settings',
     registerCommand: environment.currentEnvironment === 'desktop',

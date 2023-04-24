@@ -4,8 +4,6 @@ import { OS } from '@mantine/hooks';
 import { app } from '@kasif/config/app';
 import { environment } from '@kasif/util/environment';
 
-import { listen } from '@tauri-apps/api/event';
-
 export function getCssVar(varaible: string): string {
   const root = document.querySelector(':root')!;
   const style = getComputedStyle(root);
@@ -121,8 +119,8 @@ export async function createGlobalStyles(): Promise<{ styles: CSSObject; kill: (
   };
 
   if (environment.currentEnvironment === 'desktop') {
-    unListenFocus = await listen('tauri://focus', focusHandler);
-    unListenBlur = await listen('tauri://blur', blurHandler);
+    unListenFocus = await environment.event.listen('tauri://focus', focusHandler);
+    unListenBlur = await environment.event.listen('tauri://blur', blurHandler);
   } else {
     document.addEventListener('focus', focusHandler);
     document.addEventListener('blur', blurHandler);
