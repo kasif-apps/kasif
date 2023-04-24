@@ -94,11 +94,19 @@ export class App {
     this.commandManager.init();
     this.authManager.init();
     this.pluginManager.init();
+
+    for (const [, manager] of this.customManagers.entries()) {
+      manager.init();
+    }
   }
 
   kill() {
     this.networkManager.kill();
     this.contextMenuManager.kill();
+
+    for (const [, manager] of this.customManagers.entries()) {
+      manager.kill();
+    }
   }
 }
 

@@ -5,4 +5,8 @@ export abstract class BaseManager extends EventTarget {
   constructor(public app: App, public parent?: App) {
     super();
   }
+
+  init() {}
+
+  kill() {}
 }
