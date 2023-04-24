@@ -10,6 +10,7 @@ import { getFirstNodeInPath } from '@kasif/util/misc';
 
 import {
   IconCode,
+  IconEgg,
   IconLicense,
   IconMessages,
   IconNotification,
@@ -26,6 +27,7 @@ export function initAppContextMenu(app: App) {
   app.contextMenuManager.defineField('view-handle');
   app.contextMenuManager.defineField('view-handle-bar');
   app.contextMenuManager.defineField('notifications');
+  app.contextMenuManager.defineField('easter-egg');
 
   app.contextMenuManager.defineCategory({
     id: 'app',
@@ -43,6 +45,12 @@ export function initAppContextMenu(app: App) {
     id: 'settings',
     title: 'Settings',
     order: 2,
+  });
+
+  app.contextMenuManager.defineCategory({
+    id: 'easter-egg',
+    title: 'Easter Egg',
+    order: 99,
   });
 
   app.contextMenuManager.defineItem('app', {
@@ -198,5 +206,16 @@ export function initAppContextMenu(app: App) {
     category: 'settings',
     registerCommand: environment.currentEnvironment === 'desktop',
     condition: async () => environment.currentEnvironment === 'desktop',
+  });
+
+  app.contextMenuManager.defineItem('easter-egg', {
+    id: 'easter-egg',
+    title: 'Hi 🙃',
+    icon: () => React.createElement(IconEgg, { size: 14 }),
+    onTrigger: async () => {
+      app.notificationManager.success('🙃', 'Hi, you found me!');
+    },
+    category: 'easter-egg',
+    condition: async () => app.viewManager.store.get().currentView === 'settings',
   });
 }

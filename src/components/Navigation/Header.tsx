@@ -68,7 +68,14 @@ export function KasifHeader() {
           sx={{ width: 'calc(100vw - var(--mantine-navbar-width) - 80px)', minHeight: 44 }}>
           <Tabs />
         </ScrollArea>
-        <Image mb={6} height={30} width={30} src="/favicon.png" alt="kasif logo" />
+        <Image
+          data-contextmenu-field="easter-egg"
+          mb={6}
+          height={30}
+          width={30}
+          src="/favicon.png"
+          alt="kasif logo"
+        />
       </Group>
     </Header>
   );

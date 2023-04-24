@@ -117,7 +117,6 @@ export class NotificationManager extends BaseManager {
         message,
         icon: React.createElement(IconCheck, { size: 20 }),
         color: 'green',
-        autoClose: false,
         id,
       });
     }
