@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import { Droppable, DroppableProvided } from 'react-beautiful-dnd';
+import { Droppable, DroppableProvided, DroppableStateSnapshot } from 'react-beautiful-dnd';
 import { useTranslation } from 'react-i18next';
 
 import {
@@ -10,7 +10,6 @@ import {
   createStyles,
   useMantineTheme,
 } from '@mantine/core';
-import { useHover } from '@mantine/hooks';
 
 import { ContextMenu } from '@kasif/components/Compound/ContextMenu';
 import { KasifFooter, KasifHeader, KasifNavbar } from '@kasif/components/Navigation';
@@ -24,11 +23,6 @@ import SplitPane, { Pane as SplitPaneView } from 'split-pane-react';
 const useStyles = createStyles((theme, { isDragging }: { isDragging: boolean }) => ({
   paneFreeDropArea: {
     'position': 'absolute',
-    'top': 'calc(var(--mantine-header-height, 0px) + var(--titlebar-height, 0px))',
-    'right': 0,
-    'width': 140,
-    'height':
-      'calc(100vh - var(--mantine-header-height) - var(--titlebar-height) - var(--mantine-footer-height))',
     'pointerEvents': isDragging ? 'auto' : 'none',
     'backgroundColor': 'transparent',
 
@@ -45,6 +39,21 @@ const useStyles = createStyles((theme, { isDragging }: { isDragging: boolean }) 
         backgroundColor: theme.fn.rgba(theme.colors[theme.primaryColor][5], 0.2),
       },
     },
+  },
+
+  right: {
+    top: 'calc(var(--mantine-header-height, 0px) + var(--titlebar-height, 0px))',
+    right: 0,
+    width: 140,
+    height:
+      'calc(100vh - var(--mantine-header-height) - var(--titlebar-height) - var(--mantine-footer-height))',
+  },
+
+  bottom: {
+    bottom: 'var(--mantine-footer-height, 0px)',
+    left: 'var(--mantine-navbar-width)',
+    width: 'calc(100vw - var(--mantine-navbar-width))',
+    height: 100,
   },
 
   paneBusyDropArea: {
@@ -113,7 +122,6 @@ const CustomScrollArea = ({
 const PaneItem = (props: { children: React.ReactNode; id: string; droppable: boolean }) => {
   const [isDragging] = useSlice(app.dndManager.isDragging);
   const { classes, cx } = useStyles({ isDragging });
-  const { hovered, ref: paneDropAreaRef } = useHover();
 
   if (!props.droppable) {
     return (
@@ -126,7 +134,7 @@ const PaneItem = (props: { children: React.ReactNode; id: string; droppable: boo
   return (
     <SplitPaneView minSize={100}>
       <Droppable droppableId={`busy-pane-id:${props.id}`}>
-        {(provided: DroppableProvided) => (
+        {(provided: DroppableProvided, snapshot: DroppableStateSnapshot) => (
           <div
             data-pane-id={props.id}
             data-contextmenu-field="pane"
@@ -135,8 +143,7 @@ const PaneItem = (props: { children: React.ReactNode; id: string; droppable: boo
             {...provided.droppableProps}>
             <div
               style={{ zIndex: isDragging ? 99 : -1 }}
-              ref={paneDropAreaRef}
-              className={cx('overlay', isDragging && hovered && 'active')}
+              className={cx('overlay', isDragging && snapshot.isDraggingOver && 'active')}
             />
             {props.children}
           </div>
@@ -150,7 +157,6 @@ function PaneView() {
   const [isDragging] = useSlice(app.dndManager.isDragging);
   const [paneSizes, setPaneSizes] = useSlice(app.paneManager.paneSizes);
   const { classes, cx } = useStyles({ isDragging });
-  const { hovered, ref: paneDropAreaRef } = useHover();
 
   const [{ currentView }] = useSlice(app.viewManager.store);
   const [{ panes }] = useSlice(app.paneManager.store);
@@ -190,7 +196,7 @@ function PaneView() {
 
   return (
     <>
-      {panes.length > 1 ? (
+      {panes.length > 0 ? (
         <>
           {/* @ts-ignore */}
           <SplitPane
@@ -247,16 +253,24 @@ function PaneView() {
         </CustomScrollArea>
       )}
 
-      <Droppable droppableId="free-pane">
-        {(provided: DroppableProvided) => (
+      <Droppable droppableId="free-right-pane">
+        {(provided: DroppableProvided, snapshot: DroppableStateSnapshot) => (
           <div
-            className={cx(classes.paneFreeDropArea)}
+            className={cx(classes.paneFreeDropArea, classes.right)}
             ref={provided.innerRef}
             {...provided.droppableProps}>
-            <div
-              ref={paneDropAreaRef}
-              className={cx('overlay', isDragging && hovered && 'active')}
-            />
+            <div className={cx('overlay', isDragging && snapshot.isDraggingOver && 'active')} />
+          </div>
+        )}
+      </Droppable>
+
+      <Droppable droppableId="free-bottom-pane">
+        {(provided: DroppableProvided, snapshot: DroppableStateSnapshot) => (
+          <div
+            className={cx(classes.paneFreeDropArea, classes.bottom)}
+            ref={provided.innerRef}
+            {...provided.droppableProps}>
+            <div className={cx('overlay', isDragging && snapshot.isDraggingOver && 'active')} />
           </div>
         )}
       </Droppable>

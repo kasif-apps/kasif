@@ -62,12 +62,22 @@ export class DndManager extends BaseManager {
           app.viewManager.store.upsert({ views: newItems });
         }
         return;
-      case 'free-pane':
+      case 'free-right-pane':
         {
           const pane = app.paneManager.createPaneFromView(result.draggableId);
 
           if (pane) {
-            app.paneManager.pushPane(pane);
+            app.paneManager.pushPane({ ...pane, position: 'right' });
+            app.viewManager.removeView(result.draggableId);
+          }
+        }
+        break;
+      case 'free-bottom-pane':
+        {
+          const pane = app.paneManager.createPaneFromView(result.draggableId);
+
+          if (pane) {
+            app.paneManager.pushPane({ ...pane, position: 'bottom' });
             app.viewManager.removeView(result.draggableId);
           }
         }
