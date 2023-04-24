@@ -1,6 +1,10 @@
+import { useEffect, useRef } from 'react';
+
 import { Group, Header, Image, ScrollArea, createStyles } from '@mantine/core';
 
 import { Tabs } from '@kasif/components/ViewController/Tabs';
+import { app } from '@kasif/config/app';
+import { useSlice } from '@kasif/util/cinq-react';
 import { environment } from '@kasif/util/environment';
 import { getOS } from '@kasif/util/misc';
 
@@ -28,7 +32,18 @@ const useStyles = createStyles(theme => ({
 
 export function KasifHeader() {
   const { classes } = useStyles();
+  const ref = useRef<HTMLDivElement>(null);
   const os = getOS();
+
+  useEffect(() => {
+    if (ref.current) {
+      const area = ref.current.querySelector('[data-radix-scroll-area-viewport]');
+
+      if (area) {
+        area.setAttribute('data-tauri-drag-region', 'true');
+      }
+    }
+  }, []);
 
   return (
     <Header
@@ -48,12 +63,14 @@ export function KasifHeader() {
       )}
       <Group>
         <ScrollArea
+          ref={ref}
+          data-tauri-drag-region
           offsetScrollbars
           scrollbarSize={8}
-          sx={{ width: 'calc(100vw - var(--mantine-navbar-width) - 80px)' }}>
+          sx={{ width: 'calc(100vw - var(--mantine-navbar-width) - 80px)', minHeight: 44 }}>
           <Tabs />
         </ScrollArea>
-        <Image mb={4} height={30} width={30} src="/favicon.png" alt="kasif logo" />
+        <Image mb={6} height={30} width={30} src="/favicon.png" alt="kasif logo" />
       </Group>
     </Header>
   );

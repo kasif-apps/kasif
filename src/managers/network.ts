@@ -1,7 +1,8 @@
-import { createRecordSlice } from '@kasif-apps/cinq';
 import { App } from '@kasif/config/app';
 import { BaseManager } from '@kasif/managers/base';
 import { authorized, trackable, tracker } from '@kasif/util/decorators';
+
+import { createRecordSlice } from '@kasif-apps/cinq';
 
 interface NetworkStatus {
   downlink?: number;

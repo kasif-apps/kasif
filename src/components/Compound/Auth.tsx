@@ -6,9 +6,11 @@ import {
   Box,
   Button,
   Card,
+  Center,
   Checkbox,
   Divider,
   Group,
+  Loader,
   LoadingOverlay,
   Paper,
   PaperProps,
@@ -25,17 +27,21 @@ import {
   DiscordButton,
   GithubButton,
   GoogleButton,
+  SpotifyButton,
   TwitterButton,
 } from '@kasif/components/Primitive/SocialButtons';
 import { BackendError, backend } from '@kasif/config/backend';
 import { environment } from '@kasif/util/environment';
+import { animations } from '@kasif/util/misc';
+
+import { Transition } from '../Transition/TransitionWrapper';
 
 interface AuthProvider {
   authUrl: string;
   codeChallenge: string;
   codeChallengeMethod: string;
   codeVerifier: string;
-  name: 'github' | 'google' | 'twitter' | 'discord';
+  name: 'github' | 'google' | 'twitter' | 'discord' | 'spotify';
   state: string;
 }
 
@@ -44,6 +50,7 @@ const globalAuthMethods = {
   google: (props: any) => <GoogleButton {...props} />,
   twitter: (props: any) => <TwitterButton {...props} />,
   discord: (props: any) => <DiscordButton {...props} />,
+  spotify: (props: any) => <SpotifyButton {...props} />,
 };
 
 export function SignInLogin(props: PaperProps) {
@@ -66,6 +73,7 @@ export function SignInLogin(props: PaperProps) {
   const [authProviders, setAuthProviders] = useState<AuthProvider[]>([]);
   const redirectUrl = `${import.meta.env.VITE_REACT_API_URL}/api/users/auth-redirect`;
   const [loading, setLoading] = useState(false);
+  const [oauth2Loading, setOauth2Loading] = useState(true);
 
   const handleOAuthLogin = useCallback(async (provider: AuthProvider) => {
     const record = await backend.collection('auth_table').create({
@@ -105,6 +113,7 @@ export function SignInLogin(props: PaperProps) {
       .listAuthMethods()
       .then(authMethods => {
         setAuthProviders(authMethods.authProviders as AuthProvider[]);
+        setOauth2Loading(false);
       });
 
     return () => {
@@ -132,21 +141,28 @@ export function SignInLogin(props: PaperProps) {
     <Box
       p="sm"
       pt={0}
-      sx={{ maxWidth: 550, margin: 'auto', height: '100%', display: 'flex', alignItems: 'center' }}>
+      sx={{ maxWidth: 570, margin: 'auto', height: '100%', display: 'flex', alignItems: 'center' }}>
       <Paper radius="md" p="xl" withBorder sx={{ width: '100%' }} {...props}>
         <LoadingOverlay loaderProps={{ variant: 'dots' }} visible={loading} />
         <Text size="lg" weight={500}>
           Welcome to Kâşif, {type} with
         </Text>
 
-        <Group sx={{ minHeight: 36 }} grow mb="md" mt="md">
-          {authProviders.map(provider =>
-            React.createElement(
-              globalAuthMethods[provider.name],
-              { onClick: () => handleOAuthLogin(provider), radius: 'xl' },
-              `${upperFirst(provider.name)}`
-            )
+        <Group sx={{ minHeight: 36 }} grow mb="md" mt="md" spacing="xs">
+          {oauth2Loading && (
+            <Center>
+              <Loader sx={{ maxWidth: 30 }} variant="dots" />
+            </Center>
           )}
+          {authProviders.map(provider => (
+            <Transition transition={animations.scale}>
+              {React.createElement(
+                globalAuthMethods[provider.name],
+                { onClick: () => handleOAuthLogin(provider), radius: 'xl' },
+                `${upperFirst(provider.name)}`
+              )}
+            </Transition>
+          ))}
         </Group>
 
         <Divider label="Or continue with email" labelPosition="center" my="lg" />

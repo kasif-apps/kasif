@@ -41,18 +41,11 @@ const useStyles = createStyles((theme, { dragging }: { dragging: boolean }) => (
       'padding': `0 4px 0 ${theme.spacing.xs}`,
       'borderRadius': theme.radius.sm,
       'transition': 'background-color 200ms ease',
-      // backgroundColor:
-      //   theme.colorScheme === 'dark'
-      //     ? theme.fn.rgba(theme.colors.dark[8], isHomeView ? 0.3 : 1)
-      //     : theme.fn.rgba(theme.colors.gray[0], isHomeView ? 0.1 : 1),
-
-      // backdropFilter: 'blur(5px)',
       'backgroundColor': theme.colorScheme === 'dark' ? theme.colors.dark[8] : theme.colors.gray[0],
       'maxWidth': 400,
       'overflow': 'hidden',
       'textOverflow': 'ellipsis',
       'cursor': 'initial',
-      // color: isHomeView ? theme.white : 'auto',
 
       '&.active': {
         ref: getStylesRef('active'),
@@ -84,7 +77,7 @@ export function TabItem(props: TabItemProps) {
   const { classes, cx } = useStyles({
     dragging: Boolean(dragging),
   });
-  const ref = useRef<HTMLButtonElement>(null);
+  const ref = useRef<HTMLDivElement>(null);
   const mergedRef = useMergedRef(ref, provided.innerRef);
 
   const handleClose = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
@@ -106,7 +99,6 @@ export function TabItem(props: TabItemProps) {
 
   return (
     <UnstyledButton
-      // @ts-ignore
       ref={mergedRef}
       {...provided.draggableProps}
       {...provided.dragHandleProps}

@@ -1,10 +1,11 @@
-import { createRecordSlice, createVectorSlice, RecordSlice, VectorSlice } from '@kasif-apps/cinq';
 import { app } from '@kasif/config/app';
 import { initAppContextMenu } from '@kasif/config/contextmenu';
 import { BaseManager } from '@kasif/managers/base';
 import { useSlice } from '@kasif/util/cinq-react';
 import { authorized, trackable, tracker } from '@kasif/util/decorators';
 import { RenderableNode } from '@kasif/util/node-renderer';
+
+import { RecordSlice, VectorSlice, createRecordSlice, createVectorSlice } from '@kasif-apps/cinq';
 
 export interface ContextMenuState {
   position: {
@@ -72,14 +73,14 @@ export class ContextMenuManager extends BaseManager {
   @trackable
   @authorized(['reinit_command_manager'])
   init() {
-    document.addEventListener('contextmenu', (e) => this.#handleContextMenuEvent(e));
+    document.addEventListener('contextmenu', e => this.#handleContextMenuEvent(e));
     initAppContextMenu(this.app);
   }
 
   async #handleContextMenuEvent(event: MouseEvent) {
     event.preventDefault();
 
-    const path = event.composedPath().filter((item) => {
+    const path = event.composedPath().filter(item => {
       if (!item) return false;
 
       if (item instanceof HTMLElement) {
@@ -102,7 +103,7 @@ export class ContextMenuManager extends BaseManager {
 
         for await (const item of subItems) {
           if (item.condition && (await item.condition()) === false) {
-            subItems = subItems.filter((i) => i.id !== item.id);
+            subItems = subItems.filter(i => i.id !== item.id);
           }
         }
 
@@ -121,7 +122,7 @@ export class ContextMenuManager extends BaseManager {
 
   #getTargets(path: HTMLElement[]) {
     const ids: string[] = [];
-    path.forEach((element) => {
+    path.forEach(element => {
       const id = element.getAttribute('data-contextmenu-field');
 
       if (id) ids.push(id);
@@ -178,8 +179,8 @@ export class ContextMenuManager extends BaseManager {
   defineItem(fieldId: string, item: ContextMenuItem) {
     const fields = this.fields.get();
     const categories = this.categories.get();
-    const targetFieldIndex = fields.findIndex((field) => field.id === fieldId);
-    const targetCategoryIndex = categories.findIndex((category) => category.id === item.category);
+    const targetFieldIndex = fields.findIndex(field => field.id === fieldId);
+    const targetCategoryIndex = categories.findIndex(category => category.id === item.category);
 
     if (targetFieldIndex >= 0) {
       if (targetCategoryIndex >= 0) {
@@ -212,8 +213,8 @@ export function useContextMenuItems(): Map<ContextMenuCategory, ContextMenuItem[
   const [currentItems] = useSlice(app.contextMenuManager.currentItems);
   const [categories] = useSlice(app.contextMenuManager.categories);
 
-  currentItems.forEach((item) => {
-    const targetCategory = categories.find((category) => category.id === item.category);
+  currentItems.forEach(item => {
+    const targetCategory = categories.find(category => category.id === item.category);
 
     if (targetCategory) {
       const hasKey = items.has(targetCategory);

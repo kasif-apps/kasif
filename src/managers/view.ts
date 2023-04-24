@@ -1,8 +1,9 @@
-import { createRecordSlice } from '@kasif-apps/cinq';
-import { WelcomePage } from '@kasif/pages/WelcomePage';
 import { BaseManager } from '@kasif/managers/base';
-import { RenderableNode } from '@kasif/util/node-renderer';
+import { WelcomePage } from '@kasif/pages/WelcomePage';
 import { authorized, trackable, tracker } from '@kasif/util/decorators';
+import { RenderableNode } from '@kasif/util/node-renderer';
+
+import { createRecordSlice } from '@kasif-apps/cinq';
 
 export interface View {
   id: string;
@@ -29,7 +30,7 @@ export class ViewManager extends BaseManager {
   @trackable
   @authorized(['push_view'])
   pushView({ view }: { view: View }) {
-    const viewExists = this.store.get().views.some((v) => v.id === view.id);
+    const viewExists = this.store.get().views.some(v => v.id === view.id);
 
     if (viewExists) {
       this.store.setKey('currentView', view.id);
@@ -37,7 +38,7 @@ export class ViewManager extends BaseManager {
       return;
     }
 
-    this.store.upsert((oldState) => ({
+    this.store.upsert(oldState => ({
       views: [...(oldState as ViewStore).views, view],
       currentView: view.id,
     }));
@@ -55,7 +56,7 @@ export class ViewManager extends BaseManager {
     let nextView: ViewStore['currentView'] = value.currentView;
 
     if (isCurrentView) {
-      const viewIndex = value.views.findIndex((view) => view.id === viewId);
+      const viewIndex = value.views.findIndex(view => view.id === viewId);
 
       if (viewIndex === 0) {
         nextView = value.views[1]?.id ?? null;
@@ -64,8 +65,8 @@ export class ViewManager extends BaseManager {
       }
     }
 
-    this.store.upsert((oldState) => ({
-      views: (oldState as ViewStore).views.filter((view) => view.id !== viewId),
+    this.store.upsert(oldState => ({
+      views: (oldState as ViewStore).views.filter(view => view.id !== viewId),
       currentView: nextView,
     }));
 
@@ -90,7 +91,7 @@ export class ViewManager extends BaseManager {
 
   getViewComponent(id: ViewStore['currentView']): View['render'] {
     const state = this.store.get();
-    const currentView = state.views.find((view) => view.id === id);
+    const currentView = state.views.find(view => view.id === id);
 
     if (currentView) {
       return currentView.render;

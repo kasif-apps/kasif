@@ -1,6 +1,11 @@
-import { Button, ButtonProps, Group } from '@mantine/core';
+import { Button, ButtonProps } from '@mantine/core';
 
-import { IconBrandDiscord, IconBrandGithub, IconBrandTwitter } from '@tabler/icons';
+import {
+  IconBrandDiscord,
+  IconBrandGithub,
+  IconBrandSpotify,
+  IconBrandTwitter,
+} from '@tabler/icons';
 
 export function GoogleIcon(props: React.ComponentPropsWithoutRef<'svg'>) {
   return (
@@ -80,15 +85,20 @@ export function GithubButton(props: ButtonProps) {
   );
 }
 
-export function SocialButtons() {
+export function SpotifyButton(props: ButtonProps) {
   return (
-    <Group position="center" sx={{ padding: 15 }}>
-      <GoogleButton>Continue with Google</GoogleButton>
-      <TwitterButton href="https://twitter.com/mantinedev" target="_blank">
-        Follow on Twitter
-      </TwitterButton>
-      <GithubButton>Login with GitHub</GithubButton>
-      <DiscordButton>Join Discord community</DiscordButton>
-    </Group>
+    <Button
+      leftIcon={<IconBrandSpotify size="1rem" />}
+      sx={theme => ({
+        'backgroundColor': theme.colorScheme === 'dark' ? '#1DB954' : '#1DB954',
+        '&:not([data-disabled]):hover': {
+          backgroundColor:
+            theme.colorScheme === 'dark'
+              ? theme.fn.lighten('#1DB954', 0.05)
+              : theme.fn.darken('#1DB954', 0.05),
+        },
+      })}
+      {...props}
+    />
   );
 }

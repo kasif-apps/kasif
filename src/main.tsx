@@ -32,6 +32,8 @@ function Wrapper() {
   const { theme } = app.themeManager.getTheme(themeID);
   const [themeSetting] = useSetting<ThemeSetting.Type>('theme');
   const [commands] = useSlice(app.commandManager.commands);
+  const [settingsReady] = useSlice(app.settingsManager.ready);
+  const [permissionsReady] = useSlice(app.permissionManager.ready);
   const [globalStyles, setGlobalStyles] = useState<CSSObject>({});
   const killer = useRef<(() => void) | null>(null);
 
@@ -46,13 +48,16 @@ function Wrapper() {
     createGlobalStyles().then(({ styles, kill }) => {
       setGlobalStyles(styles);
       killer.current = kill;
-      setReady(true);
+
+      if (settingsReady && permissionsReady) {
+        setReady(true);
+      }
     });
 
     return () => {
       if (killer.current) killer.current();
     };
-  }, [themeSetting.value]);
+  }, [themeSetting.value, settingsReady, permissionsReady]);
 
   useEffect(() => {
     if (environment.currentEnvironment === 'desktop') {

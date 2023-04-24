@@ -1,10 +1,14 @@
-import { NotificationProps, showNotification } from '@mantine/notifications';
-import { BaseManager } from '@kasif/managers/base';
-import { IconAlertTriangle, IconCheck, IconInfoCircle, IconX } from '@tabler/icons';
 import React from 'react';
-import { createVectorSlice } from '@kasif-apps/cinq';
+
 import { Group, Text } from '@mantine/core';
+import { NotificationProps, showNotification } from '@mantine/notifications';
+
+import { BaseManager } from '@kasif/managers/base';
 import { authorized, trackable, tracker } from '@kasif/util/decorators';
+
+import { IconAlertTriangle, IconCheck, IconInfoCircle, IconX } from '@tabler/icons';
+
+import { createVectorSlice } from '@kasif-apps/cinq';
 
 export type NotificationType = 'error' | 'warn' | 'success' | 'log';
 

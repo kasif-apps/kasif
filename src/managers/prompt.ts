@@ -1,10 +1,12 @@
 import React from 'react';
+
+import { Stack } from '@mantine/core';
+import { modals, openConfirmModal } from '@mantine/modals';
+
+import { InputPrompt } from '@kasif/components/Compound/InputPrompt';
 import { BaseManager } from '@kasif/managers/base';
 import { authorized, trackable, tracker } from '@kasif/util/decorators';
-import { modals, openConfirmModal } from '@mantine/modals';
-import { InputPrompt } from '@kasif/components/Compound/InputPrompt';
 import { DisplayRenderableNode, RenderableNode } from '@kasif/util/node-renderer';
-import { Stack } from '@mantine/core';
 
 @tracker('promptManager')
 export class PromptManager extends BaseManager {
@@ -13,7 +15,7 @@ export class PromptManager extends BaseManager {
   input(title: string): [Promise<string | undefined>, string] {
     const id = crypto.randomUUID();
 
-    const promise = new Promise<string | undefined>((resolve) => {
+    const promise = new Promise<string | undefined>(resolve => {
       modals.open({
         title: `${this.app.name} asks`,
         children: React.createElement(InputPrompt, {
@@ -44,7 +46,7 @@ export class PromptManager extends BaseManager {
   ): [Promise<boolean>, string] {
     const id = crypto.randomUUID();
 
-    const promise = new Promise<boolean>((resolve) => {
+    const promise = new Promise<boolean>(resolve => {
       openConfirmModal({
         title: `${this.app.name} asks`,
         children: React.createElement(

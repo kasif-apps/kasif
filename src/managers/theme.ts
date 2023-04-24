@@ -1,8 +1,10 @@
-import { app } from '@kasif/config/app';
 import { MantineProviderProps, MantineTheme } from '@mantine/core';
+
+import { app } from '@kasif/config/app';
 import { BaseManager } from '@kasif/managers/base';
 import { trackable, tracker } from '@kasif/util/decorators';
-import { createSlice, Slice } from '@kasif-apps/cinq';
+
+import { Slice, createSlice } from '@kasif-apps/cinq';
 
 export interface ThemeOption {
   id: string;
@@ -83,7 +85,7 @@ export class ThemeManager extends BaseManager {
 
   @trackable
   getTheme(id: ThemeOption['id']): ThemeOption {
-    const result = this.options.find((option) => option.id === id);
+    const result = this.options.find(option => option.id === id);
 
     if (!result) {
       app.notificationManager.error(`Theme option with id "${id}" not found.`);

@@ -1,9 +1,10 @@
-import { createRecordSlice } from '@kasif-apps/cinq';
 import { app } from '@kasif/config/app';
 import { BaseManager } from '@kasif/managers/base';
 import { View } from '@kasif/managers/view';
 import { authorized, trackable, tracker } from '@kasif/util/decorators';
 import { RenderableNode } from '@kasif/util/node-renderer';
+
+import { createRecordSlice } from '@kasif-apps/cinq';
 
 export interface Pane {
   id: string;
@@ -42,7 +43,7 @@ export class PaneManager extends BaseManager {
   @trackable
   @authorized(['push_pane'])
   pushPane(pane: Optional<Optional<Pane, 'position'>, 'size'>) {
-    this.store.upsert((oldState) => ({
+    this.store.upsert(oldState => ({
       panes: [
         ...(oldState.panes || []),
         {
@@ -61,7 +62,7 @@ export class PaneManager extends BaseManager {
   removePane(paneId: Pane['id']) {
     this.store.setKey(
       'panes',
-      (this.store.get().panes || []).filter((item) => item.id !== paneId)
+      (this.store.get().panes || []).filter(item => item.id !== paneId)
     );
 
     this.dispatchEvent(new CustomEvent('remove-pane', { detail: paneId }));
@@ -78,13 +79,13 @@ export class PaneManager extends BaseManager {
 
   @trackable
   getPane(paneId: Pane['id']) {
-    return this.store.get().panes.find((pane) => pane.id === paneId);
+    return this.store.get().panes.find(pane => pane.id === paneId);
   }
 
   @trackable
   createPaneFromView(viewId: View['id']): Optional<Optional<Pane, 'position'>, 'size'> | undefined {
     const instance = app.viewManager.store.get();
-    const view = instance.views.find((v) => v.id === viewId);
+    const view = instance.views.find(v => v.id === viewId);
     if (!view) {
       return;
     }
@@ -100,8 +101,8 @@ export class PaneManager extends BaseManager {
   @trackable
   @authorized(['replace_pane'])
   replacePane(paneId: Pane['id'], pane: Pane) {
-    this.store.upsert((oldState) => ({
-      panes: (oldState as PaneStore).panes.map((p) => (p.id === paneId ? pane : p)),
+    this.store.upsert(oldState => ({
+      panes: (oldState as PaneStore).panes.map(p => (p.id === paneId ? pane : p)),
     }));
 
     this.dispatchEvent(new CustomEvent('replace-pane', { detail: pane }));

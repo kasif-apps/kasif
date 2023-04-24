@@ -1,13 +1,14 @@
 import { App } from '@kasif/config/app';
-import { environment } from '@kasif/util/environment';
-import { User } from '@kasif/managers/auth';
 import { backend } from '@kasif/config/backend';
-import { Record } from 'pocketbase';
-import { authorized, trackable, tracker } from '@kasif/util/decorators';
-import { BaseManager } from '@kasif/managers/base';
 import { PermissionType } from '@kasif/config/permission';
-import { createVectorSlice } from '@kasif-apps/cinq';
+import { User } from '@kasif/managers/auth';
+import { BaseManager } from '@kasif/managers/base';
+import { authorized, trackable, tracker } from '@kasif/util/decorators';
+import { environment } from '@kasif/util/environment';
 import { KasifRemote } from '@kasif/util/remote';
+
+import { createVectorSlice } from '@kasif-apps/cinq';
+import { Record } from 'pocketbase';
 
 export interface PluginModule {
   name: string;
@@ -86,7 +87,7 @@ export class PluginManager extends BaseManager {
   async list(): Promise<PluginDTO[]> {
     const apps = await backend.collection('apps').getList(0, 100, { expand: 'author' });
 
-    return apps.items.map((record) => {
+    return apps.items.map(record => {
       const item = record as unknown as PluginRawDTO;
 
       return this.#mapItem(item, record);
@@ -99,7 +100,7 @@ export class PluginManager extends BaseManager {
       .collection('apps')
       .getList(0, 2, { expand: 'author', sort: '-downloads' });
 
-    return apps.items.map((record) => {
+    return apps.items.map(record => {
       const item = record as unknown as PluginRawDTO;
 
       return this.#mapItem(item, record);
@@ -116,7 +117,10 @@ export class PluginManager extends BaseManager {
     await environment.fs.copyFile(pluginPath, destination);
 
     const appsFolder = await environment.path.resolveResource('apps/');
-    await environment.invoke('load_plugin_remotely', { resourcePath: appsFolder, pluginPath: destination });
+    await environment.invoke('load_plugin_remotely', {
+      resourcePath: appsFolder,
+      pluginPath: destination,
+    });
   }
 
   @trackable
@@ -131,7 +135,10 @@ export class PluginManager extends BaseManager {
     await environment.fs.writeBinaryFile(destination, await file.arrayBuffer());
 
     const appsFolder = await environment.path.resolveResource('apps/');
-    await environment.invoke('load_plugin_remotely', { resourcePath: appsFolder, pluginPath: destination });
+    await environment.invoke('load_plugin_remotely', {
+      resourcePath: appsFolder,
+      pluginPath: destination,
+    });
   }
 
   async initSingleModule(name: string, isWebBased: boolean) {

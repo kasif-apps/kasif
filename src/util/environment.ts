@@ -1,5 +1,7 @@
 import { app } from '@kasif/config/app';
 
+import { Slice, Transactor } from '@kasif-apps/cinq';
+import { TransactorOptions } from '@kasif-apps/cinq/dist/src/lib/transactor/base/transactor';
 import { invoke, fs as tauriFs, path as tauriPath } from '@tauri-apps/api';
 import { getMatches as getArgMatches } from '@tauri-apps/api/cli';
 import { OpenDialogOptions, open } from '@tauri-apps/api/dialog';
@@ -32,8 +34,11 @@ interface FileEntry {
 interface Fs {
   copyFile: (source: string, target: string) => Promise<void>;
   writeBinaryFile: (path: string, contents: ArrayBuffer, options?: FsOptions) => Promise<void>;
+  writeTextFile: (path: string, contents: string, options?: FsOptions) => Promise<void>;
   readTextFile: (path: string, options?: FsOptions) => Promise<string>;
+  removeFile: (file: string, options?: FsOptions | undefined) => Promise<void>;
   readDir: (path: string) => Promise<FileEntry[]>;
+  exists: (path: string, options?: FsOptions | undefined) => Promise<boolean>;
 }
 
 interface Dialog {
@@ -70,9 +75,12 @@ export class Environment {
 
     this.fs = {
       copyFile: NoOp,
+      writeTextFile: NoOp,
       writeBinaryFile: NoOp,
+      removeFile: NoOp,
       readTextFile: NoOp,
       readDir: NoOp,
+      exists: NoOp,
     };
 
     this.dialog = {
@@ -121,3 +129,42 @@ export class Environment {
 }
 
 export const environment = new Environment();
+
+export interface FSTransactorOptions<T, K, L> extends TransactorOptions<T, K, L> {
+  path: string;
+}
+
+export class FSTransactor<T> extends Transactor<T> {
+  constructor(public options: FSTransactorOptions<T, any, any>) {
+    super(options);
+  }
+
+  init(): void {
+    super.init();
+
+    environment.fs.exists(this.options.path).then(async exists => {
+      if (!exists) {
+        this.set();
+      } else {
+        this.load();
+      }
+    });
+
+    this.slice.subscribe(() => {
+      this.set();
+    });
+  }
+
+  async set() {
+    await environment.fs.writeTextFile(this.options.path, this.encode());
+  }
+
+  async load() {
+    const record = await environment.fs.readTextFile(this.options.path);
+    this.decode(record);
+  }
+
+  kill() {
+    environment.fs.removeFile(this.options.path);
+  }
+}

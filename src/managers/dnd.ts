@@ -1,9 +1,11 @@
-import { createSlice } from '@kasif-apps/cinq';
+import { DropResult, OnDragUpdateResponder } from 'react-beautiful-dnd';
+
 import { app } from '@kasif/config/app';
 import { BaseManager } from '@kasif/managers/base';
 import { tracker } from '@kasif/util/decorators';
 import { reorder } from '@kasif/util/misc';
-import { DropResult, OnDragUpdateResponder } from 'react-beautiful-dnd';
+
+import { createSlice } from '@kasif-apps/cinq';
 
 @tracker('dndManager')
 export class DndManager extends BaseManager {
@@ -35,7 +37,7 @@ export class DndManager extends BaseManager {
 
       if (pane) {
         const { panes } = app.paneManager.store.get();
-        const previousPane = panes.find((item) => item.id === id);
+        const previousPane = panes.find(item => item.id === id);
 
         if (previousPane) {
           app.paneManager.replacePane(id, {

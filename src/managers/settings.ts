@@ -1,9 +1,17 @@
-import { createRecordSlice, RecordSlice, StorageTransactor } from '@kasif-apps/cinq';
+import { App } from '@kasif/config/app';
 import { initialCategories, initialSettings } from '@kasif/config/settings';
 import { BaseManager } from '@kasif/managers/base';
-import { RenderableNode } from '@kasif/util/node-renderer';
-import { App } from '@kasif/config/app';
 import { authorized, trackable, tracker } from '@kasif/util/decorators';
+import { FSTransactor, environment } from '@kasif/util/environment';
+import { RenderableNode } from '@kasif/util/node-renderer';
+
+import {
+  RecordSlice,
+  Slice,
+  StorageTransactor,
+  createRecordSlice,
+  createSlice,
+} from '@kasif-apps/cinq';
 
 export interface SettingCategory {
   id: string;
@@ -23,6 +31,7 @@ export interface SettingsItem<T> {
 
 export interface SettingController<T> {
   id: SettingsItem<T>['id'];
+  raw: SettingsItem<T>;
   instance: RecordSlice<SettingsItem<T>>;
   category: SettingsItem<T>['category'];
   update: (value: T) => void;
@@ -36,14 +45,41 @@ export interface SettingsStore {
 export class SettingsManager extends BaseManager {
   controllers: SettingController<any>[] = [];
   categories: SettingCategory[] = [];
+  store = createRecordSlice<Record<string, unknown>>({}, { key: 'settings' });
+  ready = createSlice(false, { key: 'settings-ready-state' });
 
   constructor(app: App, parent?: App) {
     super(app, parent);
 
     if (!parent) {
-      initialCategories.forEach((category) => this.defineCategory(category));
-      initialSettings.forEach((setting) => this.defineSetting(setting));
+      initialCategories.forEach(category => this.defineCategory(category));
+      initialSettings.forEach(setting => this.defineSetting(setting));
     }
+
+    this.store.subscribe(e => {
+      const settings = this.store.get();
+
+      for (const [key, setting] of Object.entries(settings)) {
+        const controller = this.getSettingController(key);
+
+        if (controller) {
+          controller.instance.set({ ...controller.raw, value: setting });
+        }
+      }
+    });
+
+    environment.path.appLocalDataDir().then(async dir => {
+      const path = await environment.path.join(dir, 'settings.json');
+
+      const transactor = new FSTransactor({
+        key: 'settings',
+        slice: this.store,
+        path,
+      });
+
+      transactor.init();
+      this.ready.set(true);
+    });
   }
 
   @trackable
@@ -57,14 +93,18 @@ export class SettingsManager extends BaseManager {
       return;
     }
 
-    const slice = createRecordSlice(item, { key: `kasif.${item.id}` });
+    const slice = createRecordSlice(item, { key: item.id });
+    this.store.upsert({ [slice.key]: slice.get().value });
 
     const controller = {
       id: item.id,
+      raw: item,
       instance: slice,
       update: (value: T) => {
         const oldValue = slice.get().value;
         slice.upsert({ ...item, value });
+        this.store.upsert({ [slice.key]: slice.get().value });
+
         this.app.notificationManager.log(
           `Setting '${item.title}' (${item.id}) updated`,
           'Setting Updated'
@@ -77,18 +117,6 @@ export class SettingsManager extends BaseManager {
       },
       category: item.category,
     };
-
-    const transactor = new StorageTransactor({
-      key: 'settings',
-      slice,
-      type: 'localStorage',
-      model: {
-        encode: (data) => JSON.stringify(data.get().value),
-        decode: (data) => ({ ...item, value: JSON.parse(data) }),
-      },
-    });
-
-    transactor.init();
 
     this.controllers.push(controller);
     this.dispatchEvent(new CustomEvent('define-setting', { detail: controller }));
@@ -104,7 +132,7 @@ export class SettingsManager extends BaseManager {
   @trackable
   @authorized(['define_setting_category'])
   defineCategory(category: SettingCategory) {
-    if (this.categories.find((c) => c.id === category.id)) {
+    if (this.categories.find(c => c.id === category.id)) {
       this.app.notificationManager.error(
         `Category with id ${category.id} already exists.`,
         'Cannot Define Category'
@@ -126,7 +154,7 @@ export class SettingsManager extends BaseManager {
   @trackable
   @authorized(['read_setting'])
   getSettingController<T>(id: SettingsItem<T>['id']): SettingController<T> | undefined {
-    const result = this.controllers.find((controller) => controller.id === id);
+    const result = this.controllers.find(controller => controller.id === id);
 
     return result as SettingController<T>;
   }
@@ -134,10 +162,10 @@ export class SettingsManager extends BaseManager {
   @trackable
   @authorized(['read_setting'])
   getSetting<T>(id: SettingsItem<T>['id']): T | undefined {
-    const theme = this.app.settingsManager.getSettingController<T>(id);
+    const setting = this.app.settingsManager.getSettingController<T>(id);
 
-    if (theme) {
-      return theme.instance.get().value;
+    if (setting) {
+      return setting.instance.get().value;
     }
   }
 }
