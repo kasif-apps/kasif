@@ -43,8 +43,8 @@ export function initAppContextMenu(app: App) {
   });
 
   app.contextMenuManager.defineCategory({
-    id: 'settings',
-    title: 'Settings',
+    id: 'more',
+    title: 'More',
     order: 2,
   });
 
@@ -64,16 +64,6 @@ export function initAppContextMenu(app: App) {
     },
     category: 'app',
     registerCommand: true,
-  });
-
-  app.contextMenuManager.defineItem('app', {
-    id: 'launch-command-center',
-    title: 'Launch Command Center',
-    icon: () => React.createElement(IconTerminal2, { size: 14 }),
-    onTrigger: async () => {
-      openSpotlight();
-    },
-    category: 'app',
   });
 
   app.contextMenuManager.defineItem('pane', {
@@ -164,7 +154,7 @@ export function initAppContextMenu(app: App) {
     id: 'open',
     title: 'Open',
     icon: () => React.createElement(IconExternalLink, { size: 14 }),
-    category: 'settings',
+    category: 'more',
     children: [
       {
         id: 'open-settings',
@@ -174,8 +164,17 @@ export function initAppContextMenu(app: App) {
         onTrigger: async () => {
           app.viewManager.pushView({ view: prebuiltViews.settings });
         },
-        category: 'settings',
+        category: 'app',
         registerCommand: true,
+      },
+      {
+        id: 'open-command-center',
+        title: 'Command Center',
+        icon: () => React.createElement(IconTerminal2, { size: 14 }),
+        onTrigger: async () => {
+          openSpotlight();
+        },
+        category: 'app',
       },
       {
         id: 'open-logs',
@@ -196,7 +195,7 @@ export function initAppContextMenu(app: App) {
         onTrigger: async () => {
           environment.invoke('open_devtools');
         },
-        category: 'settings',
+        category: 'app',
         registerCommand: environment.currentEnvironment === 'desktop',
         condition: async () => environment.currentEnvironment === 'desktop',
       },
@@ -208,7 +207,7 @@ export function initAppContextMenu(app: App) {
         onTrigger: async () => {
           app.viewManager.pushView({ view: prebuiltViews.permissions });
         },
-        category: 'settings',
+        category: 'app',
         registerCommand: true,
       },
     ],

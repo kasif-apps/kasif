@@ -199,11 +199,23 @@ export class ContextMenuManager extends BaseManager {
     const targetFieldIndex = fields.findIndex(field => field.id === fieldId);
     const targetCategoryIndex = categories.findIndex(category => category.id === item.category);
 
+    const defineCommandFromItem = (instance: ContextMenuItemInstance) => {
+      const isParent = isContextMenuParent(instance);
+
+      if (!isParent) {
+        if (instance.shortCut && instance.registerCommand) {
+          this.app.commandManager.defineCommand(instance);
+        }
+      } else {
+        for (const child of instance.children) {
+          defineCommandFromItem(child);
+        }
+      }
+    };
+
     if (targetFieldIndex >= 0) {
       if (targetCategoryIndex >= 0) {
-        if (!isContextMenuParent(item) && item.shortCut && item.registerCommand) {
-          this.app.commandManager.defineCommand(item);
-        }
+        defineCommandFromItem(item);
 
         this.fields.setAt(targetFieldIndex, {
           ...fields[targetFieldIndex],
