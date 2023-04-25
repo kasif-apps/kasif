@@ -3,7 +3,7 @@ import React from 'react';
 import { Stack } from '@mantine/core';
 import { modals, openConfirmModal } from '@mantine/modals';
 
-import { InputPrompt } from '@kasif/components/Compound/InputPrompt';
+import { AlertPrompt, InputPrompt } from '@kasif/components/Compound/Prompt';
 import { BaseManager } from '@kasif/managers/base';
 import { authorized, trackable, tracker } from '@kasif/util/decorators';
 import { DisplayRenderableNode, RenderableNode } from '@kasif/util/node-renderer';
@@ -71,6 +71,29 @@ export class PromptManager extends BaseManager {
       });
 
       this.dispatchEvent(new CustomEvent('show-confirm', { detail: { title, id } }));
+    });
+
+    return [promise, id];
+  }
+
+  @trackable
+  @authorized(['show_prompts'])
+  alert(title: string, content: RenderableNode = () => React.createElement('p')) {
+    const id = crypto.randomUUID();
+
+    const promise = new Promise<void>(resolve => {
+      modals.open({
+        title: `${this.app.name} says`,
+        children: React.createElement(AlertPrompt, {
+          content,
+        }),
+        onClose: () => {
+          resolve(undefined);
+          this.dispatchEvent(new CustomEvent('close', { detail: { id } }));
+        },
+      });
+
+      this.dispatchEvent(new CustomEvent('show-alert', { detail: { title, id } }));
     });
 
     return [promise, id];

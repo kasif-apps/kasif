@@ -2,6 +2,8 @@ import { useState } from 'react';
 
 import { Button, TextInput } from '@mantine/core';
 
+import { DisplayRenderableNode, RenderableNode } from '@kasif/util/node-renderer';
+
 export function InputPrompt({
   title,
   onSubmit,
@@ -30,4 +32,8 @@ export function InputPrompt({
       </Button>
     </form>
   );
+}
+
+export function AlertPrompt({ content }: { content: RenderableNode }) {
+  return <DisplayRenderableNode node={content} />;
 }
