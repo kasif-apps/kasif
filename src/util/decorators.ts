@@ -10,7 +10,7 @@ export function trackable(
   const originalValue = _descriptor.value;
   const descriptor = _descriptor;
 
-  descriptor.value = function descValue(...args: any[]) {
+  descriptor.value = function descValue(...args: unknown[]) {
     const identifier = target.constructor.prototype.identifier as keyof App;
     const instance = this as BaseManager;
     const key = propertyKey as keyof BaseManager;
@@ -54,7 +54,7 @@ export function authorized(permissions: PermissionType[]) {
     const originalValue = _descriptor.value;
     const descriptor = _descriptor;
 
-    descriptor.value = function descValue(...args: any[]) {
+    descriptor.value = function descValue(...args: unknown[]) {
       const instance = this as BaseManager;
       const missingPermissions = instance.app.permissionManager.getMissingPermissions(permissions);
 

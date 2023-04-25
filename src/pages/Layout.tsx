@@ -18,7 +18,7 @@ import { LanguageSetting } from '@kasif/config/settings';
 import { useSlice } from '@kasif/util/cinq-react';
 import { DisplayRenderableNode } from '@kasif/util/node-renderer';
 
-import SplitPane, { Pane as SplitPaneView } from 'split-pane-react';
+import SplitPane, { SashContent, Pane as SplitPaneView } from 'split-pane-react';
 
 const useStyles = createStyles((theme, { isDragging }: { isDragging: boolean }) => ({
   paneFreeDropArea: {
@@ -198,19 +198,19 @@ function PaneView() {
     <>
       {panes.length > 0 ? (
         <>
-          {/* @ts-ignore */}
           <SplitPane
             split="vertical"
             sizes={paneSizes.vertical}
+            sashRender={(_, active) => <SashContent active={active} type="vscode" />}
             onChange={sizes => setPaneSize(sizes, 'vertical')}>
             {verticalPanes.map((verticalPane, verticalIndex) => {
               if (verticalPane.id === 'main_view') {
                 return (
-                  /* @ts-ignore */
                   <SplitPane
                     key={`vartical-${verticalPane.id}`}
                     split="horizontal"
                     sizes={paneSizes.horizontal}
+                    sashRender={(_, active) => <SashContent active={active} type="vscode" />}
                     onChange={sizes => setPaneSize(sizes, 'horizontal')}>
                     {horizontalPanes.map((horizontalPane, horizontalIndex) => (
                       <>

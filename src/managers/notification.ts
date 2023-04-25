@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Group, Text } from '@mantine/core';
+import { Group, Text, TextProps } from '@mantine/core';
 import { NotificationProps, showNotification } from '@mantine/notifications';
 
 import { BaseManager } from '@kasif/managers/base';
@@ -37,8 +37,9 @@ export class NotificationManager extends BaseManager {
   createMessageTitle(title: string, source: NotificationLog['source']) {
     return React.createElement(Group, { position: 'apart', sx: { display: 'flex' } }, [
       React.createElement('span', {}, title),
-      // @ts-ignore
-      React.createElement(Text, { color: 'dimmed', size: 'xs' }, [source.name]),
+      React.createElement(Text as React.FC<TextProps>, { color: 'dimmed', size: 'xs' }, [
+        source.name,
+      ]),
     ]);
   }
 

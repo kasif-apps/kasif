@@ -1,11 +1,7 @@
 import { Button, ButtonProps } from '@mantine/core';
+import { PolymorphicComponentProps } from '@mantine/utils';
 
-import {
-  IconBrandDiscord,
-  IconBrandGithub,
-  IconBrandSpotify,
-  IconBrandTwitter,
-} from '@tabler/icons';
+import { IconBrandDiscord, IconBrandGithub, IconBrandSpotify } from '@tabler/icons';
 
 export function GoogleIcon(props: React.ComponentPropsWithoutRef<'svg'>) {
   return (
@@ -36,11 +32,11 @@ export function GoogleIcon(props: React.ComponentPropsWithoutRef<'svg'>) {
   );
 }
 
-export function GoogleButton(props: ButtonProps) {
+export function GoogleButton(props: PolymorphicComponentProps<'button', ButtonProps>) {
   return <Button leftIcon={<GoogleIcon />} variant="default" color="gray" {...props} />;
 }
 
-export function DiscordButton(props: ButtonProps) {
+export function DiscordButton(props: PolymorphicComponentProps<'button', ButtonProps>) {
   return (
     <Button
       leftIcon={<IconBrandDiscord size="1rem" />}
@@ -58,18 +54,7 @@ export function DiscordButton(props: ButtonProps) {
   );
 }
 
-export function TwitterButton(props: ButtonProps & React.ComponentPropsWithoutRef<'a'>) {
-  return (
-    <Button
-      component="a"
-      leftIcon={<IconBrandTwitter size="1rem" color="#00ACEE" />}
-      variant="default"
-      {...props}
-    />
-  );
-}
-
-export function GithubButton(props: ButtonProps) {
+export function GithubButton(props: PolymorphicComponentProps<'button', ButtonProps>) {
   return (
     <Button
       {...props}
@@ -85,7 +70,7 @@ export function GithubButton(props: ButtonProps) {
   );
 }
 
-export function SpotifyButton(props: ButtonProps) {
+export function SpotifyButton(props: PolymorphicComponentProps<'button', ButtonProps>) {
   return (
     <Button
       leftIcon={<IconBrandSpotify size="1rem" />}

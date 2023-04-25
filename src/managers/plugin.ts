@@ -8,7 +8,7 @@ import { environment } from '@kasif/util/environment';
 import { KasifRemote } from '@kasif/util/remote';
 
 import { createVectorSlice } from '@kasif-apps/cinq';
-import { Record } from 'pocketbase';
+import { Record as PocketbaseRecord } from 'pocketbase';
 
 export interface PluginModule {
   name: string;
@@ -27,10 +27,8 @@ export interface PluginModule {
 }
 
 export interface PluginImport {
-  file: {
-    // @ts-ignore
+  file: Record<string, <T>(...args: unknown[]) => Promise<T>> & {
     init: (app: App) => Promise<void>;
-    [key: string]: <T>(...args: any[]) => Promise<T>;
   };
   meta: PluginModule;
 }
@@ -46,7 +44,7 @@ export interface PluginDTO {
   package: string;
   title: string;
   updated: Date;
-  record: Record;
+  record: PocketbaseRecord;
   downloads: number;
 }
 
@@ -71,7 +69,7 @@ export interface PluginRawDTO {
 export class PluginManager extends BaseManager {
   plugins = createVectorSlice<PluginImport[]>([], { key: 'loaded-plugins' });
 
-  #mapItem(item: PluginRawDTO, record: Record): PluginDTO {
+  #mapItem(item: PluginRawDTO, record: PocketbaseRecord): PluginDTO {
     return {
       ...item,
       record,
@@ -259,7 +257,7 @@ export class PluginManager extends BaseManager {
   @trackable
   @authorized(['load_plugin'])
   async readManifest(path: string, isWebBased: boolean): Promise<PluginModule> {
-    let manifest: any;
+    let manifest: Record<'kasif', PluginModule>;
 
     if (isWebBased) {
       const request = await fetch(

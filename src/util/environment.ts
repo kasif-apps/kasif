@@ -151,7 +151,7 @@ export interface FSTransactorOptions<T, K, L> extends TransactorOptions<T, K, L>
 }
 
 export class FSTransactor<T> extends Transactor<T> {
-  constructor(public options: FSTransactorOptions<T, any, any>) {
+  constructor(public options: FSTransactorOptions<T, unknown, unknown>) {
     super(options);
   }
 

@@ -32,7 +32,7 @@ export interface SettingController<T> {
 }
 
 export interface SettingsStore {
-  items: SettingsItem<any>[];
+  items: SettingsItem<unknown>[];
 }
 
 @tracker('settingsManager')
@@ -90,7 +90,7 @@ export class SettingsManager extends BaseManager {
     const slice = createRecordSlice(item, { key: item.id });
     this.store.upsert({ [slice.key]: slice.get().value });
 
-    const controller = {
+    const controller: SettingController<T> = {
       id: item.id,
       raw: item,
       instance: slice,

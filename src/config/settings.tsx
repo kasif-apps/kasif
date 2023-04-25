@@ -254,7 +254,7 @@ export namespace LogLevelSetting {
   };
 }
 
-export const initialSettings: Array<SettingsItem<any>> = [
+export const initialSettings: Array<SettingsItem<unknown>> = [
   ThemeSetting.definition,
   FontSetting.definition,
   LanguageSetting.definition,

@@ -28,7 +28,6 @@ import {
   GithubButton,
   GoogleButton,
   SpotifyButton,
-  TwitterButton,
 } from '@kasif/components/Primitive/SocialButtons';
 import { BackendError, backend } from '@kasif/config/backend';
 import { environment } from '@kasif/util/environment';
@@ -41,16 +40,15 @@ interface AuthProvider {
   codeChallenge: string;
   codeChallengeMethod: string;
   codeVerifier: string;
-  name: 'github' | 'google' | 'twitter' | 'discord' | 'spotify';
+  name: 'github' | 'google' | 'discord' | 'spotify';
   state: string;
 }
 
 const globalAuthMethods = {
-  github: (props: any) => <GithubButton {...props} />,
-  google: (props: any) => <GoogleButton {...props} />,
-  twitter: (props: any) => <TwitterButton {...props} />,
-  discord: (props: any) => <DiscordButton {...props} />,
-  spotify: (props: any) => <SpotifyButton {...props} />,
+  github: (props: Parameters<typeof GithubButton>[0]) => <GithubButton {...props} />,
+  google: (props: Parameters<typeof GoogleButton>[0]) => <GoogleButton {...props} />,
+  discord: (props: Parameters<typeof DiscordButton>[0]) => <DiscordButton {...props} />,
+  spotify: (props: Parameters<typeof SpotifyButton>[0]) => <SpotifyButton {...props} />,
 };
 
 export function SignInLogin(props: PaperProps) {

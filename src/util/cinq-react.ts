@@ -11,5 +11,5 @@ export function useSlice<T>(slice: Slice<T>): [T, Slice<T>['set']] {
 
   useEffect(() => slice.subscribe(listener), []);
 
-  return [value, (args: any) => slice.set.call(slice, args)];
+  return [value, (...args: Parameters<typeof slice.set>) => slice.set.call(slice, ...args)];
 }
