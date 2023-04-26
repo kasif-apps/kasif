@@ -113,14 +113,46 @@ export class ContextMenuManager extends BaseManager {
     const fields = this.fields.get();
     const targetFields: string[] = [];
 
+    const checkConditions = async (
+      item: ContextMenuItemInstance
+    ): Promise<[boolean, ContextMenuItemInstance[]]> => {
+      if (item.condition && (await item.condition()) === false) {
+        return [false, []];
+      }
+
+      if (isContextMenuParent(item)) {
+        let { children } = item;
+
+        for await (const child of children) {
+          const [doesChildStay, subChildren] = await checkConditions(child);
+
+          if (!doesChildStay) {
+            children = children.filter(c => c.id !== child.id);
+          }
+
+          if (isContextMenuParent(child)) {
+            child.children = subChildren;
+          }
+        }
+
+        return [true, children];
+      }
+      return [true, []];
+    };
+
     for await (const field of fields) {
       if (targets.includes(field.id)) {
         targetFields.push(field.id);
         let { items: subItems } = field;
 
         for await (const item of subItems) {
-          if (item.condition && (await item.condition()) === false) {
+          const [stays, children] = await checkConditions(item);
+          if (!stays) {
             subItems = subItems.filter(i => i.id !== item.id);
+          }
+
+          if (isContextMenuParent(item)) {
+            item.children = children;
           }
         }
 

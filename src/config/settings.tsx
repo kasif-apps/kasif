@@ -8,6 +8,7 @@ import { Log } from '@kasif/managers/notification';
 import { SettingCategory, SettingsItem } from '@kasif/managers/settings';
 import { ThemeOption } from '@kasif/managers/theme';
 import { environment } from '@kasif/util/environment';
+import { getOS } from '@kasif/util/misc';
 
 export interface BooleanActionProps {
   id: string;
@@ -134,6 +135,14 @@ export namespace FontSetting {
   export type Type = string;
   const id = 'font';
 
+  const baseFonts: { value: string; label: string }[] = [
+    { value: 'Quicksand', label: 'Quicksand' },
+    { value: 'Roboto', label: 'Roboto' },
+    { value: 'Open Sans', label: 'Open Sans' },
+    { value: '-apple-system', label: 'San Fransisco' },
+    { value: '-windows-system', label: 'Segoe UI' },
+  ];
+
   interface ItemProps extends React.ComponentPropsWithoutRef<'div'> {
     label: string;
   }
@@ -150,6 +159,26 @@ export namespace FontSetting {
     )
   );
 
+  const getDefaultFont = () => {
+    if (environment.currentEnvironment === 'web') {
+      return 'Roboto';
+    }
+
+    const os = getOS();
+
+    switch (os) {
+      case 'macos':
+      case 'ios':
+        return '-apple-system';
+      case 'windows':
+        return 'Segoe UI';
+      case 'linux':
+        return 'Roboto';
+      default:
+        return 'Roboto';
+    }
+  };
+
   export const definition: SettingsItem<Type> = {
     id,
     category: 'appearance',
@@ -161,14 +190,10 @@ export namespace FontSetting {
       en: 'Change the font of the app.',
       tr: 'Uygulamanın yazı tipini değiştirin.',
     },
-    value: 'San Fransisco',
+    value: getDefaultFont(),
     render: () => {
       const [font, setFont] = useSetting<Type>(id);
-      const [fonts, setFonts] = useState<{ value: string; label: string }[]>([
-        { value: 'Quicksand', label: 'Quicksand' },
-        { value: 'Open Sans', label: 'Open Sans' },
-        { value: '-apple-system', label: 'San Fransisco' },
-      ]);
+      const [fonts, setFonts] = useState<{ value: string; label: string }[]>(baseFonts);
 
       useEffect(() => {
         environment.fontDir().then(async path => {
