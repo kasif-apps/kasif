@@ -67,6 +67,11 @@
       "description": "Change the log display behavior of the app. Success is recommended."
     }
   },
+  "permissions": {
+    "edit-permissions": "Edit Permissions",
+    "no-plugins": "You don't have any plugins installed",
+    "go-to-store": "Go to the Store"
+  },
   "contextmenu": {
     "category": {
       "app": "App",
@@ -148,5 +153,130 @@
   },
   "easter-egg": {
     "message": "Hi, you found me!"
+  },
+  "permission": {
+    "upload-plugin": {
+      "label": "Eklenti Yükle",
+      "description": "Sizin adınıza bir eklenti yükleme"
+    },
+    "install-plugin": {
+      "label": "Eklenti Yükle",
+      "description": "Sizin adınıza bir eklenti yükleme"
+    },
+    "load-plugin": {
+      "label": "Eklenti Yükle",
+      "description": "Belirtilen kaynaktan sizin adınıza bir eklenti yükleme"
+    },
+    "show-notifications": {
+      "label": "Bildirim Göster",
+      "description": "Bilgi, başarı, uyarı veya hata mesajları gibi sizi bilgilendirmek için bildirimleri gösterme"
+    },
+    "show-prompts": {
+      "label": "İstekleri Göster",
+      "description": "Sizi bilgilendirmek veya bilgi almak için girişler, onaylar ve uyarılar gibi istekleri gösterme"
+    },
+    "push-view": { "label": "Sekme Ekle", "description": "Ekranınıza bir sekme ekler" },
+    "push-pane": { "label": "Panel Ekle", "description": "Ekranınıza bir panel ekler" },
+    "remove-view": {
+      "label": "Sekme Kaldır",
+      "description": "Ekranınızdan bir görünüm kaldırır"
+    },
+    "set-view": {
+      "label": "Sekme Ayarla",
+      "description": "Bir görünümü etkin görünüm olarak ayarlama"
+    },
+    "remove-pane": { "label": "Panel Kaldır", "description": "Ekranınızdan bir bölüm kaldırır" },
+    "replace-pane": {
+      "label": "Panel Değiştir",
+      "description": "Bir bölümün içeriğini başka bir bölümle değiştirme"
+    },
+    "push-navbar-item": {
+      "label": "Navigasyon Ögesi Ekle",
+      "description": "Ekranınızın solunda, üst veya alt kısmına bir navigasyon ögesi ekler"
+    },
+    "remove-navbar-item": {
+      "label": "Navigasyon Ögesi Kaldır",
+      "description": "Ekranınızın sol tarafından bir navigasyon ögesi kaldırır, üst veya alt kısım olabilir"
+    },
+    "define-command": {
+      "label": "Komut Tanımla",
+      "description": "Kısayolu olan bir komut tanımlama, kullanıcıya kısayol veya komut merkezi aracılığıyla çalıştırabilir"
+    },
+    "define-setting": {
+      "label": "Ayar Tanımla",
+      "description": "Ayar sayfasında görüntülenecek bir ayar ögesi tanımlama"
+    },
+    "define-setting-category": {
+      "label": "Ayar Kategorisi Tanımla",
+      "description": "Ayar ögelerini gruplandıracak bir ayar kategorisi tanımlama"
+    },
+    "define-contextmenu-item": {
+      "label": "İçerik Menüsü Ögesi Tanımla",
+      "description": "Kullanıcının uygulamaya sağ tıkladığında görülecek bir içerik menüsü ögesi tanımlama"
+    },
+    "define-contextmenu-category": {
+      "label": "İçerik Menüsü Kategorisi Tanımla",
+      "description": "İçerik menüsü ögelerini gruplandıracak bir içerik menüsü kategorisi tanımlama"
+    },
+    "define-contextmenu-field": {
+      "label": "İçerik Menüsü Alanı Tanımla",
+      "description": "Özel bir içerik menüsü alanı tanımlama; bu, menü ögesine bir içerik sağlar ve uygulamanın belirli yerlerinde görünmesini sağlar."
+    },
+    "kill-network-manager": {
+      "label": "Ağ Yöneticisini Sonlandır",
+      "description": "Ağ yöneticisi özelliklerini sonlandırma; bu, uygulamanın yanlış çalışmasına neden olabilir."
+    },
+    "kill-contextmenu-manager": {
+      "label": "İçerik Menüsü Yöneticisini Sonlandır",
+      "description": "İçerik menüsü yöneticisi özelliklerini sonlandırma; bu, uygulamanın yanlış çalışmasına neden olabilir."
+    },
+    "reinit-permission-manager": {
+      "label": "İzin Yöneticisini Yeniden Başlat",
+      "description": "Uygulamanın izin yöneticisini herhangi bir zamanda başlatma; bu tehlikeli olabilir."
+    },
+    "reinit-command-manager": {
+      "label": "Komut Yöneticisini Yeniden Başlat",
+      "description": "Uygulamanın komut yöneticisini herhangi bir zamanda başlatma; bu tehlikeli olabilir."
+    },
+    "reinit-auth-manager": {
+      "label": "Kimlik Doğrulama Yöneticisini Yeniden Başlat",
+      "description": "Uygulamanın kimlik doğrulama yöneticisini herhangi bir zamanda başlatma; bu tehlikeli olabilir."
+    },
+    "reinit-plugin-manager": {
+      "label": "Eklenti Yöneticisini Yeniden Başlat",
+      "description": "Uygulamanın eklenti yöneticisini herhangi bir zamanda başlatma; bu tehlikeli olabilir."
+    },
+    "reinit-network-manager": {
+      "label": "Ağ Yöneticisini Yeniden Başlat",
+      "description": "Uygulamanın ağ yöneticisini herhangi bir zamanda başlatma"
+    },
+    "read-user-data": {
+      "label": "Kullanıcı Verilerini Okuma",
+      "description": "Kullanıcı ayarları, eklentileri ve diğer hassas veriler dahil olmak üzere kullanıcı bilgilerini okumak"
+    },
+    "read-setting": {
+      "label": "Ayar Okuma",
+      "description": "Uygulamanın herhangi bir ayarını okumak"
+    },
+    "read-connection-data": {
+      "label": "Bağlantı Verilerini Okuma",
+      "description": "Ağ bağlantı bilgilerini okumak"
+    },
+    "read-permission-data": {
+      "label": "İzin Verilerini Okuma",
+      "description": "Herhangi bir uygulamanın izin bilgilerini okumak"
+    },
+    "revoke-permission": {
+      "label": "İzni İptal Etme",
+      "description": "Kendi adınıza bir uygulamanın iznini iptal etmek"
+    },
+    "open-contextmenu": {
+      "label": "İçerik Menüsünü Açma",
+      "description": "Herhangi bir zamanda ekranda bir içerik menüsü açmak"
+    },
+    "close-contextmenu": {
+      "label": "İçerik Menüsünü Kapatma",
+      "description": "Herhangi bir zamanda ekrandaki içerik menüsünü kapatmak"
+    }
   }
 }

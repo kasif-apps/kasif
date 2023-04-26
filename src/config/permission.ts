@@ -1,3 +1,7 @@
+import { App } from '@kasif/config/app';
+
+import { LocaleString } from './i18n';
+
 export const permissions = [
   'upload_plugin',
   'install_plugin',
@@ -36,148 +40,141 @@ export const permissions = [
 
 export type PermissionType = (typeof permissions)[number];
 
-export const permissionDescriptions: Record<
-  PermissionType,
-  { label: string; description: string }
-> = {
-  upload_plugin: {
-    label: 'Upload Plugin',
-    description: 'Uploading a plugin on behalf of you',
-  },
-  install_plugin: {
-    label: 'Install Plugin',
-    description: 'Installing a plugin on behalf of you',
-  },
-  load_plugin: {
-    label: 'Load Plugin',
-    description: 'Loading a plugin on behalf of you from a a provided source',
-  },
-  show_notifications: {
-    label: 'Show Notifications',
-    description:
-      'Showing notifications to infrom you. These may include infos and success, warning or error messages',
-  },
-  show_prompts: {
-    label: 'Show Prompts',
-    description:
-      'Showing prompts to infrom you or get information from you. These may include inputs, confirmations and alerts',
-  },
-  push_view: {
-    label: 'Push View',
-    description: 'Pushing a view on the screen',
-  },
-  push_pane: {
-    label: 'Push Pane',
-    description: 'Pushing a pane on the screen',
-  },
-  remove_view: {
-    label: 'Remove View',
-    description: 'Removing a view from the screen',
-  },
-  set_view: {
-    label: 'Set View',
-    description: 'Settin a view as an active view',
-  },
-  remove_pane: {
-    label: 'Remove Pane',
-    description: 'Removing a pane from the screen',
-  },
-  replace_pane: {
-    label: 'Replace Pane',
-    description: "Replacing a pane's content with another pane",
-  },
-  push_navbar_item: {
-    label: 'Push Navbar Item',
-    description: 'Pushing a navigation item on the left side of the screen, either top or bottom',
-  },
-  remove_navbar_item: {
-    label: 'Remove Navbar Item',
-    description:
-      'Removing a navigation item from the left side of the screen, either top or bottom',
-  },
-  define_command: {
-    label: 'Denfine Command',
-    description:
-      'Defining a command that has a shortcut can be executed by the user via the shortcut or the command center',
-  },
-  define_setting: {
-    label: 'Define Setting',
-    description: 'Defining a settnig item that would be displayed on the settings page',
-  },
-  define_setting_category: {
-    label: 'Define Setting Category',
-    description: 'Defining a setting category that would group setting items',
-  },
-  define_contextmenu_item: {
-    label: 'Define Context Menu Item',
-    description:
-      'Defining a context menu item that would be visible when user right clicks the app',
-  },
-  define_contextmenu_category: {
-    label: 'Define Context Menu Category',
-    description: 'Defining a context menu category that would group context menu items',
-  },
-  define_contextmenu_field: {
-    label: 'Define Context Menu Field',
-    description:
-      'Defining a special context menu field that would give a context to the menu item and make it appear on certain places of the app',
-  },
-  kill_network_manager: {
-    label: 'Kill Network Manager',
-    description: 'Killing network manager features, this may cause the app to malfunction',
-  },
-  kill_contextmenu_manager: {
-    label: 'Kill Context Menu Manager',
-    description: 'Killing context menu manager features, this may cause the app to malfunction',
-  },
-  reinit_permission_manager: {
-    label: 'Reinit Permission Manager',
-    description: "Initizalizing the app's permission manager at any time, this may be dangereous",
-  },
-  reinit_command_manager: {
-    label: 'Reinit Command Manager',
-    description: "Initizalizing the app's command manager at any time, this may be dangereous",
-  },
-  reinit_auth_manager: {
-    label: 'Reinit Auth Manager',
-    description:
-      "Initizalizing the app's authentication manager at any time, this may be dangereous",
-  },
-  reinit_plugin_manager: {
-    label: 'Reinit Plugin Manager',
-    description: "Initizalizing the app's plugin manager at any time, this is dangereous",
-  },
-  reinit_network_manager: {
-    label: 'Reinit Network Manager',
-    description: "Initizalizing the app's network manager at any time",
-  },
-  read_user_data: {
-    label: 'Read User Data',
-    description:
-      'Reading user information including settings, plugins, etc. and other sensitive data',
-  },
-  read_setting: {
-    label: 'Read Setting',
-    description: 'Reading an arbitrary setting of the app',
-  },
-  read_connection_data: {
-    label: 'Read Connection Data',
-    description: 'Reading network connection information',
-  },
-  read_permission_data: {
-    label: 'Read Permission Data',
-    description: "Reading any apps' permission information",
-  },
-  revoke_permission: {
-    label: 'Revoke Permission',
-    description: 'Revoking a permission of an app on behalf of you',
-  },
-  open_contextmenu: {
-    label: 'Open Contextmenu',
-    description: 'Opening a context menu on the screen at any time',
-  },
-  close_contextmenu: {
-    label: 'Close Contetxmenu',
-    description: 'Closing the context menu on the screen at any time',
-  },
-};
+export function getPermissionDescriptions(
+  app: App
+): Record<PermissionType, { label: LocaleString; description: LocaleString }> {
+  return {
+    upload_plugin: {
+      label: app.localeManager.get('permission.upload-plugin.label'),
+      description: app.localeManager.get('permission.upload-plugin.description'),
+    },
+    install_plugin: {
+      label: app.localeManager.get('permission.install-plugin.label'),
+      description: app.localeManager.get('permission.install-plugin.description'),
+    },
+    load_plugin: {
+      label: app.localeManager.get('permission.load-plugin.label'),
+      description: app.localeManager.get('permission.load-plugin.description'),
+    },
+    show_notifications: {
+      label: app.localeManager.get('permission.show-notifications.label'),
+      description: app.localeManager.get('permission.show-notifications.description'),
+    },
+    show_prompts: {
+      label: app.localeManager.get('permission.show-prompts.label'),
+      description: app.localeManager.get('permission.show-prompts.description'),
+    },
+    push_view: {
+      label: app.localeManager.get('permission.push-view.label'),
+      description: app.localeManager.get('permission.push-view.description'),
+    },
+    push_pane: {
+      label: app.localeManager.get('permission.push-pane.label'),
+      description: app.localeManager.get('permission.push-pane.description'),
+    },
+    remove_view: {
+      label: app.localeManager.get('permission.remove-view.label'),
+      description: app.localeManager.get('permission.remove-view.description'),
+    },
+    set_view: {
+      label: app.localeManager.get('permission.set-view.label'),
+      description: app.localeManager.get('permission.set-view.description'),
+    },
+    remove_pane: {
+      label: app.localeManager.get('permission.remove-pane.label'),
+      description: app.localeManager.get('permission.remove-pane.description'),
+    },
+    replace_pane: {
+      label: app.localeManager.get('permission.replace-pane.label'),
+      description: app.localeManager.get('permission.replace-pane.description'),
+    },
+    push_navbar_item: {
+      label: app.localeManager.get('permission.push-navbar-item.label'),
+      description: app.localeManager.get('permission.push-navbar-item.description'),
+    },
+    remove_navbar_item: {
+      label: app.localeManager.get('permission.remove-navbar-item.label'),
+      description: app.localeManager.get('permission.remove-navbar-item.description'),
+    },
+    define_command: {
+      label: app.localeManager.get('permission.define-command.label'),
+      description: app.localeManager.get('permission.define-command.description'),
+    },
+    define_setting: {
+      label: app.localeManager.get('permission.define-setting.label'),
+      description: app.localeManager.get('permission.define-setting.description'),
+    },
+    define_setting_category: {
+      label: app.localeManager.get('permission.define-setting-category.label'),
+      description: app.localeManager.get('permission.define-setting-category.description'),
+    },
+    define_contextmenu_item: {
+      label: app.localeManager.get('permission.define-contextmenu-item.label'),
+      description: app.localeManager.get('permission.define-contextmenu-item.description'),
+    },
+    define_contextmenu_category: {
+      label: app.localeManager.get('permission.define-contextmenu-category.label'),
+      description: app.localeManager.get('permission.define-contextmenu-category.description'),
+    },
+    define_contextmenu_field: {
+      label: app.localeManager.get('permission.define-contextmenu-field.label'),
+      description: app.localeManager.get('permission.define-contextmenu-field.description'),
+    },
+    kill_network_manager: {
+      label: app.localeManager.get('permission.kill-network-manager.label'),
+      description: app.localeManager.get('permission.kill-network-manager.description'),
+    },
+    kill_contextmenu_manager: {
+      label: app.localeManager.get('permission.kill-contextmenu-manager.label'),
+      description: app.localeManager.get('permission.kill-contextmenu-manager.description'),
+    },
+    reinit_permission_manager: {
+      label: app.localeManager.get('permission.reinit-permission-manager.label'),
+      description: app.localeManager.get('permission.reinit-permission-manager.description'),
+    },
+    reinit_command_manager: {
+      label: app.localeManager.get('permission.reinit-command-manager.label'),
+      description: app.localeManager.get('permission.reinit-command-manager.description'),
+    },
+    reinit_auth_manager: {
+      label: app.localeManager.get('permission.reinit-auth-manager.label'),
+      description: app.localeManager.get('permission.reinit-auth-manager.description'),
+    },
+    reinit_plugin_manager: {
+      label: app.localeManager.get('permission.reinit-plugin-manager.label'),
+      description: app.localeManager.get('permission.reinit-plugin-manager.description'),
+    },
+    reinit_network_manager: {
+      label: app.localeManager.get('permission.reinit-network-manager.label'),
+      description: app.localeManager.get('permission.reinit-network-manager.description'),
+    },
+    read_user_data: {
+      label: app.localeManager.get('permission.read-user-data.label'),
+      description: app.localeManager.get('permission.read-user-data.description'),
+    },
+    read_setting: {
+      label: app.localeManager.get('permission.read-setting.label'),
+      description: app.localeManager.get('permission.read-setting.description'),
+    },
+    read_connection_data: {
+      label: app.localeManager.get('permission.read-connection-data.label'),
+      description: app.localeManager.get('permission.read-connection-data.description'),
+    },
+    read_permission_data: {
+      label: app.localeManager.get('permission.read-permission-data.label'),
+      description: app.localeManager.get('permission.read-permission-data.description'),
+    },
+    revoke_permission: {
+      label: app.localeManager.get('permission.revoke-permission.label'),
+      description: app.localeManager.get('permission.revoke-permission.description'),
+    },
+    open_contextmenu: {
+      label: app.localeManager.get('permission.open-contextmenu.label'),
+      description: app.localeManager.get('permission.open-contextmenu.description'),
+    },
+    close_contextmenu: {
+      label: app.localeManager.get('permission.close-contextmenu.label'),
+      description: app.localeManager.get('permission.close-contextmenu.description'),
+    },
+  };
+}

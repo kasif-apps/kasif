@@ -1,19 +1,29 @@
 import { Stack, Text } from '@mantine/core';
 
-import { PermissionType, permissionDescriptions } from '@kasif/config/permission';
+import { app } from '@kasif/config/app';
+import { LocaleString } from '@kasif/config/i18n';
+import { PermissionType, getPermissionDescriptions } from '@kasif/config/permission';
 
-export function Permission({ label, description }: { label: string; description: string }) {
+export function Permission({
+  label,
+  description,
+}: {
+  label: LocaleString;
+  description: LocaleString;
+}) {
   return (
     <Stack spacing={0}>
       <Text size="sm" fw="bold">
-        {label}
+        {app.localeManager.getI18nValue(label)}
       </Text>
-      <Text size="sm">{description}</Text>
+      <Text size="sm">{app.localeManager.getI18nValue(description)}</Text>
     </Stack>
   );
 }
 
 export function Permissions({ permissions }: { permissions: PermissionType[] }) {
+  const permissionDescriptions = getPermissionDescriptions(app);
+
   return (
     <Stack spacing="sm">
       {permissions.map(permission => (

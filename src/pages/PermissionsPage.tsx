@@ -1,4 +1,5 @@
 import { forwardRef } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import {
   Box,
@@ -17,7 +18,7 @@ import {
 
 import { Transition } from '@kasif/components/Transition/TransitionWrapper';
 import { app } from '@kasif/config/app';
-import { PermissionType, permissionDescriptions, permissions } from '@kasif/config/permission';
+import { PermissionType, getPermissionDescriptions, permissions } from '@kasif/config/permission';
 import { PluginImport } from '@kasif/managers/plugin';
 import { useSlice } from '@kasif/util/cinq-react';
 import { animations } from '@kasif/util/misc';
@@ -130,23 +131,26 @@ export function PermissionsPage() {
   const { classes } = useStyles();
   const [plugins] = useSlice(app.pluginManager.plugins);
   const [appPermissions] = useSlice(app.permissionManager.store);
+  const { t } = useTranslation();
 
   const handleChange = (id: string, values: PermissionType[]) => {
     app.permissionManager.store.setKey(id, values);
   };
+
+  const permissionDescriptions = getPermissionDescriptions(app);
 
   return (
     <Transition transition={animations.scale}>
       <Box p="sm" sx={{ maxWidth: 1200, margin: 'auto' }}>
         <Card data-non-capture-source radius="md" p="xl" className={classes.card}>
           <Text size="xl" className={classes.title} weight={800}>
-            Edit Permissions
+            {t('permissions.edit-permissions')}
           </Text>
           {plugins.length === 0 && (
             <Center>
               <Stack>
                 <Text size="sm" sx={{ textTransform: 'uppercase' }} color="dimmed">
-                  You don&apos;t have any plugins installed
+                  {t('permissions.no-plugins')}
                 </Text>
                 <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
                   <Button
@@ -155,7 +159,7 @@ export function PermissionsPage() {
                       app.viewManager.pushView({ view: app.viewManager.prebuiltViews.store })
                     }
                     leftIcon={<IconShoppingBag size={16} />}>
-                    Go To The Store
+                    {t('permissions.go-to-store')}
                   </Button>
                 </Box>
               </Stack>
@@ -183,8 +187,10 @@ export function PermissionsPage() {
                   handleChange(plugin.meta.identifier, values as PermissionType[])
                 }
                 data={permissions.map(item => ({
-                  label: permissionDescriptions[item].label,
-                  description: permissionDescriptions[item].description,
+                  label: app.localeManager.getI18nValue(permissionDescriptions[item].label),
+                  description: app.localeManager.getI18nValue(
+                    permissionDescriptions[item].description
+                  ),
                   value: item,
                 }))}
               />

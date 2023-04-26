@@ -68,6 +68,11 @@
       "description": "Uygulamanın uyarı görüntüleme davranışını değiştirin. Başarı önerilir."
     }
   },
+  "permissions": {
+    "edit-permissions": "İzinleri Düzenle",
+    "no-plugins": "İndirilmiş Eklentiniz Yok",
+    "go-to-store": "Mağazaya Git"
+  },
   "contextmenu": {
     "category": {
       "app": "Uygulama",

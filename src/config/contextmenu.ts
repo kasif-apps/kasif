@@ -217,7 +217,7 @@ export function initAppContextMenu(app: App) {
 
   app.contextMenuManager.defineItem('easter-egg', {
     id: 'easter-egg',
-    title: app.localeManager.get('contextmenu.easter-egg'),
+    title: app.localeManager.get('contextmenu.item.easter-egg'),
     icon: () => React.createElement(IconEgg, { size: 14 }),
     onTrigger: async () => {
       app.notificationManager.success('🙃', t('easter-egg.message')!);
