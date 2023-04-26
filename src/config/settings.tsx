@@ -98,8 +98,8 @@ export namespace ThemeSetting {
         nothingFound="Couldn't find any theme."
         sx={{ width: 300 }}
         filter={(value, item) =>
-          item.label?.toLowerCase().includes(value.toLowerCase().trim()) ||
-          item.description.toLowerCase().includes(value.toLowerCase().trim())
+          item.label?.toLocaleLowerCase().includes(value.toLocaleLowerCase().trim()) ||
+          item.description.toLocaleLowerCase().includes(value.toLocaleLowerCase().trim())
         }
         onChange={value => {
           if (value) {
@@ -222,7 +222,9 @@ export namespace FontSetting {
           searchable
           nothingFound="Couldn't find any font."
           sx={{ width: 300 }}
-          filter={(value, item) => item.label?.toLowerCase().includes(value.toLowerCase().trim())!}
+          filter={(value, item) =>
+            item.label?.toLocaleLowerCase().includes(value.toLocaleLowerCase().trim())!
+          }
           onChange={value => {
             if (value) {
               setFont(value as Type);

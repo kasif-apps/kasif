@@ -41,7 +41,7 @@ export function getOS(): OS {
 }
 
 export function createShortcutLabel(...keys: string[]): string {
-  let result = keys.map(key => key.toLowerCase());
+  let result = keys.map(key => key.toLocaleLowerCase());
   const os = getOS();
 
   if (os === 'macos' || os === 'ios') {

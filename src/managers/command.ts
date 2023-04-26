@@ -2,8 +2,9 @@ import React from 'react';
 
 import { registerSpotlightActions } from '@mantine/spotlight';
 
-import { kasif } from '@kasif/config/app';
+import { app, kasif } from '@kasif/config/app';
 import { initCommands } from '@kasif/config/command';
+import { LocaleString } from '@kasif/config/i18n';
 import { BaseManager } from '@kasif/managers/base';
 import { authorized, trackable, tracker } from '@kasif/util/decorators';
 import { createShortcutLabelFromString } from '@kasif/util/misc';
@@ -13,7 +14,7 @@ import { createVectorSlice } from '@kasif-apps/cinq';
 
 export interface Command {
   id: string;
-  title: string;
+  title: LocaleString;
   shortCut?: string;
   onTrigger: () => Promise<unknown>;
   source: typeof kasif;
@@ -46,7 +47,7 @@ export class CommandManager extends BaseManager {
       'Command defined'
     );
 
-    const shortCut = command.shortCut?.toLowerCase();
+    const shortCut = command.shortCut?.toLocaleLowerCase();
 
     let label;
     if (shortCut) {
@@ -58,6 +59,7 @@ export class CommandManager extends BaseManager {
         ...command,
         shortCut: label,
         group: 'Commands',
+        title: app.localeManager.getI18nValue(command.title),
         icon: command.icon
           ? React.createElement(DisplayRenderableNode, { node: command.icon })
           : undefined,

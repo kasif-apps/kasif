@@ -83,6 +83,7 @@ function App() {
           yOffset={10}
           actions={commands.map(command => ({
             ...command,
+            title: app.localeManager.getI18nValue(command.title),
             icon: command.icon ? <DisplayRenderableNode node={command.icon} /> : undefined,
           }))}
           searchIcon={<IconSearch size={18} />}

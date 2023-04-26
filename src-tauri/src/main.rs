@@ -102,19 +102,23 @@ fn load_external_plugins(app: &tauri::App) {
                     .resolve_resource("apps")
                     .expect("failed to resolve resource");
 
-                matches
-                    .args
-                    .get("plugin")
-                    .unwrap()
-                    .value
-                    .as_array()
-                    .unwrap()
-                    .iter()
-                    .for_each(|plugin| {
-                        let plugin_path = plugin.as_str().unwrap().to_string();
+                let is_plugin_list = matches.args.get("plugin").unwrap().value.is_array();
 
-                        load_plugin(&resource_path, Path::new("").join(plugin_path));
-                    });
+                if is_plugin_list {
+                    matches
+                        .args
+                        .get("plugin")
+                        .unwrap()
+                        .value
+                        .as_array()
+                        .unwrap()
+                        .iter()
+                        .for_each(|plugin| {
+                            let plugin_path = plugin.as_str().unwrap().to_string();
+
+                            load_plugin(&resource_path, Path::new("").join(plugin_path));
+                        });
+                }
             }
         }
 

@@ -22,6 +22,8 @@ import {
   IconWindowMinimize,
 } from '@tabler/icons';
 
+import { t } from 'i18next';
+
 export function initAppContextMenu(app: App) {
   app.contextMenuManager.defineField('app');
   app.contextMenuManager.defineField('pane');
@@ -32,31 +34,46 @@ export function initAppContextMenu(app: App) {
 
   app.contextMenuManager.defineCategory({
     id: 'app',
-    title: 'App',
+    title: {
+      en: 'App',
+      tr: 'Uygulama',
+    },
     order: 0,
   });
 
   app.contextMenuManager.defineCategory({
     id: 'view',
-    title: 'View',
+    title: {
+      en: 'View',
+      tr: 'Sekme',
+    },
     order: 1,
   });
 
   app.contextMenuManager.defineCategory({
     id: 'more',
-    title: 'More',
+    title: {
+      en: 'More',
+      tr: 'Dahası',
+    },
     order: 2,
   });
 
   app.contextMenuManager.defineCategory({
     id: 'easter-egg',
-    title: 'Easter Egg',
+    title: {
+      en: 'Easter Egg',
+      tr: 'Sürpriz',
+    },
     order: 99,
   });
 
   app.contextMenuManager.defineItem('app', {
     id: 'reload',
-    title: 'Reload App',
+    title: {
+      en: 'Reload App',
+      tr: 'Yeniden Yükle',
+    },
     shortCut: 'mod+r',
     icon: () => React.createElement(IconRefresh, { size: 14 }),
     async onTrigger() {
@@ -68,7 +85,10 @@ export function initAppContextMenu(app: App) {
 
   app.contextMenuManager.defineItem('pane', {
     id: 'close-this-pane',
-    title: 'Close This Pane',
+    title: {
+      en: 'Close This Pane',
+      tr: 'Bu Paneli Kapat',
+    },
     icon: () => React.createElement(IconWindowMinimize, { size: 14 }),
     onTrigger: async () => {
       const path = app.contextMenuManager.currentPath.get();
@@ -87,7 +107,10 @@ export function initAppContextMenu(app: App) {
 
   app.contextMenuManager.defineItem('view-handle', {
     id: 'close-this-view',
-    title: 'Close This View',
+    title: {
+      en: 'Close This View',
+      tr: 'Bu Sekmeyi Kapat',
+    },
     shortCut: 'mod+W',
     onTrigger: async () => {
       const path = app.contextMenuManager.currentPath.get();
@@ -109,7 +132,10 @@ export function initAppContextMenu(app: App) {
 
   app.contextMenuManager.defineItem('view-handle-bar', {
     id: 'close-all-views',
-    title: 'Close All Views',
+    title: {
+      en: 'Close All Views',
+      tr: 'Tüm Sekmeleri Kapat',
+    },
     shortCut: 'mod+shift+W',
     onTrigger: async () => {
       const store = app.viewManager.store.get();
@@ -126,7 +152,10 @@ export function initAppContextMenu(app: App) {
 
   app.contextMenuManager.defineItem('notifications', {
     id: 'clear-this-notification',
-    title: 'Clear This Notification',
+    title: {
+      en: 'Clear This Notification',
+      tr: 'Bu Bildirimi Temizle',
+    },
     icon: () => React.createElement(IconNotification, { size: 14 }),
     onTrigger: async () => {
       const path = app.contextMenuManager.currentPath.get();
@@ -142,7 +171,10 @@ export function initAppContextMenu(app: App) {
 
   app.contextMenuManager.defineItem('notifications', {
     id: 'clear-all-notifications',
-    title: 'Clear All Notifications',
+    title: {
+      en: 'Clear All Notifications',
+      tr: 'Tüm Bildirimleri Temizle',
+    },
     icon: () => React.createElement(IconNotificationOff, { size: 14 }),
     onTrigger: async () => {
       notifications.clean();
@@ -152,13 +184,19 @@ export function initAppContextMenu(app: App) {
 
   app.contextMenuManager.defineItem('app', {
     id: 'open',
-    title: 'Open',
+    title: {
+      en: 'Open',
+      tr: 'Aç',
+    },
     icon: () => React.createElement(IconExternalLink, { size: 14 }),
     category: 'more',
     children: [
       {
         id: 'open-settings',
-        title: 'Settings',
+        title: {
+          en: 'Settings',
+          tr: 'Ayarlar',
+        },
         shortCut: 'mod+alt+S',
         icon: () => React.createElement(IconSettings, { size: 14 }),
         onTrigger: async () => {
@@ -169,7 +207,10 @@ export function initAppContextMenu(app: App) {
       },
       {
         id: 'open-command-center',
-        title: 'Command Center',
+        title: {
+          en: 'Command Center',
+          tr: 'Komut Merkezi',
+        },
         icon: () => React.createElement(IconTerminal2, { size: 14 }),
         onTrigger: async () => {
           openSpotlight();
@@ -178,7 +219,10 @@ export function initAppContextMenu(app: App) {
       },
       {
         id: 'open-logs',
-        title: 'Logs',
+        title: {
+          en: 'Logs',
+          tr: 'Günlük',
+        },
         shortCut: 'mod+Shift+L',
         icon: () => React.createElement(IconMessages, { size: 14 }),
         onTrigger: async () => {
@@ -189,7 +233,10 @@ export function initAppContextMenu(app: App) {
       },
       {
         id: 'open-devtools',
-        title: 'Devtools',
+        title: {
+          en: 'Devtools',
+          tr: 'Geliştirici Araçları',
+        },
         shortCut: 'mod+alt+I',
         icon: () => React.createElement(IconCode, { size: 14 }),
         onTrigger: async () => {
@@ -197,11 +244,15 @@ export function initAppContextMenu(app: App) {
         },
         category: 'app',
         registerCommand: environment.currentEnvironment === 'desktop',
-        condition: async () => environment.currentEnvironment === 'desktop',
+        condition: async () =>
+          environment.currentEnvironment === 'desktop' && app.flags.get().debug,
       },
       {
         id: 'open-permissions',
-        title: 'Permissions',
+        title: {
+          en: 'Permissions',
+          tr: 'İzinler',
+        },
         shortCut: 'mod+shift+K',
         icon: () => React.createElement(IconLicense, { size: 14 }),
         onTrigger: async () => {
@@ -215,10 +266,13 @@ export function initAppContextMenu(app: App) {
 
   app.contextMenuManager.defineItem('easter-egg', {
     id: 'easter-egg',
-    title: 'Hi 🙃',
+    title: {
+      en: 'Hi 🙃',
+      tr: "N'aber 🙃",
+    },
     icon: () => React.createElement(IconEgg, { size: 14 }),
     onTrigger: async () => {
-      app.notificationManager.success('🙃', 'Hi, you found me!');
+      app.notificationManager.success('🙃', t('easter-egg')!);
     },
     category: 'easter-egg',
     condition: async () => app.viewManager.store.get().currentView === 'settings',

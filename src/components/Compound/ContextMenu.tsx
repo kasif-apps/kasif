@@ -54,7 +54,7 @@ export function RenderChild({ item }: { item: ContextMenuItem }) {
           </Text>
         ) : undefined
       }>
-      <Text size="xs">{item.title}</Text>
+      <Text size="xs">{app.localeManager.getI18nValue(item.title)}</Text>
     </Menu.Item>
   );
 }
@@ -74,12 +74,12 @@ export function RenderParent({ item }: { item: ContextMenuParent }) {
         <Menu.Item
           icon={item.icon ? <DisplayRenderableNode node={item.icon} /> : undefined}
           rightSection={<IconChevronRight size={14} />}>
-          <Text size="xs">{item.title}</Text>
+          <Text size="xs">{app.localeManager.getI18nValue(item.title)}</Text>
         </Menu.Item>
       </Menu.Target>
 
       <Menu.Dropdown>
-        <Menu.Label>{item.title}</Menu.Label>
+        <Menu.Label>{app.localeManager.getI18nValue(item.title)}</Menu.Label>
         {item.children.map(child =>
           isContextMenuParent(child) ? (
             <RenderParent key={child.id} item={child} />
@@ -121,7 +121,7 @@ export function ContextMenu() {
         <Menu.Dropdown>
           {entries.map(([category, children]) => (
             <span key={category.id}>
-              <Menu.Label>{category.title}</Menu.Label>
+              <Menu.Label>{app.localeManager.getI18nValue(category.title)}</Menu.Label>
               {children.map(item =>
                 isContextMenuParent(item) ? (
                   <RenderParent key={item.id} item={item} />

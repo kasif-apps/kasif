@@ -1,5 +1,6 @@
 import { app } from '@kasif/config/app';
 import { initAppContextMenu } from '@kasif/config/contextmenu';
+import { LocaleString } from '@kasif/config/i18n';
 import { BaseManager } from '@kasif/managers/base';
 import { useSlice } from '@kasif/util/cinq-react';
 import { authorized, trackable, tracker } from '@kasif/util/decorators';
@@ -17,7 +18,7 @@ export interface ContextMenuState {
 
 export interface ContextMenuCategory {
   id: string;
-  title: string;
+  title: LocaleString;
   order: number;
 }
 
@@ -30,7 +31,7 @@ export type ContextMenuItemInstance = ContextMenuItem | ContextMenuParent;
 
 export interface ContextMenuItem {
   id: string;
-  title: string;
+  title: LocaleString;
   onTrigger: () => Promise<unknown>;
   category: string;
   shortCut?: string;
@@ -41,7 +42,7 @@ export interface ContextMenuItem {
 
 export interface ContextMenuParent {
   id: string;
-  title: string;
+  title: LocaleString;
   category: string;
   icon?: RenderableNode;
   condition?: () => Promise<boolean>;
