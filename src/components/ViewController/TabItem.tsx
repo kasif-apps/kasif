@@ -42,11 +42,12 @@ const useStyles = createStyles((theme, { dragging }: { dragging: boolean }) => (
 
     '& .indicator': {
       position: 'absolute',
-      backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[5] : theme.colors.gray[0],
+      backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[5] : theme.white,
       borderRadius: theme.radius.sm,
       width: '96%',
       height: '100%',
       zIndex: -1,
+      boxShadow: theme.colorScheme === 'dark' ? 'none' : theme.shadows.xs,
     },
 
     '& .content': {
@@ -58,7 +59,11 @@ const useStyles = createStyles((theme, { dragging }: { dragging: boolean }) => (
       'padding': `0 4px 0 ${theme.spacing.xs}`,
       'borderRadius': theme.radius.sm,
       'transition': 'background-color 200ms ease',
-      'backgroundColor': 'transparent',
+      'backgroundColor': dragging
+        ? theme.colorScheme === 'dark'
+          ? theme.colors.dark[8]
+          : theme.colors.gray[0]
+        : 'transparent',
       'maxWidth': 400,
       'overflow': 'hidden',
       'textOverflow': 'ellipsis',
@@ -66,7 +71,7 @@ const useStyles = createStyles((theme, { dragging }: { dragging: boolean }) => (
 
       '&.active': {
         ref: getStylesRef('active'),
-        boxShadow: theme.colorScheme === 'dark' ? 'none' : theme.shadows.xs,
+        backgroundColor: 'transparent',
       },
     },
   },
@@ -154,11 +159,15 @@ export function TabItem(props: TabItemProps) {
 
       {active &&
         (animationsEnabled.value ? (
-          <motion.div
-            className="indicator"
-            layoutId="indicator"
-            transition={{ type: 'spring', bounce: 0.2, duration: 0.6 }}
-          />
+          dragging ? (
+            <div className="indicator" />
+          ) : (
+            <motion.div
+              className="indicator"
+              layoutId="indicator"
+              transition={{ type: 'spring', bounce: 0.2, duration: 0.6 }}
+            />
+          )
         ) : (
           <div className="indicator" />
         ))}
