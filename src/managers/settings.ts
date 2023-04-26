@@ -111,10 +111,6 @@ export class SettingsManager extends BaseManager {
         slice.upsert({ ...item, value });
         this.store.upsert({ [slice.key]: slice.get().value });
 
-        this.app.notificationManager.log(
-          `Setting '${item.title}' (${item.id}) updated`,
-          'Setting Updated'
-        );
         this.dispatchEvent(
           new CustomEvent('update-setting', {
             detail: { id: item.id, oldValue, newValue: value, controller },
@@ -126,13 +122,6 @@ export class SettingsManager extends BaseManager {
 
     this.controllers.push(controller);
     this.dispatchEvent(new CustomEvent('define-setting', { detail: controller }));
-
-    setTimeout(() => {
-      this.app.notificationManager.log(
-        `Setting '${item.title}' (${item.id}) defined`,
-        'Setting Defined'
-      );
-    });
   }
 
   @trackable
@@ -148,13 +137,6 @@ export class SettingsManager extends BaseManager {
 
     this.categories.push(category);
     this.dispatchEvent(new CustomEvent('define-category', { detail: category }));
-
-    setTimeout(() => {
-      this.app.notificationManager.log(
-        `Category '${category.title}' (${category.id}) defined`,
-        'Category Defined'
-      );
-    });
   }
 
   @trackable

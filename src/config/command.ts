@@ -9,10 +9,7 @@ import { t } from 'i18next';
 export function initCommands() {
   app.commandManager.defineCommand({
     id: 'close-all-views',
-    title: {
-      en: 'Close All Views',
-      tr: 'Tüm Sekmeleri Kapat',
-    },
+    title: app.localeManager.get('command.close-all-views'),
     shortCut: 'mod+Shift+W',
     onTrigger: async () => {
       const store = app.viewManager.store.get();
@@ -25,10 +22,8 @@ export function initCommands() {
 
   app.commandManager.defineCommand({
     id: 'close-view',
-    title: {
-      en: 'Close View',
-      tr: 'Sekmeyi Kapat',
-    },
+    title: app.localeManager.get('command.close-view'),
+
     shortCut: 'mod+W',
     onTrigger: async () => {
       const store = app.viewManager.store.get();
@@ -41,10 +36,7 @@ export function initCommands() {
 
   app.commandManager.defineCommand({
     id: 'remove-all-panes',
-    title: {
-      en: 'Remove All Panes',
-      tr: 'Tüm Panelleri Kaldır',
-    },
+    title: app.localeManager.get('command.remove-all-panes'),
     icon: () => React.createElement(IconWindowMinimize, { size: 14 }),
     shortCut: 'mod+Shift+P',
     onTrigger: async () => {
@@ -53,11 +45,8 @@ export function initCommands() {
   });
 
   app.commandManager.defineCommand({
-    id: 'creaete-pane',
-    title: {
-      en: 'Create Pane From View',
-      tr: 'Bu Sekmeden Panel Oluştur',
-    },
+    id: 'create-pane',
+    title: app.localeManager.get('command.create-pane'),
     shortCut: 'mod+P',
     icon: () => React.createElement(IconWindowMaximize, { size: 14 }),
     onTrigger: async () => {

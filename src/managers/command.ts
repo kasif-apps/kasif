@@ -42,10 +42,6 @@ export class CommandManager extends BaseManager {
     });
 
     this.dispatchEvent(new CustomEvent('define-command', { detail: command }));
-    this.app.notificationManager.log(
-      `Command '${command.title}' (${command.id}) defined`,
-      'Command defined'
-    );
 
     const shortCut = command.shortCut?.toLocaleLowerCase();
 

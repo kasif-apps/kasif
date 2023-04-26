@@ -51,13 +51,11 @@ export class NetworkManager extends BaseManager {
   #handleOnline() {
     this.store.set({ ...this.#getConnection(), online: true });
     this.dispatchEvent(new CustomEvent('online'));
-    this.app.notificationManager.log('Network stasus is online', 'Network Status Changed');
   }
 
   #handleOffline() {
     this.store.set({ ...this.#getConnection(), online: false });
     this.dispatchEvent(new CustomEvent('offline'));
-    this.app.notificationManager.log('Network stasus is offline', 'Network Status Changed');
   }
 
   @trackable

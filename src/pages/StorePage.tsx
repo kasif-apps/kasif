@@ -6,6 +6,7 @@ import { useElementSize } from '@mantine/hooks';
 
 import { useNetworkGuard } from '@kasif/components/Compound/NoNetwork';
 import { Hero, PluginCard } from '@kasif/components/Compound/PluginCard';
+import { Transition } from '@kasif/components/Transition/TransitionWrapper';
 import { app } from '@kasif/config/app';
 import { PluginDTO } from '@kasif/managers/plugin';
 import { useSlice } from '@kasif/util/cinq-react';
@@ -53,9 +54,13 @@ export function StorePage() {
     <div ref={ref}>
       <Box p="sm" sx={{ maxWidth: 1200, margin: 'auto' }}>
         <Stack>
-          <Title>{t('title.popular')}</Title>
+          <Transition transition="fade">
+            <Title>{t('title.popular')}</Title>
+          </Transition>
           <Hero data={popular} />
-          <Title>{t('title.discover')}</Title>
+          <Transition transition="fade">
+            <Title>{t('title.discover')}</Title>
+          </Transition>
           <SimpleGrid cols={columnCount}>
             {plugins.map(item => (
               <PluginCard

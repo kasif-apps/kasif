@@ -54,7 +54,6 @@ export class PaneManager extends BaseManager {
       ],
     }));
     this.dispatchEvent(new CustomEvent('push-pane', { detail: pane }));
-    this.app.notificationManager.log(`Pane (${pane.id}) pushed`, 'Pane Pushed');
   }
 
   @trackable
@@ -66,7 +65,6 @@ export class PaneManager extends BaseManager {
     );
 
     this.dispatchEvent(new CustomEvent('remove-pane', { detail: paneId }));
-    this.app.notificationManager.log(`Pane (${paneId}) removed`, 'Pane Removed');
   }
 
   @trackable
@@ -74,7 +72,6 @@ export class PaneManager extends BaseManager {
   removeAllPanes() {
     this.store.setKey('panes', []);
     this.dispatchEvent(new CustomEvent('remove-all-panes'));
-    this.app.notificationManager.log('All panes removed', 'Pane Removed');
   }
 
   @trackable
@@ -106,9 +103,5 @@ export class PaneManager extends BaseManager {
     }));
 
     this.dispatchEvent(new CustomEvent('replace-pane', { detail: pane }));
-    this.app.notificationManager.log(
-      `Pane (${paneId}) replaced with (${pane.id})`,
-      'Pane Replaced'
-    );
   }
 }

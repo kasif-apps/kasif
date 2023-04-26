@@ -1,8 +1,14 @@
 {
   "title": {
+    "home": "Ana Sayfa",
     "settings": "Ayarlar",
+    "plugins": "Eklentiler",
+    "permissions": "İzinler",
     "popular": "Popüler",
-    "discover": "Keşfet"
+    "discover": "Keşfet",
+    "store": "Mağaza",
+    "profile": "Profil",
+    "logs": "Günlük"
   },
   "label": {
     "info": "Bilgi",
@@ -62,7 +68,37 @@
       "description": "Uygulamanın uyarı görüntüleme davranışını değiştirin. Başarı önerilir."
     }
   },
+  "contextmenu": {
+    "category": {
+      "app": "Uygulama",
+      "view": "Sekme",
+      "more": "Dahası",
+      "easter-egg": "Sürpriz"
+    },
+    "item": {
+      "reload": "Yeniden Yükle",
+      "close-this-pane": "Bu Paneli Kaldır",
+      "close-this-view": "Bu Sekmeyi Kapat",
+      "close-all-views": "Tüm Sekmeleri Kapat",
+      "clear-this-notification": "Bu Bildirimi Temizle",
+      "clear-all-notifications": "Tüm Bildirimleri Temizle",
+      "open": "Aç",
+      "command-center": "Komut Merkezi",
+      "devtools": "Geliştirici Araçları",
+      "easter-egg": "N'aber 🙃"
+    }
+  },
+  "command": {
+    "close-all-views": "Tüm Sekmeleri Kapat",
+    "close-view": "Sekmeyi Kapat",
+    "remove-all-panes": "Tüm Panelleri Kaldır",
+    "create-pane": "Bu Sekmeden Panel Oluştur"
+  },
   "notification": {
+    "skeleton-initialized": {
+      "title": "İskelet oluşturuldu",
+      "description": "Kâşif iskeleti oluşturuldu. Versiyon:"
+    },
     "no-view-selected": {
       "title": "Seçili Sekme Yok",
       "description": "Panel oluşturmak için bir sekme açın"

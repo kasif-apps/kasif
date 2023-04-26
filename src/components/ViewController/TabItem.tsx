@@ -46,7 +46,7 @@ const useStyles = createStyles((theme, { dragging }: { dragging: boolean }) => (
       'maxWidth': 400,
       'overflow': 'hidden',
       'textOverflow': 'ellipsis',
-      'cursor': 'initial',
+      'cursor': 'pointer',
 
       '&.active': {
         ref: getStylesRef('active'),

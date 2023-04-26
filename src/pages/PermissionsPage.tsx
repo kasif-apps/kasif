@@ -18,7 +18,6 @@ import {
 import { Transition } from '@kasif/components/Transition/TransitionWrapper';
 import { app } from '@kasif/config/app';
 import { PermissionType, permissionDescriptions, permissions } from '@kasif/config/permission';
-import { prebuiltViews } from '@kasif/config/view';
 import { PluginImport } from '@kasif/managers/plugin';
 import { useSlice } from '@kasif/util/cinq-react';
 import { animations } from '@kasif/util/misc';
@@ -152,7 +151,9 @@ export function PermissionsPage() {
                 <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
                   <Button
                     size="xs"
-                    onClick={() => app.viewManager.pushView({ view: prebuiltViews.store })}
+                    onClick={() =>
+                      app.viewManager.pushView({ view: app.viewManager.prebuiltViews.store })
+                    }
                     leftIcon={<IconShoppingBag size={16} />}>
                     Go To The Store
                   </Button>

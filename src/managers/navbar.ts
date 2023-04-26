@@ -1,10 +1,11 @@
+import { App } from '@kasif/config/app';
 import { LocaleString } from '@kasif/config/i18n';
-import { initialBottomItems, initialTopItems } from '@kasif/config/navbar';
+import { getInitialBottomItems, getInitialTopItems } from '@kasif/config/navbar';
 import { BaseManager } from '@kasif/managers/base';
 import { authorized, trackable, tracker } from '@kasif/util/decorators';
 import { RenderableNode } from '@kasif/util/node-renderer';
 
-import { createRecordSlice } from '@kasif-apps/cinq';
+import { RecordSlice, createRecordSlice } from '@kasif-apps/cinq';
 import { t } from 'i18next';
 
 export interface NavbarItem {
@@ -21,13 +22,25 @@ export interface NavbarStore {
 
 @tracker('navbarManager')
 export class NavbarManager extends BaseManager {
-  store = createRecordSlice<NavbarStore>(
-    { topItems: initialTopItems, bottomItems: initialBottomItems },
-    { key: 'navbar-store' }
-  );
+  store: RecordSlice<NavbarStore>;
 
-  initialTopItemsCount = initialTopItems.length;
-  initialBottomItemsCount = initialBottomItems.length;
+  initialTopItemsCount: number;
+  initialBottomItemsCount: number;
+
+  constructor(app: App, parent?: App) {
+    super(app, parent);
+
+    const initialTopItems = getInitialTopItems(app);
+    const initialBottomItems = getInitialBottomItems(app);
+
+    this.store = createRecordSlice<NavbarStore>(
+      { topItems: initialTopItems, bottomItems: initialBottomItems },
+      { key: 'navbar-store' }
+    );
+
+    this.initialTopItemsCount = initialTopItems.length;
+    this.initialBottomItemsCount = initialBottomItems.length;
+  }
 
   @trackable
   @authorized(['push_navbar_item'])
@@ -47,7 +60,6 @@ export class NavbarManager extends BaseManager {
     }));
 
     this.dispatchEvent(new CustomEvent('push-top-item', { detail: item }));
-    this.app.notificationManager.log(`Top navbar item (${item.id}) pushed`, 'Navbar Item Pushed');
   }
 
   @trackable
@@ -58,7 +70,6 @@ export class NavbarManager extends BaseManager {
     }));
 
     this.dispatchEvent(new CustomEvent('remove-top-item', { detail: itemId }));
-    this.app.notificationManager.log(`Top navbar item (${itemId}) removed`, 'Navbar Item Removed');
   }
 
   @trackable
@@ -79,10 +90,6 @@ export class NavbarManager extends BaseManager {
     }));
 
     this.dispatchEvent(new CustomEvent('push-bottom-item', { detail: item }));
-    this.app.notificationManager.log(
-      `Bottom navbar item (${item.id}) pushed`,
-      'Navbar Item Pushed'
-    );
   }
 
   @trackable
@@ -93,9 +100,5 @@ export class NavbarManager extends BaseManager {
     }));
 
     this.dispatchEvent(new CustomEvent('remove-bottom-item', { detail: itemId }));
-    this.app.notificationManager.log(
-      `Bttom navbar item (${itemId}) removed`,
-      'Navbar Item Removed'
-    );
   }
 }

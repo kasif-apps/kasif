@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import ReactDOM from 'react-dom/client';
+import { useTranslation } from 'react-i18next';
 
 import { CSSObject, MantineProvider, MantineTheme } from '@mantine/core';
 import { useHotkeys } from '@mantine/hooks';
@@ -19,11 +20,6 @@ import { createPaneStyles } from '@kasif/util/pane';
 
 import { IconSearch } from '@tabler/icons';
 
-app.notificationManager.log(
-  `Kasif skeleton initialized. Version: ${kasif.version}`,
-  'Skeleton initialized'
-);
-
 function App() {
   const [ready, setReady] = useState(false);
   const [themeID, setThemeID] = useState('default-light');
@@ -35,6 +31,7 @@ function App() {
   const [globalStyles, setGlobalStyles] = useState<CSSObject>({});
   const [font] = useSetting<string>('font');
   const killer = useRef<(() => void) | null>(null);
+  const { t } = useTranslation();
 
   useHotkeys(
     commands
@@ -61,6 +58,11 @@ function App() {
   useEffect(() => {
     app.init();
 
+    app.notificationManager.log(
+      `${t('notification.skeleton-initialized.description')} ${kasif.version}`,
+      t('notification.skeleton-initialized.title')!
+    );
+
     return () => {
       app.kill();
     };
@@ -74,9 +76,9 @@ function App() {
         theme={{
           ...theme.ui,
           fontFamily: font.value,
-          globalStyles: (t => ({
+          globalStyles: (ui => ({
             ...globalStyles,
-            ...createPaneStyles(t),
+            ...createPaneStyles(ui),
           })) as (theme: MantineTheme) => CSSObject,
         }}>
         <SpotlightProvider

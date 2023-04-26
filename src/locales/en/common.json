@@ -1,8 +1,14 @@
 {
   "title": {
+    "home": "Home",
     "settings": "Settings",
+    "plugins": "Plugins",
+    "permissions": "Permissions",
     "popular": "Popular",
-    "discover": "Discover"
+    "discover": "Discover",
+    "store": "Store",
+    "profile": "Profile",
+    "logs": "Logs"
   },
   "label": {
     "info": "Info",
@@ -61,7 +67,37 @@
       "description": "Change the log display behavior of the app. Success is recommended."
     }
   },
+  "contextmenu": {
+    "category": {
+      "app": "App",
+      "view": "View",
+      "more": "More",
+      "easter-egg": "Easter Egg"
+    },
+    "item": {
+      "reload": "Reload App",
+      "close-this-pane": "Close This Pane",
+      "close-this-view": "Close This View",
+      "close-all-views": "Close All Views",
+      "clear-this-notification": "Clear This Notification",
+      "clear-all-notifications": "Clear All Notifications",
+      "open": "Open",
+      "command-center": "Command Center",
+      "devtools": "Devtools",
+      "easter-egg": "Hi 🙃"
+    }
+  },
+  "command": {
+    "close-all-views": "Close All Views",
+    "close-view": "Close View",
+    "remove-all-panes": "Remove All Panes",
+    "create-pane": "Create Pane From View"
+  },
   "notification": {
+    "skeleton-initialized": {
+      "title": "Skeleton initialized",
+      "description": "Kâşif skeleton initialized. Version:"
+    },
     "no-view-selected": {
       "title": "No view is selected",
       "description": "Select a view to create a pane"

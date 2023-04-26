@@ -1,4 +1,5 @@
 import { LocaleString } from '@kasif/config/i18n';
+import { getPrebuiltViews } from '@kasif/config/view';
 import { BaseManager } from '@kasif/managers/base';
 import { WelcomePage } from '@kasif/pages/WelcomePage';
 import { authorized, trackable, tracker } from '@kasif/util/decorators';
@@ -28,6 +29,8 @@ export class ViewManager extends BaseManager {
     { key: 'view-store' }
   );
 
+  prebuiltViews = getPrebuiltViews(this.app);
+
   @trackable
   @authorized(['push_view'])
   pushView({ view }: { view: View }) {
@@ -46,7 +49,6 @@ export class ViewManager extends BaseManager {
 
     this.dispatchEvent(new CustomEvent('push-view', { detail: view }));
     this.dispatchEvent(new CustomEvent('set-view', { detail: view.id }));
-    this.app.notificationManager.log(`View '${view.title}' (${view.id}) pushed`, 'View Pushed');
   }
 
   @trackable
@@ -76,7 +78,6 @@ export class ViewManager extends BaseManager {
     if (isCurrentView) {
       this.dispatchEvent(new CustomEvent('set-view', { detail: nextView }));
     }
-    this.app.notificationManager.log(`View (${viewId}) removed`, 'View Removed');
   }
 
   @trackable
@@ -86,7 +87,6 @@ export class ViewManager extends BaseManager {
       this.store.setKey('currentView', viewId);
 
       this.dispatchEvent(new CustomEvent('set-view', { detail: viewId }));
-      this.app.notificationManager.log(`View (${viewId ?? 'home'}) set`, 'View Set');
     }
   }
 

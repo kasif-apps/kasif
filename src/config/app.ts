@@ -66,6 +66,9 @@ export class App {
     this.name = options?.name ?? kasif.name;
     this.version = options?.version ?? kasif.version;
 
+    this.commandManager = new CommandManager(this, this.parent);
+    this.contextMenuManager = new ContextMenuManager(this, this.parent);
+
     this.localeManager = new LocaleManager(this, this.parent);
     this.localeManager.init();
     this.permissionManager = new PermissionManager(this, this.parent);
@@ -76,8 +79,6 @@ export class App {
     this.themeManager = new ThemeManager(this, this.parent);
     this.navbarManager = new NavbarManager(this, this.parent);
     this.paneManager = new PaneManager(this, this.parent);
-    this.commandManager = new CommandManager(this, this.parent);
-    this.contextMenuManager = new ContextMenuManager(this, this.parent);
     this.dndManager = new DndManager(this, this.parent);
     this.networkManager = new NetworkManager(this, this.parent);
     this.promptManager = new PromptManager(this, this.parent);

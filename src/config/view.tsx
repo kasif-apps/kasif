@@ -1,6 +1,6 @@
 import { Avatar } from '@mantine/core';
 
-import { app } from '@kasif/config/app';
+import { App } from '@kasif/config/app';
 import { View } from '@kasif/managers/view';
 import { LogsPage } from '@kasif/pages/LogsPage';
 import { PermissionsPage } from '@kasif/pages/PermissionsPage';
@@ -19,67 +19,54 @@ import {
   IconUser,
 } from '@tabler/icons';
 
-export const prebuiltViews: Record<string, View> = {
-  settings: {
-    id: 'settings',
-    title: {
-      en: 'Settings',
-      tr: 'Ayarlar',
+export function getPrebuiltViews(app: App): Record<string, View> {
+  return {
+    settings: {
+      id: 'settings',
+      title: app.localeManager.get('title.settings'),
+      icon: () => <IconSettings size={18} stroke={1.5} />,
+      render: SettingsPage,
     },
-    icon: () => <IconSettings size={18} stroke={1.5} />,
-    render: SettingsPage,
-  },
-  profile: {
-    id: 'profile',
-    title: {
-      en: 'Profile',
-      tr: 'Profil',
-    },
-    icon: () => {
-      const [avatar] = useSlice(app.authManager.avatar);
+    profile: {
+      id: 'profile',
+      title: app.localeManager.get('title.profile'),
+      icon: () => {
+        const [avatar] = useSlice(app.authManager.avatar);
 
-      if (avatar.length > 0) {
-        return <Avatar size={20} radius="xl" src={avatar} />;
-      }
+        if (avatar.length > 0) {
+          return <Avatar size={20} radius="xl" src={avatar} />;
+        }
 
-      return <IconUser size={18} stroke={1.5} />;
+        return <IconUser size={18} stroke={1.5} />;
+      },
+      render: ProfilePage,
     },
-    render: ProfilePage,
-  },
-  store: {
-    id: 'store',
-    title: {
-      en: 'Store',
-      tr: 'Mağaza',
+    store: {
+      id: 'store',
+      title: app.localeManager.get('title.store'),
+      icon: () => <IconShoppingBag size={18} stroke={1.5} />,
+      render: StorePage,
     },
-    icon: () => <IconShoppingBag size={18} stroke={1.5} />,
-    render: StorePage,
-  },
-  plugins: {
-    id: 'plugins',
-    title: {
-      en: 'Plugins',
-      tr: 'Eklentiler',
+    plugins: {
+      id: 'plugins',
+      title: {
+        en: 'Plugins',
+        tr: 'Eklentiler',
+      },
+      icon: () => <IconPuzzle size={18} stroke={1.5} />,
+      render: PluginsPage,
     },
-    icon: () => <IconPuzzle size={18} stroke={1.5} />,
-    render: PluginsPage,
-  },
-  logs: {
-    id: 'logs',
-    title: {
-      en: 'Logs',
-      tr: 'Günlük',
+    logs: {
+      id: 'logs',
+      title: app.localeManager.get('title.logs'),
+      icon: () => <IconMessages size={18} stroke={1.5} />,
+      render: LogsPage,
     },
-    icon: () => <IconMessages size={18} stroke={1.5} />,
-    render: LogsPage,
-  },
-  permissions: {
-    id: 'permissions',
-    title: {
-      en: 'Permissions',
-      tr: 'İzinler',
+    permissions: {
+      id: 'permissions',
+      title: app.localeManager.get('title.permissions'),
+      icon: () => <IconLicense size={18} stroke={1.5} />,
+      render: PermissionsPage,
     },
-    icon: () => <IconLicense size={18} stroke={1.5} />,
-    render: PermissionsPage,
-  },
-};
+  };
+}

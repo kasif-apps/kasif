@@ -115,11 +115,11 @@ export namespace ThemeSetting {
     );
   }
 
-  export const definition = (wrapper: App): SettingsItem<Type> => ({
+  export const definition = (instance: App): SettingsItem<Type> => ({
     id,
     category: 'appearance',
-    title: wrapper.localeManager.get('settings.theme.title'),
-    description: wrapper.localeManager.get('settings.theme.description'),
+    title: instance.localeManager.get('settings.theme.title'),
+    description: instance.localeManager.get('settings.theme.description'),
     value: 'default-light',
     render: Render,
   });
@@ -173,11 +173,11 @@ export namespace FontSetting {
     }
   };
 
-  export const definition = (wrapper: App): SettingsItem<Type> => ({
+  export const definition = (instance: App): SettingsItem<Type> => ({
     id,
     category: 'appearance',
-    title: wrapper.localeManager.get('settings.font.title'),
-    description: wrapper.localeManager.get('settings.font.description'),
+    title: instance.localeManager.get('settings.font.title'),
+    description: instance.localeManager.get('settings.font.description'),
     value: getDefaultFont(),
     render: () => {
       const [font, setFont] = useSetting<Type>(id);
@@ -229,11 +229,11 @@ export namespace LanguageSetting {
   export type Type = 'en' | 'tr';
   const id = 'language';
 
-  export const definition = (wrapper: App): SettingsItem<Type> => ({
+  export const definition = (instance: App): SettingsItem<Type> => ({
     id,
     category: 'appearance',
-    title: wrapper.localeManager.get('settings.language.title'),
-    description: wrapper.localeManager.get('settings.language.description'),
+    title: instance.localeManager.get('settings.language.title'),
+    description: instance.localeManager.get('settings.language.description'),
     value: 'en',
     render: () => {
       const [state, setState] = useSetting<Type>(id);
@@ -267,11 +267,11 @@ export namespace AnimationSetting {
   export type Type = boolean;
   const id = 'enable-animations';
 
-  export const definition = (wrapper: App): SettingsItem<Type> => ({
+  export const definition = (instance: App): SettingsItem<Type> => ({
     id,
     category: 'behavior',
-    title: wrapper.localeManager.get('settings.animations.title'),
-    description: wrapper.localeManager.get('settings.animations.description'),
+    title: instance.localeManager.get('settings.animations.title'),
+    description: instance.localeManager.get('settings.animations.description'),
     value: true,
     render: () => <BooleanAction id={id} />,
   });
@@ -281,11 +281,11 @@ export namespace LogLevelSetting {
   export type Type = keyof typeof Log;
   const id = 'log-level';
 
-  export const definition = (wrapper: App): SettingsItem<Type> => ({
+  export const definition = (instance: App): SettingsItem<Type> => ({
     id,
     category: 'behavior',
-    title: wrapper.localeManager.get('settings.log-level.title'),
-    description: wrapper.localeManager.get('settings.log-level.description'),
+    title: instance.localeManager.get('settings.log-level.title'),
+    description: instance.localeManager.get('settings.log-level.description'),
     value: 'SUCCESS',
     render: () => {
       const { t } = useTranslation();
@@ -306,28 +306,28 @@ export namespace LogLevelSetting {
   });
 }
 
-export function getInitialSettings(wrapper: App): Array<SettingsItem<unknown>> {
+export function getInitialSettings(instance: App): Array<SettingsItem<unknown>> {
   return [
-    ThemeSetting.definition(wrapper),
-    FontSetting.definition(wrapper),
-    LanguageSetting.definition(wrapper),
-    AnimationSetting.definition(wrapper),
-    LogLevelSetting.definition(wrapper),
+    ThemeSetting.definition(instance),
+    FontSetting.definition(instance),
+    LanguageSetting.definition(instance),
+    AnimationSetting.definition(instance),
+    LogLevelSetting.definition(instance),
   ];
 }
 
-export function getInitialCategories(wrapper: App): Array<SettingCategory> {
+export function getInitialCategories(instance: App): Array<SettingCategory> {
   return [
     {
       id: 'appearance',
-      title: wrapper.localeManager.get('settings.appearance.title'),
-      description: wrapper.localeManager.get('settings.appearance.description'),
+      title: instance.localeManager.get('settings.appearance.title'),
+      description: instance.localeManager.get('settings.appearance.description'),
       color: 'orange',
     },
     {
       id: 'behavior',
-      title: wrapper.localeManager.get('settings.behavior.title'),
-      description: wrapper.localeManager.get('settings.behavior.description'),
+      title: instance.localeManager.get('settings.behavior.title'),
+      description: instance.localeManager.get('settings.behavior.description'),
       color: 'cyan',
     },
   ];

@@ -1,3 +1,5 @@
+import { useTranslation } from 'react-i18next';
+
 import { Box, Card, Center, Group, Notification, Stack, Text, createStyles } from '@mantine/core';
 
 import { Transition } from '@kasif/components/Transition/TransitionWrapper';
@@ -14,6 +16,7 @@ const useStyles = createStyles(theme => ({
     display: 'flex',
     flexDirection: 'column',
     gap: theme.spacing.xl,
+    minHeight: '100%',
   },
 
   notification: {
@@ -76,16 +79,15 @@ const getIcon = (type: NotificationType) => {
 
 export function LogsPage() {
   const { classes } = useStyles();
+  const { t } = useTranslation();
   const [logs] = useSlice(app.notificationManager.logs);
-
-  // const items = logs.reverse();
 
   return (
     <Transition duration={200} transition={animations.scale}>
-      <Box p="sm" sx={{ maxWidth: 1200, margin: 'auto' }}>
+      <Box p="sm" sx={{ maxWidth: 1200, margin: 'auto', height: '100%' }}>
         <Card data-non-capture-source radius="md" p="xl" className={classes.card}>
           <Text size="xl" className={classes.title} weight={800}>
-            Logs
+            {t('title.logs')}
           </Text>
           {logs.length === 0 && (
             <Center>
