@@ -13,9 +13,14 @@ import {
 
 import { ContextMenu } from '@kasif/components/Compound/ContextMenu';
 import { KasifFooter, KasifHeader, KasifNavbar } from '@kasif/components/Navigation';
+import {
+  Transition,
+  useTransitionController,
+} from '@kasif/components/Transition/TransitionWrapper';
 import { app } from '@kasif/config/app';
 import { LanguageSetting } from '@kasif/config/settings';
 import { useSlice } from '@kasif/util/cinq-react';
+import { animations } from '@kasif/util/misc';
 import { DisplayRenderableNode } from '@kasif/util/node-renderer';
 
 import SplitPane, { SashContent, Pane as SplitPaneView } from 'split-pane-react';
@@ -323,5 +328,21 @@ export function Layout() {
       <ContextMenu />
       <PaneView />
     </AppShell>
+  );
+}
+
+export function PageSkeleton({ id, children }: { id: string; children: React.ReactElement }) {
+  const controller = useTransitionController(50);
+
+  useEffect(() => {
+    app.viewManager.controllers.upsert(oldValue => ({
+      [id]: { ...oldValue[id], view: controller },
+    }));
+  }, []);
+
+  return (
+    <Transition controller={controller} transition={animations.scale}>
+      {children}
+    </Transition>
   );
 }

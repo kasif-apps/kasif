@@ -1,3 +1,4 @@
+import { TransitionController } from '@kasif/components/Transition/TransitionWrapper';
 import { LocaleString } from '@kasif/config/i18n';
 import { getPrebuiltViews } from '@kasif/config/view';
 import { BaseManager } from '@kasif/managers/base';
@@ -19,6 +20,11 @@ export interface ViewStore {
   currentView: View['id'] | null;
 }
 
+export type ViewTransitionControllerStore = Record<
+  string,
+  { view?: TransitionController; handle?: TransitionController }
+>;
+
 @tracker('viewManager')
 export class ViewManager extends BaseManager {
   store = createRecordSlice<ViewStore>(
@@ -27,6 +33,11 @@ export class ViewManager extends BaseManager {
       currentView: null,
     },
     { key: 'view-store' }
+  );
+
+  controllers = createRecordSlice<ViewTransitionControllerStore>(
+    {},
+    { key: 'view-transition-controller-store' }
   );
 
   prebuiltViews = getPrebuiltViews(this.app);
@@ -53,7 +64,25 @@ export class ViewManager extends BaseManager {
 
   @trackable
   @authorized(['remove_view'])
-  removeView(viewId: View['id']) {
+  async removeView(viewId: View['id']) {
+    const controllers = this.controllers.get();
+    const controller = controllers[viewId];
+
+    if (controller) {
+      const promises = [];
+      if (controller.handle) {
+        promises.push(controller.handle.unMount());
+        this.controllers.upsert({ [viewId]: { handle: undefined } });
+      }
+
+      if (controller.view) {
+        promises.push(controller.view.unMount());
+        this.controllers.upsert({ [viewId]: { view: undefined } });
+      }
+
+      await Promise.all(promises);
+    }
+
     const value = this.store.get();
     const isCurrentView = value.currentView === viewId;
     let nextView: ViewStore['currentView'] = value.currentView;

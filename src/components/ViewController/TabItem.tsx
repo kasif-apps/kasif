@@ -4,11 +4,18 @@ import { DraggableProvided } from 'react-beautiful-dnd';
 import { ActionIcon, Sx, Tooltip, UnstyledButton, createStyles, getStylesRef } from '@mantine/core';
 import { useMergedRef } from '@mantine/hooks';
 
-import { app } from '@kasif/config/app';
+import {
+  Transition,
+  useTransitionController,
+} from '@kasif/components/Transition/TransitionWrapper';
+import { app, useSetting } from '@kasif/config/app';
 import { LocaleString } from '@kasif/config/i18n';
+import { animations } from '@kasif/util/misc';
 import { DisplayRenderableNode, RenderableNode } from '@kasif/util/node-renderer';
 
 import { IconX } from '@tabler/icons';
+
+import { motion } from 'framer-motion';
 
 const useStyles = createStyles((theme, { dragging }: { dragging: boolean }) => ({
   tab: {
@@ -33,6 +40,15 @@ const useStyles = createStyles((theme, { dragging }: { dragging: boolean }) => (
       backgroundColor: 'transparent',
     },
 
+    '& .indicator': {
+      position: 'absolute',
+      backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[5] : theme.colors.gray[0],
+      borderRadius: theme.radius.sm,
+      width: '96%',
+      height: '100%',
+      zIndex: -1,
+    },
+
     '& .content': {
       'display': 'flex',
       'alignItems': 'center',
@@ -42,7 +58,7 @@ const useStyles = createStyles((theme, { dragging }: { dragging: boolean }) => (
       'padding': `0 4px 0 ${theme.spacing.xs}`,
       'borderRadius': theme.radius.sm,
       'transition': 'background-color 200ms ease',
-      'backgroundColor': theme.colorScheme === 'dark' ? theme.colors.dark[8] : theme.colors.gray[0],
+      'backgroundColor': 'transparent',
       'maxWidth': 400,
       'overflow': 'hidden',
       'textOverflow': 'ellipsis',
@@ -50,7 +66,6 @@ const useStyles = createStyles((theme, { dragging }: { dragging: boolean }) => (
 
       '&.active': {
         ref: getStylesRef('active'),
-        backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[5] : theme.white,
         boxShadow: theme.colorScheme === 'dark' ? 'none' : theme.shadows.xs,
       },
     },
@@ -80,9 +95,18 @@ export function TabItem(props: TabItemProps) {
   });
   const ref = useRef<HTMLDivElement>(null);
   const mergedRef = useMergedRef(ref, provided.innerRef);
+  const controller = useTransitionController(50);
+  const [animationsEnabled] = useSetting<boolean>('enable-animations');
 
-  const handleClose = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+  useEffect(() => {
+    app.viewManager.controllers.upsert(oldValue => ({
+      [id]: { ...oldValue[id], handle: controller },
+    }));
+  }, []);
+
+  const handleClose = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.stopPropagation();
+
     app.viewManager.removeView(id);
   };
 
@@ -95,10 +119,10 @@ export function TabItem(props: TabItemProps) {
   const style: Sx = {
     ...provided.draggableProps.style,
     zIndex: 99,
-    position: 'relative',
+    position: dragging ? 'absolute' : 'relative',
   };
 
-  return (
+  const button = (
     <UnstyledButton
       ref={mergedRef}
       {...provided.draggableProps}
@@ -127,6 +151,27 @@ export function TabItem(props: TabItemProps) {
           </ActionIcon>
         </div>
       </Tooltip>
+
+      {active &&
+        (animationsEnabled.value ? (
+          <motion.div
+            className="indicator"
+            layoutId="indicator"
+            transition={{ type: 'spring', bounce: 0.2, duration: 0.6 }}
+          />
+        ) : (
+          <div className="indicator" />
+        ))}
     </UnstyledButton>
+  );
+
+  if (dragging) {
+    return button;
+  }
+
+  return (
+    <Transition controller={controller} transition={animations.scale}>
+      <span style={{ position: 'relative' }}>{button}</span>
+    </Transition>
   );
 }

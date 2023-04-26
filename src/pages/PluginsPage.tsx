@@ -5,6 +5,8 @@ import { Box, Button } from '@mantine/core';
 import { app } from '@kasif/config/app';
 import { environment } from '@kasif/util/environment';
 
+import { PageSkeleton } from './Layout';
+
 export function PluginsPage() {
   const [loading, setLoading] = useState(false);
 
@@ -34,10 +36,12 @@ export function PluginsPage() {
   };
 
   return (
-    <Box p="sm" sx={{ margin: 'auto', height: '100%' }}>
-      <Button loading={loading} onClick={handleClick}>
-        Load Local Plugin
-      </Button>
-    </Box>
+    <PageSkeleton id="plugins">
+      <Box p="sm" sx={{ margin: 'auto', height: '100%' }}>
+        <Button loading={loading} onClick={handleClick}>
+          Load Local Plugin
+        </Button>
+      </Box>
+    </PageSkeleton>
   );
 }

@@ -13,8 +13,8 @@ const useStyles = createStyles((theme, { isDebug }: { isDebug: boolean }) => {
   let color: string;
 
   if (isDebug) {
-    [, , , , backgroundColor] = theme.colors.blue;
-    [, , , , borderColor] = theme.colors.blue;
+    [, , , , , , backgroundColor] = theme.colors[theme.primaryColor];
+    [, , , , , , borderColor] = theme.colors[theme.primaryColor];
     color = theme.white;
   } else {
     backgroundColor = theme.colorScheme === 'dark' ? theme.colors.dark[8] : theme.colors.gray[0];

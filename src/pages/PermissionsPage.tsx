@@ -16,14 +16,14 @@ import {
   createStyles,
 } from '@mantine/core';
 
-import { Transition } from '@kasif/components/Transition/TransitionWrapper';
 import { app } from '@kasif/config/app';
 import { PermissionType, getPermissionDescriptions, permissions } from '@kasif/config/permission';
 import { PluginImport } from '@kasif/managers/plugin';
 import { useSlice } from '@kasif/util/cinq-react';
-import { animations } from '@kasif/util/misc';
 
 import { IconShoppingBag } from '@tabler/icons';
+
+import { PageSkeleton } from './Layout';
 
 const useStyles = createStyles(theme => ({
   card: {
@@ -140,7 +140,7 @@ export function PermissionsPage() {
   const permissionDescriptions = getPermissionDescriptions(app);
 
   return (
-    <Transition transition={animations.scale}>
+    <PageSkeleton id="permissions">
       <Box p="sm" sx={{ maxWidth: 1200, margin: 'auto' }}>
         <Card data-non-capture-source radius="md" p="xl" className={classes.card}>
           <Text size="xl" className={classes.title} weight={800}>
@@ -199,6 +199,6 @@ export function PermissionsPage() {
           ))}
         </Card>
       </Box>
-    </Transition>
+    </PageSkeleton>
   );
 }

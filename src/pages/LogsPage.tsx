@@ -10,6 +10,8 @@ import { animations, getRelativeTime } from '@kasif/util/misc';
 
 import { IconAlertTriangle, IconCheck, IconInfoCircle, IconX } from '@tabler/icons';
 
+import { PageSkeleton } from './Layout';
+
 const useStyles = createStyles(theme => ({
   card: {
     backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[7] : theme.white,
@@ -83,7 +85,7 @@ export function LogsPage() {
   const [logs] = useSlice(app.notificationManager.logs);
 
   return (
-    <Transition duration={200} transition={animations.scale}>
+    <PageSkeleton id="logs">
       <Box p="sm" sx={{ maxWidth: 1200, margin: 'auto', height: '100%' }}>
         <Card data-non-capture-source radius="md" p="xl" className={classes.card}>
           <Text size="xl" className={classes.title} weight={800}>
@@ -137,6 +139,6 @@ export function LogsPage() {
           </Stack>
         </Card>
       </Box>
-    </Transition>
+    </PageSkeleton>
   );
 }

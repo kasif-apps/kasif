@@ -7,13 +7,13 @@
     "distDir": "../dist"
   },
   "package": {
-    "productName": "Kâşif UI Tool",
+    "productName": "Kâşif The Explorer",
     "version": "0.1.0"
   },
   "tauri": {
     "macOSPrivateApi": true,
     "cli": {
-      "description": "Kâşif UI Tool CLI",
+      "description": "Kâşif The Explorer CLI",
       "longDescription": "Run your Kâşif app with additional flags",
       "args": [
         {
@@ -76,7 +76,7 @@
         "providerShortName": null,
         "signingIdentity": null
       },
-      "shortDescription": "",
+      "shortDescription": "Modern cross platform file manager",
       "targets": "all",
       "windows": {
         "certificateThumbprint": null,
@@ -97,7 +97,7 @@
         "width": 1100,
         "height": 660,
         "resizable": true,
-        "title": "Kasif | UI Tool",
+        "title": "Kasif The Explorer",
         "transparent": true,
         "decorations": false
       }

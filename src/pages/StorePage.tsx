@@ -11,6 +11,8 @@ import { app } from '@kasif/config/app';
 import { PluginDTO } from '@kasif/managers/plugin';
 import { useSlice } from '@kasif/util/cinq-react';
 
+import { PageSkeleton } from './Layout';
+
 export function StorePage() {
   const [plugins, setPlugins] = useState<PluginDTO[] | null>(null);
   const [popular, setPopular] = useState<PluginDTO[] | null>(null);
@@ -51,35 +53,37 @@ export function StorePage() {
   }
 
   return (
-    <div ref={ref}>
-      <Box p="sm" sx={{ maxWidth: 1200, margin: 'auto' }}>
-        <Stack>
-          <Transition transition="fade">
-            <Title>{t('title.popular')}</Title>
-          </Transition>
-          <Hero data={popular} />
-          <Transition transition="fade">
-            <Title>{t('title.discover')}</Title>
-          </Transition>
-          <SimpleGrid cols={columnCount}>
-            {plugins.map(item => (
-              <PluginCard
-                key={item.id}
-                // author={item.author.username}
-                installed={installedPlugins
-                  .map(plugin => plugin.meta.identifier)
-                  .includes(item.app_id)}
-                author=""
-                title={item.title}
-                description={item.description}
-                image={item.image}
-                category={item.category}
-                url={item.package}
-              />
-            ))}
-          </SimpleGrid>
-        </Stack>
-      </Box>
-    </div>
+    <PageSkeleton id="store">
+      <div ref={ref}>
+        <Box p="sm" sx={{ maxWidth: 1200, margin: 'auto' }}>
+          <Stack>
+            <Transition transition="fade">
+              <Title>{t('title.popular')}</Title>
+            </Transition>
+            <Hero data={popular} />
+            <Transition transition="fade">
+              <Title>{t('title.discover')}</Title>
+            </Transition>
+            <SimpleGrid cols={columnCount}>
+              {plugins.map(item => (
+                <PluginCard
+                  key={item.id}
+                  // author={item.author.username}
+                  installed={installedPlugins
+                    .map(plugin => plugin.meta.identifier)
+                    .includes(item.app_id)}
+                  author=""
+                  title={item.title}
+                  description={item.description}
+                  image={item.image}
+                  category={item.category}
+                  url={item.package}
+                />
+              ))}
+            </SimpleGrid>
+          </Stack>
+        </Box>
+      </div>
+    </PageSkeleton>
   );
 }

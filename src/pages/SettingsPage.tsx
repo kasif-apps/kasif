@@ -2,10 +2,10 @@ import { useTranslation } from 'react-i18next';
 
 import { Box, Card, Group, Text, createStyles } from '@mantine/core';
 
-import { Transition } from '@kasif/components/Transition/TransitionWrapper';
 import { app } from '@kasif/config/app';
-import { animations } from '@kasif/util/misc';
 import { DisplayRenderableNode } from '@kasif/util/node-renderer';
+
+import { PageSkeleton } from './Layout';
 
 const useStyles = createStyles(theme => ({
   card: {
@@ -100,7 +100,7 @@ export function SettingsPage() {
   });
 
   return (
-    <Transition transition={animations.scale}>
+    <PageSkeleton id="settings">
       <Box p="sm" sx={{ maxWidth: 1200, margin: 'auto' }}>
         <Card data-non-capture-source radius="md" p="xl" className={classes.card}>
           <Text size="xl" className={classes.title} weight={800}>
@@ -109,6 +109,6 @@ export function SettingsPage() {
           {categories}
         </Card>
       </Box>
-    </Transition>
+    </PageSkeleton>
   );
 }

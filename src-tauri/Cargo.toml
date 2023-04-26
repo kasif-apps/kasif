@@ -1,11 +1,11 @@
 [package]
-name = "app"
+name = "kasif"
 version = "0.1.0"
-description = "Kasif | UI Tool"
-authors = ["you"]
-license = ""
-repository = ""
-default-run = "app"
+description = "Modern cross platform file manager"
+authors = ["Muhammed Ali CAN"]
+license = "MIT"
+repository = "https://github.com/kasif-apps"
+default-run = "kasif"
 edition = "2021"
 rust-version = "1.59"
 
