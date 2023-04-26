@@ -258,7 +258,7 @@ export function UserCard({ avatar, name, title }: UserCardProps) {
   const { t } = useTranslation();
 
   return (
-    <Card p="xl" radius="md" className={classes.card}>
+    <Card radius="md" className={classes.card}>
       <Card.Section
         sx={{
           backgroundImage: 'url(/splashes/splash_24.webp)',
@@ -266,44 +266,47 @@ export function UserCard({ avatar, name, title }: UserCardProps) {
           height: 200,
         }}
       />
-      <Stack spacing={0} className={classes.content}>
-        <Stack spacing={0}>
-          <Avatar
-            src={avatar}
-            size={80}
-            radius={80}
-            mx="auto"
-            mt={-30}
-            className={classes.avatar}
-          />
-          <Text ta="center" fz="lg" fw={500} mt="sm">
-            {name}
-          </Text>
-          <Text ta="center" fz="sm" c="dimmed">
-            {title}
-          </Text>
+
+      <Card.Section p="md" pt={0} sx={{ height: '100%' }}>
+        <Stack spacing={0} className={classes.content}>
+          <Stack spacing={0}>
+            <Avatar
+              src={avatar}
+              size={80}
+              radius={80}
+              mx="auto"
+              mt={-30}
+              className={classes.avatar}
+            />
+            <Text ta="center" fz="lg" fw={500} mt="sm">
+              {name}
+            </Text>
+            <Text ta="center" fz="sm" c="dimmed">
+              {title}
+            </Text>
+          </Stack>
+          <Group>
+            <Button
+              sx={{ flex: 1 }}
+              variant="light"
+              radius="md"
+              mt="xl"
+              size="sm"
+              color={theme.colorScheme === 'dark' ? undefined : 'dark'}
+              onClick={() => backend.authStore.clear()}>
+              {t('profile.logout')}
+            </Button>
+            <Button
+              sx={{ flex: 1 }}
+              radius="md"
+              mt="xl"
+              size="sm"
+              color={theme.colorScheme === 'dark' ? undefined : 'dark'}>
+              {t('profile.upload-app')}
+            </Button>
+          </Group>
         </Stack>
-        <Group>
-          <Button
-            sx={{ flex: 1 }}
-            variant="light"
-            radius="md"
-            mt="xl"
-            size="sm"
-            color={theme.colorScheme === 'dark' ? undefined : 'dark'}
-            onClick={() => backend.authStore.clear()}>
-            {t('profile.logout')}
-          </Button>
-          <Button
-            sx={{ flex: 1 }}
-            radius="md"
-            mt="xl"
-            size="sm"
-            color={theme.colorScheme === 'dark' ? undefined : 'dark'}>
-            {t('profile.upload-app')}
-          </Button>
-        </Group>
-      </Stack>
+      </Card.Section>
     </Card>
   );
 }

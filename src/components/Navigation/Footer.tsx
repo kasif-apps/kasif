@@ -7,6 +7,8 @@ import { useSlice } from '@kasif/util/cinq-react';
 
 import { IconLicense } from '@tabler/icons';
 
+import { Transition } from '../Transition/TransitionWrapper';
+
 const useStyles = createStyles((theme, { isDebug }: { isDebug: boolean }) => {
   let backgroundColor: string;
   let borderColor: string;
@@ -42,25 +44,27 @@ export function KasifFooter() {
   const { t } = useTranslation();
 
   return (
-    <Footer withBorder={false} className={classes.footer} height={32} px="sm">
-      <Group>
-        {flags.debug && (
-          <Text transform="uppercase" fw="bolder" size="xs">
-            {t('label.debug')}
-          </Text>
-        )}
-        <Text size="xs">© 2023 Kâşif</Text>
-      </Group>
-      <Group spacing="xs">
-        <Tooltip label={t('label.licenses')}>
-          <ActionIcon
-            variant="transparent"
-            size="sm"
-            sx={{ color: flags.debug ? 'white' : 'primary' }}>
-            <IconLicense stroke={1.5} size={16} />
-          </ActionIcon>
-        </Tooltip>
-      </Group>
-    </Footer>
+    <Transition transition="fade">
+      <Footer withBorder={false} className={classes.footer} height={32} px="sm">
+        <Group>
+          {flags.debug && (
+            <Text transform="uppercase" fw="bolder" size="xs">
+              {t('label.debug')}
+            </Text>
+          )}
+          <Text size="xs">© 2023 Kâşif</Text>
+        </Group>
+        <Group spacing="xs">
+          <Tooltip label={t('label.licenses')}>
+            <ActionIcon
+              variant="transparent"
+              size="sm"
+              sx={{ color: flags.debug ? 'white' : 'primary' }}>
+              <IconLicense stroke={1.5} size={16} />
+            </ActionIcon>
+          </Tooltip>
+        </Group>
+      </Footer>
+    </Transition>
   );
 }

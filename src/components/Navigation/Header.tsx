@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react';
 
 import { Group, Header, Image, ScrollArea, createStyles } from '@mantine/core';
 
+import { Transition } from '@kasif/components/Transition/TransitionWrapper';
 import { Tabs } from '@kasif/components/ViewController/Tabs';
 import { environment } from '@kasif/util/environment';
 import { getOS } from '@kasif/util/misc';
@@ -44,39 +45,41 @@ export function KasifHeader() {
   }, []);
 
   return (
-    <Header
-      data-tauri-drag-region={os === 'macos'}
-      data-contextmenu-field="view-handle-bar"
-      className={classes.header}
-      withBorder={false}
-      sx={{
-        left: 'var(--mantine-navbar-width)',
-        top: 'var(--titlebar-height)',
-        width: 'calc(100vw - var(--mantine-navbar-width))',
-      }}
-      height={60}
-      p="sm">
-      {environment.currentEnvironment === 'desktop' && os !== 'macos' && (
-        <div data-tauri-drag-region className={classes.titlebar} />
-      )}
-      <Group>
-        <ScrollArea
-          ref={ref}
-          data-tauri-drag-region
-          offsetScrollbars
-          scrollbarSize={8}
-          sx={{ width: 'calc(100vw - var(--mantine-navbar-width) - 80px)', minHeight: 44 }}>
-          <Tabs />
-        </ScrollArea>
-        <Image
-          data-contextmenu-field="easter-egg"
-          mb={6}
-          height={30}
-          width={30}
-          src="/favicon.png"
-          alt="kasif logo"
-        />
-      </Group>
-    </Header>
+    <Transition transition="fade">
+      <Header
+        data-tauri-drag-region={os === 'macos'}
+        data-contextmenu-field="view-handle-bar"
+        className={classes.header}
+        withBorder={false}
+        sx={{
+          left: 'var(--mantine-navbar-width)',
+          top: 'var(--titlebar-height)',
+          width: 'calc(100vw - var(--mantine-navbar-width))',
+        }}
+        height={60}
+        p="sm">
+        {environment.currentEnvironment === 'desktop' && os !== 'macos' && (
+          <div data-tauri-drag-region className={classes.titlebar} />
+        )}
+        <Group>
+          <ScrollArea
+            ref={ref}
+            data-tauri-drag-region
+            offsetScrollbars
+            scrollbarSize={8}
+            sx={{ width: 'calc(100vw - var(--mantine-navbar-width) - 80px)', minHeight: 44 }}>
+            <Tabs />
+          </ScrollArea>
+          <Image
+            data-contextmenu-field="easter-egg"
+            mb={6}
+            height={30}
+            width={30}
+            src="/favicon.png"
+            alt="kasif logo"
+          />
+        </Group>
+      </Header>
+    </Transition>
   );
 }

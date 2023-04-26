@@ -64,4 +64,50 @@ export function initCommands() {
       }
     },
   });
+
+  app.commandManager.defineCommand({
+    id: 'jumpt-to-next-view',
+    title: app.localeManager.get('command.jump-to-next-view'),
+    shortCut: 'mod+tab',
+    onTrigger: async () => {
+      const store = app.viewManager.store.get();
+
+      if (store.views.length > 1) {
+        const index = store.views.findIndex(view => view.id === store.currentView);
+
+        let newViewId: string;
+
+        if (index === store.views.length - 1) {
+          newViewId = store.views[0].id;
+        } else {
+          newViewId = store.views[index + 1].id;
+        }
+
+        app.viewManager.setCurrentView(newViewId);
+      }
+    },
+  });
+
+  app.commandManager.defineCommand({
+    id: 'jumpt-to-previous-view',
+    title: app.localeManager.get('command.jump-to-previous-view'),
+    shortCut: 'mod+shift+tab',
+    onTrigger: async () => {
+      const store = app.viewManager.store.get();
+
+      if (store.views.length > 1) {
+        const index = store.views.findIndex(view => view.id === store.currentView);
+
+        let newViewId: string;
+
+        if (index === 0) {
+          newViewId = store.views.at(-1)?.id || store.views[index].id;
+        } else {
+          newViewId = store.views[index - 1].id;
+        }
+
+        app.viewManager.setCurrentView(newViewId);
+      }
+    },
+  });
 }

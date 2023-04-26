@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 import {
   AppShell,
   Box,
+  MantineTransition,
   ScrollArea,
   ScrollAreaProps,
   createStyles,
@@ -331,7 +332,15 @@ export function Layout() {
   );
 }
 
-export function PageSkeleton({ id, children }: { id: string; children: React.ReactElement }) {
+export function PageSkeleton({
+  id,
+  transition,
+  children,
+}: {
+  id: string;
+  children: React.ReactElement;
+  transition?: MantineTransition;
+}) {
   const controller = useTransitionController(50);
 
   useEffect(() => {
@@ -341,7 +350,7 @@ export function PageSkeleton({ id, children }: { id: string; children: React.Rea
   }, []);
 
   return (
-    <Transition controller={controller} transition={animations.scale}>
+    <Transition controller={controller} transition={transition || animations.scale}>
       {children}
     </Transition>
   );

@@ -14,7 +14,9 @@ import { DisplayRenderableNode } from '@kasif/util/node-renderer';
 
 import { IconChevronRight } from '@tabler/icons';
 
-const useStyles = createStyles(() => ({
+import { Transition } from '../Transition/TransitionWrapper';
+
+const useStyles = createStyles(theme => ({
   root: {
     position: 'absolute',
     top: 0,
@@ -23,7 +25,23 @@ const useStyles = createStyles(() => ({
   },
 
   item: {
-    padding: '4px 6px',
+    'padding': '4px 6px',
+    'background': 'transparent',
+
+    '&:hover': {
+      background:
+        theme.colorScheme === 'dark'
+          ? theme.fn.gradient({
+              from: theme.fn.rgba(theme.colors.dark[5], 0.4),
+              to: theme.fn.rgba(theme.colors.dark[8], 0.4),
+              deg: 45,
+            })
+          : theme.fn.gradient({
+              from: theme.fn.rgba(theme.colors.gray[1], 0.4),
+              to: theme.fn.rgba(theme.colors.gray[3], 0.4),
+              deg: 45,
+            }),
+    },
   },
 
   label: {
@@ -33,6 +51,24 @@ const useStyles = createStyles(() => ({
 
   shortCut: {
     fontSize: 10,
+  },
+
+  dropdown: {
+    'backgroundColor': 'transparent',
+
+    '& .overlay': {
+      width: '100%',
+      height: '100%',
+      position: 'absolute',
+      zIndex: -1,
+      top: 0,
+      left: 0,
+      backdropFilter: 'blur(10px)',
+      backgroundColor:
+        theme.colorScheme === 'dark'
+          ? theme.fn.rgba(theme.colors.dark[7], 0.7)
+          : theme.fn.rgba(theme.white, 0.7),
+    },
   },
 }));
 
@@ -64,7 +100,7 @@ export function RenderParent({ item }: { item: ContextMenuParent }) {
 
   return (
     <Menu
-      classNames={{ item: classes.item, label: classes.label }}
+      classNames={{ item: classes.item, label: classes.label, dropdown: classes.dropdown }}
       id={item.id}
       trigger="hover"
       position="right-start"
@@ -87,6 +123,7 @@ export function RenderParent({ item }: { item: ContextMenuParent }) {
             <RenderChild key={child.id} item={child} />
           )
         )}
+        <div className="overlay" />
       </Menu.Dropdown>
     </Menu>
   );
@@ -107,32 +144,37 @@ export function ContextMenu() {
       ref={ref}
       style={{ top: store.position.y, left: store.position.x }}
       className={classes.root}>
-      <Menu
-        id="context-menu"
-        classNames={{ item: classes.item, label: classes.label }}
-        position="bottom-start"
-        opened
-        shadow="md"
-        width={220}>
-        <Menu.Target>
-          <span />
-        </Menu.Target>
+      <Transition duration={100} transition="pop-top-left">
+        <div>
+          <Menu
+            id="context-menu"
+            classNames={{ item: classes.item, label: classes.label, dropdown: classes.dropdown }}
+            position="bottom-start"
+            opened
+            shadow="md"
+            width={220}>
+            <Menu.Target>
+              <span />
+            </Menu.Target>
 
-        <Menu.Dropdown>
-          {entries.map(([category, children]) => (
-            <span key={category.id}>
-              <Menu.Label>{app.localeManager.getI18nValue(category.title)}</Menu.Label>
-              {children.map(item =>
-                isContextMenuParent(item) ? (
-                  <RenderParent key={item.id} item={item} />
-                ) : (
-                  <RenderChild key={item.id} item={item} />
-                )
-              )}
-            </span>
-          ))}
-        </Menu.Dropdown>
-      </Menu>
+            <Menu.Dropdown>
+              {entries.map(([category, children]) => (
+                <span key={category.id}>
+                  <Menu.Label>{app.localeManager.getI18nValue(category.title)}</Menu.Label>
+                  {children.map(item =>
+                    isContextMenuParent(item) ? (
+                      <RenderParent key={item.id} item={item} />
+                    ) : (
+                      <RenderChild key={item.id} item={item} />
+                    )
+                  )}
+                </span>
+              ))}
+              <div className="overlay" />
+            </Menu.Dropdown>
+          </Menu>
+        </div>
+      </Transition>
     </div>
   );
 }

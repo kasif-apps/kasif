@@ -97,7 +97,9 @@
     "close-all-views": "Tüm Sekmeleri Kapat",
     "close-view": "Sekmeyi Kapat",
     "remove-all-panes": "Tüm Panelleri Kaldır",
-    "create-pane": "Bu Sekmeden Panel Oluştur"
+    "create-pane": "Bu Sekmeden Panel Oluştur",
+    "jump-to-next-view": "Bir Dahaki Sekmeye Atla",
+    "jump-to-previous-view": "Bir Önceki Sekmeye Atla"
   },
   "notification": {
     "skeleton-initialized": {

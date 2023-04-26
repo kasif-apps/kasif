@@ -96,7 +96,9 @@
     "close-all-views": "Close All Views",
     "close-view": "Close View",
     "remove-all-panes": "Remove All Panes",
-    "create-pane": "Create Pane From View"
+    "create-pane": "Create Pane From View",
+    "jump-to-next-view": "Just To Next View",
+    "jump-to-previous-view": "Jump To Previous View"
   },
   "notification": {
     "skeleton-initialized": {

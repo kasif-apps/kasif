@@ -9,17 +9,26 @@ import {
   createStyles,
 } from '@mantine/core';
 
+import { Transition } from '@kasif/components/Transition/TransitionWrapper';
 import { app } from '@kasif/config/app';
 import { NavbarItem } from '@kasif/managers/navbar';
 import { useSlice } from '@kasif/util/cinq-react';
 import { environment } from '@kasif/util/environment';
-import { getOS } from '@kasif/util/misc';
+import { animations, getOS } from '@kasif/util/misc';
 import { DisplayRenderableNode } from '@kasif/util/node-renderer';
+
+import { motion } from 'framer-motion';
 
 const useStyles = createStyles(theme => ({
   navbar: {
     backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[7] : theme.white,
     backdropFilter: 'blur(10px)',
+  },
+
+  linkWrapper: {
+    '&:active': {
+      transform: 'scale(1.1)',
+    },
   },
 
   link: {
@@ -46,11 +55,15 @@ const useStyles = createStyles(theme => ({
 function NavbarLink({ icon: Icon, label, onClick }: NavbarItem) {
   const { classes } = useStyles();
   return (
-    <Tooltip withinPortal label={app.localeManager.getI18nValue(label)} position="right">
-      <UnstyledButton onClick={onClick} className={classes.link}>
-        <DisplayRenderableNode node={Icon} />
-      </UnstyledButton>
-    </Tooltip>
+    <motion.div
+      transition={{ type: 'spring', bounce: 0.5, duration: 0.6 }}
+      whileTap={{ scale: 0.9 }}>
+      <Tooltip withinPortal label={app.localeManager.getI18nValue(label)} position="right">
+        <UnstyledButton onClick={onClick} className={classes.link}>
+          <DisplayRenderableNode node={Icon} />
+        </UnstyledButton>
+      </Tooltip>
+    </motion.div>
   );
 }
 
@@ -102,10 +115,18 @@ export function KasifNavbar() {
   const os = getOS();
   const [navbarStore] = useSlice(app.navbarManager.store);
   const topItems = navbarStore.topItems.map(link => (
-    <NavbarLink {...link} key={app.localeManager.getI18nValue(link.label)} />
+    <Transition delay={200} transition={animations.scale}>
+      <span>
+        <NavbarLink {...link} key={app.localeManager.getI18nValue(link.label)} />
+      </span>
+    </Transition>
   ));
   const bottomItems = navbarStore.bottomItems.map(link => (
-    <NavbarLink {...link} key={app.localeManager.getI18nValue(link.label)} />
+    <Transition delay={200} transition={animations.scale}>
+      <span>
+        <NavbarLink {...link} key={app.localeManager.getI18nValue(link.label)} />
+      </span>
+    </Transition>
   ));
 
   const upperDividedTop = topItems.slice(0, app.navbarManager.initialTopItemsCount);
@@ -117,46 +138,48 @@ export function KasifNavbar() {
   const titleBarVisible = os === 'macos' && environment.currentEnvironment === 'desktop';
 
   return (
-    <Navbar
-      className={classes.navbar}
-      withBorder={false}
-      height="calc(100% - var(--titlebar-height))"
-      sx={{ top: 'var(--titlebar-height)' }}
-      width={{ base: 76 }}>
-      {titleBarVisible && <MacOSTitleBar />}
-      <Navbar.Section
-        mb="lg"
-        grow
-        component={(props: any) => <ScrollArea {...props} scrollbarSize={8} />}>
-        <Stack mt={titleBarVisible ? 0 : 'xs'} justify="center" align="center" spacing={4}>
-          {upperDividedTop}
-          {upperDividedBottom.length > 0 && (
-            <Divider
-              sx={theme => ({
-                borderColor:
-                  theme.colorScheme === 'dark' ? theme.colors.dark[5] : theme.colors.gray[2],
-                width: '60%',
-              })}
-            />
-          )}
-          {upperDividedBottom}
-        </Stack>
-      </Navbar.Section>
-      <Navbar.Section my="sm">
-        <Stack justify="center" align="center" spacing={4}>
-          {lowerDividedBottom}
-          {lowerDividedBottom.length > 0 && (
-            <Divider
-              sx={theme => ({
-                borderColor:
-                  theme.colorScheme === 'dark' ? theme.colors.dark[5] : theme.colors.gray[2],
-                width: '60%',
-              })}
-            />
-          )}
-          {lowerDividedTop}
-        </Stack>
-      </Navbar.Section>
-    </Navbar>
+    <Transition transition="fade">
+      <Navbar
+        className={classes.navbar}
+        withBorder={false}
+        height="calc(100% - var(--titlebar-height))"
+        sx={{ top: 'var(--titlebar-height)' }}
+        width={{ base: 76 }}>
+        {titleBarVisible && <MacOSTitleBar />}
+        <Navbar.Section
+          mb="lg"
+          grow
+          component={(props: any) => <ScrollArea {...props} scrollbarSize={8} />}>
+          <Stack mt={titleBarVisible ? 0 : 'xs'} justify="center" align="center" spacing={4}>
+            {upperDividedTop}
+            {upperDividedBottom.length > 0 && (
+              <Divider
+                sx={theme => ({
+                  borderColor:
+                    theme.colorScheme === 'dark' ? theme.colors.dark[5] : theme.colors.gray[2],
+                  width: '60%',
+                })}
+              />
+            )}
+            {upperDividedBottom}
+          </Stack>
+        </Navbar.Section>
+        <Navbar.Section my="sm">
+          <Stack justify="center" align="center" spacing={4}>
+            {lowerDividedBottom}
+            {lowerDividedBottom.length > 0 && (
+              <Divider
+                sx={theme => ({
+                  borderColor:
+                    theme.colorScheme === 'dark' ? theme.colors.dark[5] : theme.colors.gray[2],
+                  width: '60%',
+                })}
+              />
+            )}
+            {lowerDividedTop}
+          </Stack>
+        </Navbar.Section>
+      </Navbar>
+    </Transition>
   );
 }
