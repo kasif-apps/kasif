@@ -226,16 +226,31 @@ export namespace LanguageSetting {
       tr: 'Uygulamanın görüntü dilini değiştirin.',
     },
     value: 'en',
-    render: () => (
-      <SelectAction
-        id={id}
-        data={[
-          { value: 'en', label: 'English' },
-          { value: 'tr', label: 'Türkçe' },
-        ]}
-        placeholder="Select Language"
-      />
-    ),
+    render: () => {
+      const [state, setState] = useSetting<Type>(id);
+      const options = app.localeManager.getLocaleOptions();
+      const data: { label: string; value: string }[] = [];
+
+      for (const locale in options) {
+        if (Object.prototype.hasOwnProperty.call(options, locale)) {
+          const element = options[locale];
+          data.push({ label: element.name, value: locale });
+        }
+      }
+
+      return (
+        <Select
+          placeholder="Select Language"
+          value={state.value}
+          onChange={value => {
+            if (value) {
+              setState(value as Type);
+            }
+          }}
+          data={data}
+        />
+      );
+    },
   };
 }
 

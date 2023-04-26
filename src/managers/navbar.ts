@@ -1,3 +1,4 @@
+import { LocaleString } from '@kasif/config/i18n';
 import { initialBottomItems, initialTopItems } from '@kasif/config/navbar';
 import { BaseManager } from '@kasif/managers/base';
 import { authorized, trackable, tracker } from '@kasif/util/decorators';
@@ -8,7 +9,7 @@ import { createRecordSlice } from '@kasif-apps/cinq';
 export interface NavbarItem {
   id: string;
   icon: RenderableNode;
-  label: string;
+  label: LocaleString;
   onClick?(): void;
 }
 

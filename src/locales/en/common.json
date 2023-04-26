@@ -1,6 +1,8 @@
 {
   "title": {
-    "settings": "Settings"
+    "settings": "Settings",
+    "popular": "Popular",
+    "discover": "Discover"
   },
   "label": {
     "info": "Info",
@@ -8,6 +10,24 @@
     "warning": "Warning",
     "error": "Error",
     "on": "On",
-    "off": "Off"
+    "off": "Off",
+    "install": "Install",
+    "uninstall": "Uninstall",
+    "downloads": "Downloads",
+    "licenses": "Licenses"
+  },
+  "profile": {
+    "login": "Login",
+    "logout": "Logout",
+    "upload-app": "Upload App",
+    "welcome": "Welcome to Kâşif, login with",
+    "or-continue-with-email": "or continue with your email",
+    "email-or-username": "Email or Username",
+    "email": "Email",
+    "password": "Password",
+    "name": "Name",
+    "dont-have-account": "Don't have an account? Register",
+    "already-have-account": "Already have an account? Login",
+    "terms-and-conditions": "I accept the terms and conditions"
   }
 }

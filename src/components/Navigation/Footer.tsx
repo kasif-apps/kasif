@@ -1,3 +1,5 @@
+import { useTranslation } from 'react-i18next';
+
 import { ActionIcon, Footer, Group, Text, Tooltip, createStyles } from '@mantine/core';
 
 import { app } from '@kasif/config/app';
@@ -37,6 +39,7 @@ const useStyles = createStyles((theme, { isDebug }: { isDebug: boolean }) => {
 export function KasifFooter() {
   const [flags] = useSlice(app.flags);
   const { classes } = useStyles({ isDebug: flags.debug });
+  const { t } = useTranslation();
 
   return (
     <Footer withBorder={false} className={classes.footer} height={32} px="sm">
@@ -46,10 +49,10 @@ export function KasifFooter() {
             DEBUG
           </Text>
         )}
-        <Text size="xs">© 2023 Kasif</Text>
+        <Text size="xs">© 2023 Kâşif</Text>
       </Group>
       <Group spacing="xs">
-        <Tooltip label="Licenses">
+        <Tooltip label={t('label.licenses')}>
           <ActionIcon
             variant="transparent"
             size="sm"

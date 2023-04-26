@@ -1,6 +1,6 @@
 import { initReactI18next } from 'react-i18next';
 
-import { I18nString, initialLocales } from '@kasif/config/i18n';
+import { LocaleString, initialLocales } from '@kasif/config/i18n';
 import { BaseManager } from '@kasif/managers/base';
 import { trackable, tracker } from '@kasif/util/decorators';
 
@@ -8,15 +8,37 @@ import { createRecordSlice } from '@kasif-apps/cinq';
 import * as instance from 'i18next';
 import LanguageDetector from 'i18next-browser-languagedetector';
 
+export interface DefineLocaleOptions {
+  key: string;
+  name: string;
+  translation: instance.Resource;
+  reinit?: boolean;
+}
 @tracker('localeManager')
 export class LocaleManager extends BaseManager {
-  #store = createRecordSlice<Record<string, instance.Resource>>({}, { key: 'locales' });
+  #store = createRecordSlice<Record<string, { name: string; resource: instance.Resource }>>(
+    {},
+    { key: 'locales' }
+  );
 
   init() {
     for (const locale of initialLocales) {
-      this.defineLocale(locale.key, locale.translation);
+      this.defineLocale({
+        key: locale.key,
+        name: locale.name,
+        translation: locale.translation,
+        reinit: false,
+      });
     }
-    const resources = this.#store.get();
+    const resources: Record<string, instance.Resource> = {};
+
+    const store = this.#store.get();
+    for (const key in store) {
+      if (Object.prototype.hasOwnProperty.call(store, key)) {
+        const element = store[key];
+        resources[key] = element.resource;
+      }
+    }
 
     instance
       .use(LanguageDetector)
@@ -29,6 +51,9 @@ export class LocaleManager extends BaseManager {
         },
         resources,
       });
+
+    const html = document.getElementsByTagName('html')[0];
+    html.setAttribute('lang', instance.default.language);
   }
 
   @trackable
@@ -37,7 +62,7 @@ export class LocaleManager extends BaseManager {
   }
 
   @trackable
-  getI18nValue(input: I18nString): string {
+  getI18nValue(input: LocaleString): string {
     const { language } = instance.default;
     const result = input[language];
 
@@ -49,7 +74,18 @@ export class LocaleManager extends BaseManager {
   }
 
   @trackable
-  defineLocale(key: string, translation: instance.Resource) {
-    this.#store.upsert({ [key]: { translation } });
+  defineLocale(options: DefineLocaleOptions) {
+    this.#store.upsert({
+      [options.key]: { resource: { translation: options.translation }, name: options.name },
+    });
+
+    if (options.reinit) {
+      this.init();
+    }
+  }
+
+  @trackable
+  getLocaleOptions() {
+    return this.#store.get();
   }
 }

@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import {
   Anchor,
@@ -72,6 +73,7 @@ export function SignInLogin(props: PaperProps) {
   const redirectUrl = `${import.meta.env.VITE_REACT_API_URL}/api/users/auth-redirect`;
   const [loading, setLoading] = useState(false);
   const [oauth2Loading, setOauth2Loading] = useState(true);
+  const { t } = useTranslation();
 
   const handleOAuthLogin = useCallback(async (provider: AuthProvider) => {
     const record = await backend.collection('auth_table').create({
@@ -143,7 +145,7 @@ export function SignInLogin(props: PaperProps) {
       <Paper radius="md" p="xl" withBorder sx={{ width: '100%' }} {...props}>
         <LoadingOverlay loaderProps={{ variant: 'dots' }} visible={loading} />
         <Text size="lg" weight={500}>
-          Welcome to Kâşif, {type} with
+          {t('profile.welcome')}
         </Text>
 
         <Group sx={{ minHeight: 36 }} grow mb="md" mt="md" spacing="xs">
@@ -163,14 +165,14 @@ export function SignInLogin(props: PaperProps) {
           ))}
         </Group>
 
-        <Divider label="Or continue with email" labelPosition="center" my="lg" />
+        <Divider label={t('profile.or-continue-with-email')} labelPosition="center" my="lg" />
 
         <form onSubmit={form.onSubmit(handleLogin)}>
           <Stack>
             {type === 'register' && (
               <TextInput
-                label="Name"
-                placeholder="Your name"
+                label={t('profile.name')}
+                placeholder={t('profile.name')!}
                 value={form.values.name}
                 onChange={event => form.setFieldValue('name', event.currentTarget.value)}
                 radius="md"
@@ -179,7 +181,7 @@ export function SignInLogin(props: PaperProps) {
 
             <TextInput
               required
-              label="Email or username"
+              label={type === 'login' ? t('profile.email-or-username') : t('profile.email')}
               placeholder="hello@kasif.app"
               value={form.values.email}
               onChange={event => form.setFieldValue('email', event.currentTarget.value)}
@@ -189,8 +191,8 @@ export function SignInLogin(props: PaperProps) {
 
             <PasswordInput
               required
-              label="Password"
-              placeholder="Your password"
+              label={t('profile.password')}
+              placeholder={t('profile.password')!}
               value={form.values.password}
               onChange={event => form.setFieldValue('password', event.currentTarget.value)}
               error={form.errors.password && 'Password should include at least 6 characters'}
@@ -199,7 +201,7 @@ export function SignInLogin(props: PaperProps) {
 
             {type === 'register' && (
               <Checkbox
-                label="I accept terms and conditions"
+                label={t('profile.terms-and-conditions')}
                 checked={form.values.terms}
                 onChange={event => form.setFieldValue('terms', event.currentTarget.checked)}
               />
@@ -214,11 +216,11 @@ export function SignInLogin(props: PaperProps) {
               onClick={() => toggle()}
               size="xs">
               {type === 'register'
-                ? 'Already have an account? Login'
-                : "Don't have an account? Register"}
+                ? t('profile.already-have-account')
+                : t('profile.dont-have-account')}
             </Anchor>
             <Button type="submit" radius="xl">
-              {upperFirst(type)}
+              {t(`profile.${type}`)}
             </Button>
           </Group>
         </form>
@@ -253,6 +255,7 @@ interface UserCardProps {
 
 export function UserCard({ avatar, name, title }: UserCardProps) {
   const { classes, theme } = useStyles();
+  const { t } = useTranslation();
 
   return (
     <Card p="xl" radius="md" className={classes.card}>
@@ -289,7 +292,7 @@ export function UserCard({ avatar, name, title }: UserCardProps) {
             size="sm"
             color={theme.colorScheme === 'dark' ? undefined : 'dark'}
             onClick={() => backend.authStore.clear()}>
-            Logout
+            {t('profile.logout')}
           </Button>
           <Button
             sx={{ flex: 1 }}
@@ -297,7 +300,7 @@ export function UserCard({ avatar, name, title }: UserCardProps) {
             mt="xl"
             size="sm"
             color={theme.colorScheme === 'dark' ? undefined : 'dark'}>
-            Upload An App
+            {t('profile.upload-app')}
           </Button>
         </Group>
       </Stack>

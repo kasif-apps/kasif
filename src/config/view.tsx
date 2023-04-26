@@ -22,13 +22,19 @@ import {
 export const prebuiltViews: Record<string, View> = {
   settings: {
     id: 'settings',
-    title: 'Settings',
+    title: {
+      en: 'Settings',
+      tr: 'Ayarlar',
+    },
     icon: () => <IconSettings size={18} stroke={1.5} />,
     render: SettingsPage,
   },
   profile: {
     id: 'profile',
-    title: 'Profile',
+    title: {
+      en: 'Profile',
+      tr: 'Profil',
+    },
     icon: () => {
       const [avatar] = useSlice(app.authManager.avatar);
 
@@ -42,25 +48,37 @@ export const prebuiltViews: Record<string, View> = {
   },
   store: {
     id: 'store',
-    title: 'Store',
+    title: {
+      en: 'Store',
+      tr: 'Mağaza',
+    },
     icon: () => <IconShoppingBag size={18} stroke={1.5} />,
     render: StorePage,
   },
   plugins: {
     id: 'plugins',
-    title: 'Plugins',
+    title: {
+      en: 'Plugins',
+      tr: 'Eklentiler',
+    },
     icon: () => <IconPuzzle size={18} stroke={1.5} />,
     render: PluginsPage,
   },
   logs: {
     id: 'logs',
-    title: 'Logs',
+    title: {
+      en: 'Logs',
+      tr: 'Günlük',
+    },
     icon: () => <IconMessages size={18} stroke={1.5} />,
     render: LogsPage,
   },
   permissions: {
     id: 'permissions',
-    title: 'Permissions',
+    title: {
+      en: 'Permissions',
+      tr: 'İzinler',
+    },
     icon: () => <IconLicense size={18} stroke={1.5} />,
     render: PermissionsPage,
   },

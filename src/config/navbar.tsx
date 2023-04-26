@@ -11,7 +11,10 @@ export const initialTopItems: NavbarItem[] = [
   {
     id: 'home',
     icon: () => <IconHome size={20} stroke={1.5} />,
-    label: 'Home',
+    label: {
+      en: 'Home',
+      tr: 'Anasayfa',
+    },
     onClick: () => app.viewManager.setCurrentView(null),
   },
 ];
@@ -20,13 +23,19 @@ export const initialBottomItems: NavbarItem[] = [
   {
     id: 'store',
     icon: () => <IconShoppingBag size={20} stroke={1.5} />,
-    label: 'Store',
+    label: {
+      en: 'Store',
+      tr: 'Mağaza',
+    },
     onClick: () => app.viewManager.pushView({ view: prebuiltViews.store }),
   },
   {
     id: 'plugins',
     icon: () => <IconPuzzle size={20} stroke={1.5} />,
-    label: 'Plugins',
+    label: {
+      en: 'Plugins',
+      tr: 'Eklentiler',
+    },
     onClick: () => app.viewManager.pushView({ view: prebuiltViews.plugins }),
   },
   {
@@ -51,13 +60,19 @@ export const initialBottomItems: NavbarItem[] = [
 
       return <IconUser size={20} stroke={1.5} />;
     },
-    label: 'Profile',
+    label: {
+      en: 'Profile',
+      tr: 'Profil',
+    },
     onClick: () => app.viewManager.pushView({ view: prebuiltViews.profile }),
   },
   {
     id: 'settings',
     icon: () => <IconSettings size={20} stroke={1.5} />,
-    label: 'Settings',
+    label: {
+      en: 'Settings',
+      tr: 'Ayarlar',
+    },
     onClick: () => app.viewManager.pushView({ view: prebuiltViews.settings }),
   },
 ];

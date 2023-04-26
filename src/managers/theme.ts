@@ -1,7 +1,7 @@
 import { MantineProviderProps, MantineTheme } from '@mantine/core';
 
 import { app } from '@kasif/config/app';
-import { I18nString } from '@kasif/config/i18n';
+import { LocaleString } from '@kasif/config/i18n';
 import { BaseManager } from '@kasif/managers/base';
 import { trackable, tracker } from '@kasif/util/decorators';
 
@@ -9,8 +9,8 @@ import { Slice, createSlice } from '@kasif-apps/cinq';
 
 export interface ThemeOption {
   id: string;
-  title: I18nString;
-  description: I18nString;
+  title: LocaleString;
+  description: LocaleString;
   theme: {
     ui: Omit<MantineProviderProps['theme'], 'globalStyles'>;
   };

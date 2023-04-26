@@ -5,6 +5,7 @@ import { ActionIcon, Sx, Tooltip, UnstyledButton, createStyles, getStylesRef } f
 import { useMergedRef } from '@mantine/hooks';
 
 import { app } from '@kasif/config/app';
+import { LocaleString } from '@kasif/config/i18n';
 import { DisplayRenderableNode, RenderableNode } from '@kasif/util/node-renderer';
 
 import { IconX } from '@tabler/icons';
@@ -64,7 +65,7 @@ const useStyles = createStyles((theme, { dragging }: { dragging: boolean }) => (
 
 export interface TabItemProps {
   id: string;
-  title: string;
+  title: LocaleString;
   icon: RenderableNode | null;
   active?: boolean;
   dragging?: boolean;
@@ -108,14 +109,19 @@ export function TabItem(props: TabItemProps) {
       data-contextmenu-field="view-handle"
       data-view-id={id}
       className={cx(classes.tab, active && 'active', beforeActive && 'before-active')}>
-      <Tooltip openDelay={1000} sx={{ maxWidth: 400 }} multiline withinPortal label={title}>
+      <Tooltip
+        openDelay={1000}
+        sx={{ maxWidth: 400 }}
+        multiline
+        withinPortal
+        label={app.localeManager.getI18nValue(title)}>
         <div className={cx('content', active && 'active')}>
           {icon && (
             <span className="tab-icon">
               <DisplayRenderableNode node={icon} />
             </span>
           )}
-          <p className={classes.title}>{title}</p>
+          <p className={classes.title}>{app.localeManager.getI18nValue(title)}</p>
           <ActionIcon className="close-icon" onClick={handleClose} size="xs" radius="xl">
             <IconX size={12} />
           </ActionIcon>

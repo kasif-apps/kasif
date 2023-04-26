@@ -46,7 +46,7 @@ const useStyles = createStyles(theme => ({
 function NavbarLink({ icon: Icon, label, onClick }: NavbarItem) {
   const { classes } = useStyles();
   return (
-    <Tooltip withinPortal label={label} position="right">
+    <Tooltip withinPortal label={app.localeManager.getI18nValue(label)} position="right">
       <UnstyledButton onClick={onClick} className={classes.link}>
         <DisplayRenderableNode node={Icon} />
       </UnstyledButton>
@@ -101,9 +101,11 @@ export function KasifNavbar() {
   const { classes } = useStyles();
   const os = getOS();
   const [navbarStore] = useSlice(app.navbarManager.store);
-  const topItems = navbarStore.topItems.map(link => <NavbarLink {...link} key={link.label} />);
+  const topItems = navbarStore.topItems.map(link => (
+    <NavbarLink {...link} key={app.localeManager.getI18nValue(link.label)} />
+  ));
   const bottomItems = navbarStore.bottomItems.map(link => (
-    <NavbarLink {...link} key={link.label} />
+    <NavbarLink {...link} key={app.localeManager.getI18nValue(link.label)} />
   ));
 
   const upperDividedTop = topItems.slice(0, app.navbarManager.initialTopItemsCount);

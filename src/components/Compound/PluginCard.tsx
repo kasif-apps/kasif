@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { ActionIcon, Badge, Button, Card, Group, Image, Text, createStyles } from '@mantine/core';
 
@@ -60,6 +61,7 @@ export function PluginCard(props: PluginCardProps) {
   const { image, title, description, category, author, url, installed } = props;
   const [loading, setLoading] = useState(false);
   const { classes } = useStyles();
+  const { t } = useTranslation();
 
   return (
     <Transition transition="fade">
@@ -106,7 +108,7 @@ export function PluginCard(props: PluginCardProps) {
               radius="md"
               variant={installed ? 'outline' : 'filled'}
               style={{ flex: 1 }}>
-              {installed ? 'Uninstall' : 'Install'}
+              {installed ? t('label.uninstall') : t('label.install')}
             </Button>
             <ActionIcon variant="default" radius="md" size={36}>
               <IconHeart size="1.1rem" className={classes.like} stroke={1.5} />
@@ -186,9 +188,11 @@ interface HeroProps {
 
 export function Hero({ data }: HeroProps) {
   const { classes } = useHeroStyles();
+  const { t } = useTranslation();
+
   const stats = data.map(stat => (
     <div key={stat.title} className={classes.stat}>
-      <Text className={classes.label}>Downloads</Text>
+      <Text className={classes.label}>{t('label.downloads')}</Text>
       <Text className={classes.count}>{stat.downloads}</Text>
       <Text className={classes.title}>{stat.title}</Text>
       <Text className={classes.description}>{stat.description}</Text>

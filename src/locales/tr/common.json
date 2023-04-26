@@ -1,6 +1,8 @@
 {
   "title": {
-    "settings": "Ayarlar"
+    "settings": "Ayarlar",
+    "popular": "Popüler",
+    "discover": "Keşfet"
   },
   "label": {
     "info": "Bilgi",
@@ -8,6 +10,25 @@
     "warning": "Uyarı",
     "error": "Hata",
     "on": "Açık",
-    "off": "Kapalı"
+    "off": "Kapalı",
+    "install": "Yükle",
+    "uninstall": "Kaldır",
+    "downloads": "İndirme",
+    "licenses": "Lisanslar"
+  },
+  "profile": {
+    "login": "Giriş Yap",
+    "register": "Kaydol",
+    "logout": "Çıkış Yap",
+    "upload-app": "Uygulama Yükle",
+    "welcome": "Kâşif'e Hoşgeldin, aşağıdakiler ile giriş yap",
+    "or-continue-with-email": "veya e-postan ile devam et",
+    "email-or-username": "E-posta veya kullanıcı adı",
+    "email": "E-posta",
+    "password": "Şifre",
+    "name": "İsim",
+    "dont-have-account": "Hesabın yok mu? Kaydol",
+    "already-have-account": "Zaten hesabın var mı? Giriş Yap",
+    "terms-and-conditions": "Kullanım Şartlarını kabul ediyorum"
   }
 }

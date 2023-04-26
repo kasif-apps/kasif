@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { Box, LoadingOverlay, SimpleGrid, Stack, Title } from '@mantine/core';
 import { useElementSize } from '@mantine/hooks';
@@ -14,6 +15,7 @@ export function StorePage() {
   const [popular, setPopular] = useState<PluginDTO[] | null>(null);
   const [installedPlugins] = useSlice(app.pluginManager.plugins);
   const { ref, width } = useElementSize();
+  const { t } = useTranslation();
 
   useEffect(() => {
     app.pluginManager.getPopular().then((popularItems: PluginDTO[]) => {
@@ -51,9 +53,9 @@ export function StorePage() {
     <div ref={ref}>
       <Box p="sm" sx={{ maxWidth: 1200, margin: 'auto' }}>
         <Stack>
-          <Title>Popular</Title>
+          <Title>{t('title.popular')}</Title>
           <Hero data={popular} />
-          <Title>Discover</Title>
+          <Title>{t('title.discover')}</Title>
           <SimpleGrid cols={columnCount}>
             {plugins.map(item => (
               <PluginCard

@@ -1,3 +1,4 @@
+import { LocaleString } from '@kasif/config/i18n';
 import { BaseManager } from '@kasif/managers/base';
 import { WelcomePage } from '@kasif/pages/WelcomePage';
 import { authorized, trackable, tracker } from '@kasif/util/decorators';
@@ -7,7 +8,7 @@ import { createRecordSlice } from '@kasif-apps/cinq';
 
 export interface View {
   id: string;
-  title: string;
+  title: LocaleString;
   icon: RenderableNode | null;
   render: RenderableNode;
 }
