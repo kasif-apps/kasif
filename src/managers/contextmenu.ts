@@ -7,6 +7,7 @@ import { authorized, trackable, tracker } from '@kasif/util/decorators';
 import { RenderableNode } from '@kasif/util/node-renderer';
 
 import { RecordSlice, createRecordSlice, createVectorSlice } from '@kasif-apps/cinq';
+import { t } from 'i18next';
 
 export interface ContextMenuState {
   position: {
@@ -256,14 +257,14 @@ export class ContextMenuManager extends BaseManager {
         });
       } else {
         this.app.notificationManager.error(
-          `Could not find context menu category with id (${item.category})`,
-          'Error Defining Context Menu Item'
+          `${t('notification.contextmenu.could-not-find-category.description')} (${item.category})`,
+          t('notification.contextmenu.could-not-find-category.title')!
         );
       }
     } else {
       this.app.notificationManager.error(
-        `Could not find context menu field with id (${fieldId})`,
-        'Error Defining Context Menu Item'
+        `${t('notification.contextmenu.could-not-find-field.description')} (${fieldId})`,
+        t('notification.contextmenu.could-not-find-field.title')!
       );
     }
   }

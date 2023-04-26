@@ -88,4 +88,21 @@ export class LocaleManager extends BaseManager {
   getLocaleOptions() {
     return this.#store.get();
   }
+
+  @trackable
+  get(key: string): LocaleString {
+    const result: LocaleString = {
+      en: key,
+    };
+
+    const store = this.#store.get();
+
+    for (const locale in store) {
+      if (Object.prototype.hasOwnProperty.call(store, locale)) {
+        result[locale] = instance.t(key, { lng: locale });
+      }
+    }
+
+    return result;
+  }
 }

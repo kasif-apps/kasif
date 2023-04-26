@@ -9,6 +9,7 @@ import { getMatches as getArgMatches } from '@tauri-apps/api/cli';
 import { OpenDialogOptions, open } from '@tauri-apps/api/dialog';
 import { EventCallback, EventName, UnlistenFn, listen } from '@tauri-apps/api/event';
 import { appWindow } from '@tauri-apps/api/window';
+import { t } from 'i18next';
 
 async function NoOp<T>(): Promise<T> {
   return 'no-op' as unknown as T;
@@ -119,8 +120,8 @@ export class Environment {
           originalIPC(message);
         } else {
           app.notificationManager.error(
-            'Desktop app is required for this part of the app',
-            'Desktop Environment Missing'
+            t('notification.desktop-required.description'),
+            t('notification.desktop-required.title')!
           );
         }
       };

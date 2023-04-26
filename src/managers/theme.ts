@@ -6,6 +6,7 @@ import { BaseManager } from '@kasif/managers/base';
 import { trackable, tracker } from '@kasif/util/decorators';
 
 import { Slice, createSlice } from '@kasif-apps/cinq';
+import { t } from 'i18next';
 
 export interface ThemeOption {
   id: string;
@@ -101,7 +102,7 @@ export class ThemeManager extends BaseManager {
     const result = this.options.find(option => option.id === id);
 
     if (!result) {
-      app.notificationManager.error(`Theme option with id "${id}" not found.`);
+      app.notificationManager.error(`${t('notification.theme-not-found.description')} ('${id}')`);
     }
 
     return result || this.options[0];

@@ -14,7 +14,8 @@
     "install": "Install",
     "uninstall": "Uninstall",
     "downloads": "Downloads",
-    "licenses": "Licenses"
+    "licenses": "Licenses",
+    "debug": "Debug Mode"
   },
   "profile": {
     "login": "Login",
@@ -30,5 +31,86 @@
     "already-have-account": "Already have an account? Login",
     "terms-and-conditions": "I accept the terms and conditions"
   },
-  "easter-egg": "Hi, you found me!"
+  "settings": {
+    "appearance": {
+      "title": "Appearance",
+      "description": "Change the appearance of the app."
+    },
+    "behavior": {
+      "title": "Behavior",
+      "description": "Basic & advanced behaviour related settings."
+    },
+    "theme": {
+      "title": "Theme",
+      "description": "Change the theme of the app."
+    },
+    "font": {
+      "title": "Font",
+      "description": "Change the font of the app."
+    },
+    "language": {
+      "title": "Language",
+      "description": "Change the display language of the app."
+    },
+    "animations": {
+      "title": "Animations",
+      "description": "Enable the animations througout the app."
+    },
+    "log-level": {
+      "title": "Log Level",
+      "description": "Change the log display behavior of the app. Success is recommended."
+    }
+  },
+  "notification": {
+    "no-view-selected": {
+      "title": "No view is selected",
+      "description": "Select a view to create a pane"
+    },
+    "contextmenu": {
+      "could-not-find-category": {
+        "title": "Error Defining Context Menu Item",
+        "description": "Could not find context menu category with id"
+      },
+      "could-not-find-field": {
+        "title": "Error Defining Context Menu Item",
+        "description": "Could not find context menu field with id"
+      }
+    },
+    "navbar-item-exists": {
+      "title": "Navbar Item Cannot Be Pushed",
+      "description": "Navbar item exists"
+    },
+    "plugin": {
+      "error-running-script": {
+        "title": "Error running plugin script"
+      },
+      "error-loading-app": {
+        "title": "Error Loading App",
+        "description": "Could not load app. Check the logs for more information."
+      },
+      "error-getting-tokens": {
+        "title": "Error getting tokens"
+      }
+    },
+    "settings": {
+      "cannot-define-setting": {
+        "title": "Could Not Define Setting",
+        "description": "Setting with id already exists."
+      },
+      "cannot-define-category": {
+        "title": "Could Not Define Category",
+        "description": "Category with id already exists."
+      }
+    },
+    "theme-not-found": {
+      "description": "Theme option with id not found."
+    },
+    "desktop-required": {
+      "title": "Desktop Environment Missing",
+      "description": "Desktop app is required for this part of the app"
+    }
+  },
+  "easter-egg": {
+    "message": "Hi, you found me!"
+  }
 }

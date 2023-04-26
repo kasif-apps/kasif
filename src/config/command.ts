@@ -4,10 +4,15 @@ import { app } from '@kasif/config/app';
 
 import { IconWindowMaximize, IconWindowMinimize } from '@tabler/icons';
 
+import { t } from 'i18next';
+
 export function initCommands() {
   app.commandManager.defineCommand({
-    id: 'close-all-view',
-    title: 'Close All View',
+    id: 'close-all-views',
+    title: {
+      en: 'Close All Views',
+      tr: 'Tüm Sekmeleri Kapat',
+    },
     shortCut: 'mod+Shift+W',
     onTrigger: async () => {
       const store = app.viewManager.store.get();
@@ -20,7 +25,10 @@ export function initCommands() {
 
   app.commandManager.defineCommand({
     id: 'close-view',
-    title: 'Close View',
+    title: {
+      en: 'Close View',
+      tr: 'Sekmeyi Kapat',
+    },
     shortCut: 'mod+W',
     onTrigger: async () => {
       const store = app.viewManager.store.get();
@@ -33,7 +41,10 @@ export function initCommands() {
 
   app.commandManager.defineCommand({
     id: 'remove-all-panes',
-    title: 'Remove All Panes',
+    title: {
+      en: 'Remove All Panes',
+      tr: 'Tüm Panelleri Kaldır',
+    },
     icon: () => React.createElement(IconWindowMinimize, { size: 14 }),
     shortCut: 'mod+Shift+P',
     onTrigger: async () => {
@@ -43,7 +54,10 @@ export function initCommands() {
 
   app.commandManager.defineCommand({
     id: 'creaete-pane',
-    title: 'Create Pane From View',
+    title: {
+      en: 'Create Pane From View',
+      tr: 'Bu Sekmeden Panel Oluştur',
+    },
     shortCut: 'mod+P',
     icon: () => React.createElement(IconWindowMaximize, { size: 14 }),
     onTrigger: async () => {
@@ -54,7 +68,10 @@ export function initCommands() {
         app.paneManager.pushPane(pane);
         app.viewManager.removeView(view);
       } else {
-        app.notificationManager.error('Select a view to create a pane', 'No view is selected');
+        app.notificationManager.error(
+          t('notification.no-view-selected.description'),
+          t('notification.no-view-selected.title')!
+        );
       }
     },
   });

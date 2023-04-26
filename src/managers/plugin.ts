@@ -8,6 +8,7 @@ import { environment } from '@kasif/util/environment';
 import { KasifRemote } from '@kasif/util/remote';
 
 import { createVectorSlice } from '@kasif-apps/cinq';
+import { t } from 'i18next';
 import { Record as PocketbaseRecord } from 'pocketbase';
 
 export interface PluginModule {
@@ -190,11 +191,16 @@ export class PluginManager extends BaseManager {
           } catch (error) {
             this.app.notificationManager.error(
               String(error),
-              `Error running '${instance.name}' (${instance.identifier}) plugin script`
+              `${t('notification.plugin.error-running-script.title')} '${instance.name}' (${
+                instance.identifier
+              })`
             );
           }
         } catch (error) {
-          this.app.notificationManager.error(String(error), 'Error getting tokens');
+          this.app.notificationManager.error(
+            String(error),
+            t('notification.plugin.error-getting-tokens.title')!
+          );
         }
       }
     });
@@ -244,8 +250,8 @@ export class PluginManager extends BaseManager {
       return { file, meta: pluginModule };
     } catch (error) {
       this.app.notificationManager.error(
-        `Could not load app '${pluginModule.name}'. Check the logs for more information.`,
-        'Error Loading App'
+        `${t('notification.plugin.error-loading-app.description')} '${pluginModule.name}'`,
+        t('notification.plugin.error-loading-app.title')!
       );
       this.app.notificationManager.log(
         String((error as any).stack),

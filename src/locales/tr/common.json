@@ -14,7 +14,8 @@
     "install": "Yükle",
     "uninstall": "Kaldır",
     "downloads": "İndirme",
-    "licenses": "Lisanslar"
+    "licenses": "Lisanslar",
+    "debug": "Hata Ayıklama Modu"
   },
   "profile": {
     "login": "Giriş Yap",
@@ -31,5 +32,86 @@
     "already-have-account": "Zaten hesabın var mı? Giriş Yap",
     "terms-and-conditions": "Kullanım Şartlarını kabul ediyorum"
   },
-  "easter-egg": "Buldun beni!"
+  "settings": {
+    "appearance": {
+      "title": "Görünüm",
+      "description": "Uygulamanın görünümünü değiştirin."
+    },
+    "behavior": {
+      "title": "Davranış",
+      "description": "Temel ve gelişmiş davranış ayarları."
+    },
+    "theme": {
+      "title": "Tema",
+      "description": "Uygulamanın temasını değiştirin."
+    },
+    "font": {
+      "title": "Yazı Tipi",
+      "description": "Uygulamanın yazı tipini değiştirin."
+    },
+    "language": {
+      "title": "Dil",
+      "description": "Uygulamanın görüntü dilini değiştirin."
+    },
+    "animations": {
+      "title": "Animasyonlar",
+      "description": "Uygulama genelinde animasyonları etkinleştirin."
+    },
+    "log-level": {
+      "title": "Uyarı Seviyesi",
+      "description": "Uygulamanın uyarı görüntüleme davranışını değiştirin. Başarı önerilir."
+    }
+  },
+  "notification": {
+    "no-view-selected": {
+      "title": "Seçili Sekme Yok",
+      "description": "Panel oluşturmak için bir sekme açın"
+    },
+    "contextmenu": {
+      "could-not-find-category": {
+        "title": "Menü Ögesi Tanımlanamadı",
+        "description": "Bu id ile bir menü kategorisi bulunamadı"
+      },
+      "could-not-find-field": {
+        "title": "Menü Ögesi Tanımlanamadı",
+        "description": "Bu id ile bir menü bölgesi bulunamadı"
+      }
+    },
+    "navbar-item-exists": {
+      "title": "Navigasyon Ögesi Tanımlanamadı",
+      "description": "Navigasyon ögesi zaten var"
+    },
+    "plugin": {
+      "error-running-script": {
+        "title": "Eklenti Betiği Çalıştırılırken Hata Oluştu"
+      },
+      "error-loading-app": {
+        "title": "Eklenti Yüklenirken Hata Oluştu",
+        "description": "Eklenti yüklenemedi, detay için günlüğü kontrol edin"
+      },
+      "error-getting-tokens": {
+        "title": "Token'lar Alınırken Hata Oluştu"
+      }
+    },
+    "settings": {
+      "cannot-define-setting": {
+        "title": "Ayar Ögesi Tanımlanamadı",
+        "description": "Bu id ile bir ayar ögesi zaten var"
+      },
+      "cannot-define-category": {
+        "title": "Kategori Tanımlanamadı",
+        "description": "Bu id ile zaten bir kategori var"
+      }
+    },
+    "theme-not-found": {
+      "description": "Tema seçeneği bulunamadı"
+    },
+    "desktop-required": {
+      "title": "Masaütü Ortamı Gerekli",
+      "description": "Uygulamanın bu özelliği için masaüstü ortamı gerekli"
+    }
+  },
+  "easter-egg": {
+    "message": "Buldun beni!"
+  }
 }

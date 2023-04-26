@@ -45,8 +45,8 @@ export function KasifFooter() {
     <Footer withBorder={false} className={classes.footer} height={32} px="sm">
       <Group>
         {flags.debug && (
-          <Text fw="bolder" size="xs">
-            DEBUG
+          <Text transform="uppercase" fw="bolder" size="xs">
+            {t('label.debug')}
           </Text>
         )}
         <Text size="xs">© 2023 Kâşif</Text>

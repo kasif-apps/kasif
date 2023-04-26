@@ -86,8 +86,8 @@ export function initAppContextMenu(app: App) {
   app.contextMenuManager.defineItem('pane', {
     id: 'close-this-pane',
     title: {
-      en: 'Close This Pane',
-      tr: 'Bu Paneli Kapat',
+      en: 'Remove This Pane',
+      tr: 'Bu Paneli Kaldır',
     },
     icon: () => React.createElement(IconWindowMinimize, { size: 14 }),
     onTrigger: async () => {
@@ -272,7 +272,7 @@ export function initAppContextMenu(app: App) {
     },
     icon: () => React.createElement(IconEgg, { size: 14 }),
     onTrigger: async () => {
-      app.notificationManager.success('🙃', t('easter-egg')!);
+      app.notificationManager.success('🙃', t('easter-egg.message')!);
     },
     category: 'easter-egg',
     condition: async () => app.viewManager.store.get().currentView === 'settings',

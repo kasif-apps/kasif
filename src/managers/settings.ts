@@ -1,12 +1,13 @@
 import { App } from '@kasif/config/app';
 import { LocaleString } from '@kasif/config/i18n';
-import { initialCategories, initialSettings } from '@kasif/config/settings';
+import { getInitialCategories, getInitialSettings } from '@kasif/config/settings';
 import { BaseManager } from '@kasif/managers/base';
 import { authorized, trackable, tracker } from '@kasif/util/decorators';
 import { FSTransactor, environment } from '@kasif/util/environment';
 import { RenderableNode } from '@kasif/util/node-renderer';
 
 import { RecordSlice, StorageTransactor, createRecordSlice, createSlice } from '@kasif-apps/cinq';
+import { t } from 'i18next';
 
 export interface SettingCategory {
   id: string;
@@ -47,8 +48,8 @@ export class SettingsManager extends BaseManager {
     super(app, parent);
 
     if (!parent) {
-      initialCategories.forEach(category => this.defineCategory(category));
-      initialSettings.forEach(setting => this.defineSetting(setting));
+      getInitialCategories(app).forEach(category => this.defineCategory(category));
+      getInitialSettings(app).forEach(setting => this.defineSetting(setting));
     }
 
     this.store.subscribe(() => {
@@ -92,8 +93,8 @@ export class SettingsManager extends BaseManager {
   defineSetting<T>(item: SettingsItem<T>) {
     if (this.getSettingController(item.id)) {
       this.app.notificationManager.error(
-        `Setting with id ${item.id} already exists.`,
-        'Cannot Define Setting'
+        `${t('notification.settings.cannot-define-setting.description')} ('${item.id}')`,
+        t('notification.settings.cannot-define-setting.title')!
       );
       return;
     }
@@ -139,8 +140,8 @@ export class SettingsManager extends BaseManager {
   defineCategory(category: SettingCategory) {
     if (this.categories.find(c => c.id === category.id)) {
       this.app.notificationManager.error(
-        `Category with id ${category.id} already exists.`,
-        'Cannot Define Category'
+        `${t('notification.settings.cannot-define-category.description')} ${category.id}`,
+        t('notification.settings.cannot-define-category.title')!
       );
       return;
     }

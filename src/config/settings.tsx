@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 
 import { Group, Select, Switch, Text } from '@mantine/core';
 
-import { app, useSetting } from '@kasif/config/app';
+import { App, app, useSetting } from '@kasif/config/app';
 import { Log } from '@kasif/managers/notification';
 import { SettingCategory, SettingsItem } from '@kasif/managers/settings';
 import { ThemeOption } from '@kasif/managers/theme';
@@ -115,20 +115,14 @@ export namespace ThemeSetting {
     );
   }
 
-  export const definition: SettingsItem<Type> = {
+  export const definition = (wrapper: App): SettingsItem<Type> => ({
     id,
     category: 'appearance',
-    title: {
-      en: 'Theme',
-      tr: 'Tema',
-    },
-    description: {
-      en: 'Change the theme of the app.',
-      tr: 'Uygulamanın temasını değiştirin.',
-    },
+    title: wrapper.localeManager.get('settings.theme.title'),
+    description: wrapper.localeManager.get('settings.theme.description'),
     value: 'default-light',
     render: Render,
-  };
+  });
 }
 
 export namespace FontSetting {
@@ -179,17 +173,11 @@ export namespace FontSetting {
     }
   };
 
-  export const definition: SettingsItem<Type> = {
+  export const definition = (wrapper: App): SettingsItem<Type> => ({
     id,
     category: 'appearance',
-    title: {
-      en: 'Font',
-      tr: 'Yazı Tipi',
-    },
-    description: {
-      en: 'Change the font of the app.',
-      tr: 'Uygulamanın yazı tipini değiştirin.',
-    },
+    title: wrapper.localeManager.get('settings.font.title'),
+    description: wrapper.localeManager.get('settings.font.description'),
     value: getDefaultFont(),
     render: () => {
       const [font, setFont] = useSetting<Type>(id);
@@ -234,24 +222,18 @@ export namespace FontSetting {
         />
       );
     },
-  };
+  });
 }
 
 export namespace LanguageSetting {
   export type Type = 'en' | 'tr';
   const id = 'language';
 
-  export const definition: SettingsItem<Type> = {
+  export const definition = (wrapper: App): SettingsItem<Type> => ({
     id,
     category: 'appearance',
-    title: {
-      en: 'Language',
-      tr: 'Dil',
-    },
-    description: {
-      en: 'Change the display language of the app.',
-      tr: 'Uygulamanın görüntü dilini değiştirin.',
-    },
+    title: wrapper.localeManager.get('settings.language.title'),
+    description: wrapper.localeManager.get('settings.language.description'),
     value: 'en',
     render: () => {
       const [state, setState] = useSetting<Type>(id);
@@ -278,44 +260,32 @@ export namespace LanguageSetting {
         />
       );
     },
-  };
+  });
 }
 
 export namespace AnimationSetting {
   export type Type = boolean;
   const id = 'enable-animations';
 
-  export const definition: SettingsItem<Type> = {
+  export const definition = (wrapper: App): SettingsItem<Type> => ({
     id,
     category: 'behavior',
-    title: {
-      en: 'Animations',
-      tr: 'Animasyonlar',
-    },
-    description: {
-      en: 'Enable the animations througout the app.',
-      tr: 'Uygulama genelinde animasyonları etkinleştirin.',
-    },
+    title: wrapper.localeManager.get('settings.animations.title'),
+    description: wrapper.localeManager.get('settings.animations.description'),
     value: true,
     render: () => <BooleanAction id={id} />,
-  };
+  });
 }
 
 export namespace LogLevelSetting {
   export type Type = keyof typeof Log;
   const id = 'log-level';
 
-  export const definition: SettingsItem<Type> = {
+  export const definition = (wrapper: App): SettingsItem<Type> => ({
     id,
     category: 'behavior',
-    title: {
-      en: 'Log Level',
-      tr: 'Uyarı Seviyesi',
-    },
-    description: {
-      en: 'Change the log display behavior of the app. Success is recommended.',
-      tr: 'Uygulamanın uyarı görüntüleme davranışını değiştirin. Başarı önerilir.',
-    },
+    title: wrapper.localeManager.get('settings.log-level.title'),
+    description: wrapper.localeManager.get('settings.log-level.description'),
     value: 'SUCCESS',
     render: () => {
       const { t } = useTranslation();
@@ -333,40 +303,32 @@ export namespace LogLevelSetting {
         />
       );
     },
-  };
+  });
 }
 
-export const initialSettings: Array<SettingsItem<unknown>> = [
-  ThemeSetting.definition,
-  FontSetting.definition,
-  LanguageSetting.definition,
-  AnimationSetting.definition,
-  LogLevelSetting.definition,
-];
+export function getInitialSettings(wrapper: App): Array<SettingsItem<unknown>> {
+  return [
+    ThemeSetting.definition(wrapper),
+    FontSetting.definition(wrapper),
+    LanguageSetting.definition(wrapper),
+    AnimationSetting.definition(wrapper),
+    LogLevelSetting.definition(wrapper),
+  ];
+}
 
-export const initialCategories: Array<SettingCategory> = [
-  {
-    id: 'appearance',
-    title: {
-      en: 'Appearance',
-      tr: 'Görünüm',
+export function getInitialCategories(wrapper: App): Array<SettingCategory> {
+  return [
+    {
+      id: 'appearance',
+      title: wrapper.localeManager.get('settings.appearance.title'),
+      description: wrapper.localeManager.get('settings.appearance.description'),
+      color: 'orange',
     },
-    description: {
-      en: 'Change the appearance of the app.',
-      tr: 'Uygulamanın görünümünü değiştirin.',
+    {
+      id: 'behavior',
+      title: wrapper.localeManager.get('settings.behavior.title'),
+      description: wrapper.localeManager.get('settings.behavior.description'),
+      color: 'cyan',
     },
-    color: 'orange',
-  },
-  {
-    id: 'behavior',
-    title: {
-      en: 'Behavior',
-      tr: 'Davranış',
-    },
-    description: {
-      en: 'Basic & advanced behaviour related settings.',
-      tr: 'Temel ve gelişmiş davranış ayarları.',
-    },
-    color: 'cyan',
-  },
-];
+  ];
+}

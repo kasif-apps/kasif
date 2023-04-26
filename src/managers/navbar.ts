@@ -5,6 +5,7 @@ import { authorized, trackable, tracker } from '@kasif/util/decorators';
 import { RenderableNode } from '@kasif/util/node-renderer';
 
 import { createRecordSlice } from '@kasif-apps/cinq';
+import { t } from 'i18next';
 
 export interface NavbarItem {
   id: string;
@@ -35,8 +36,8 @@ export class NavbarManager extends BaseManager {
 
     if (itemExists) {
       this.app.notificationManager.error(
-        `Top navbar item (${item.id}) exists`,
-        'Navbar Item Cannot Be Pushed'
+        `${t('notification.navbar-item-exists.description')} (${item.id})`,
+        t('notification.navbar-item-exists.title')!
       );
       return;
     }
@@ -66,6 +67,10 @@ export class NavbarManager extends BaseManager {
     const itemExists = this.store.get().bottomItems.some(i => i.id === item.id);
 
     if (itemExists) {
+      this.app.notificationManager.error(
+        `${t('notification.navbar-item-exists.description')} (${item.id})`,
+        t('notification.navbar-item-exists.title')!
+      );
       return;
     }
 
