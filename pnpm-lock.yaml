@@ -15,6 +15,7 @@ specifiers:
   '@mantine/modals': ^6.0.6
   '@mantine/notifications': ^6.0.6
   '@mantine/spotlight': ^6.0.6
+  '@mantine/utils': ^6.0.9
   '@tabler/icons': ^1.116.1
   '@tauri-apps/api': ^1.2.0
   '@tauri-apps/cli': ^1.2.2
@@ -66,6 +67,7 @@ dependencies:
   '@mantine/modals': 6.0.6_feqrfkte3oaz5jjghkdwfk53i4
   '@mantine/notifications': 6.0.6_feqrfkte3oaz5jjghkdwfk53i4
   '@mantine/spotlight': 6.0.6_feqrfkte3oaz5jjghkdwfk53i4
+  '@mantine/utils': 6.0.9_react@18.2.0
   '@tabler/icons': 1.116.1_biqbaboplfbrettd7655fr4n2y
   '@tauri-apps/api': 1.2.0
   framer-motion: 10.12.4_biqbaboplfbrettd7655fr4n2y
@@ -1128,6 +1130,14 @@ packages:
 
   /@mantine/utils/6.0.6_react@18.2.0:
     resolution: {integrity: sha512-Pd+ZTJ3maXb1zihZzHpo00XLwcKEg+ZGLPFG5vg/YafLDDWIhgV6snTFVKsPb2cunVjOwzbKcvlmCHXBe97mTQ==}
+    peerDependencies:
+      react: '>=16.8.0'
+    dependencies:
+      react: 18.2.0
+    dev: false
+
+  /@mantine/utils/6.0.9_react@18.2.0:
+    resolution: {integrity: sha512-zEDZixO8dw2ZSNZiQ1g7S+Bq2q4E8ps6bvpyZsxpiXBdh3g2H0WOEdJdDpBTiTRPWotSlU1kaKN3tOplCRDQ2Q==}
     peerDependencies:
       react: '>=16.8.0'
     dependencies:

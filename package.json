@@ -27,6 +27,7 @@
     "@mantine/modals": "^6.0.6",
     "@mantine/notifications": "^6.0.6",
     "@mantine/spotlight": "^6.0.6",
+    "@mantine/utils": "^6.0.9",
     "@tabler/icons": "^1.116.1",
     "@tauri-apps/api": "^1.2.0",
     "framer-motion": "^10.12.4",
