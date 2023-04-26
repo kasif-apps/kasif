@@ -1,4 +1,5 @@
 import { forwardRef, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { Group, Select, Switch, Text } from '@mantine/core';
 
@@ -14,11 +15,12 @@ export interface BooleanActionProps {
 
 export function BooleanAction(props: BooleanActionProps) {
   const [state, setState] = useSetting<boolean>(props.id);
+  const { t } = useTranslation();
 
   return (
     <Switch
-      onLabel="ON"
-      offLabel="OFF"
+      onLabel={t('label.on')}
+      offLabel={t('label.off')}
       size="lg"
       checked={state.value}
       onChange={e => setState(e.currentTarget.checked)}
@@ -103,7 +105,11 @@ export namespace ThemeSetting {
             setTheme(value as Type);
           }
         }}
-        data={data}
+        data={data.map(item => ({
+          ...item,
+          label: app.localeManager.getI18nValue(item.label),
+          description: app.localeManager.getI18nValue(item.description),
+        }))}
       />
     );
   }
@@ -111,8 +117,14 @@ export namespace ThemeSetting {
   export const definition: SettingsItem<Type> = {
     id,
     category: 'appearance',
-    title: 'Theme',
-    description: 'Change the theme of the app.',
+    title: {
+      en: 'Theme',
+      tr: 'Tema',
+    },
+    description: {
+      en: 'Change the theme of the app.',
+      tr: 'Uygulamanın temasını değiştirin.',
+    },
     value: 'default-light',
     render: Render,
   };
@@ -141,8 +153,14 @@ export namespace FontSetting {
   export const definition: SettingsItem<Type> = {
     id,
     category: 'appearance',
-    title: 'Font',
-    description: 'Change the font of the app.',
+    title: {
+      en: 'Font',
+      tr: 'Yazı Tipi',
+    },
+    description: {
+      en: 'Change the font of the app.',
+      tr: 'Uygulamanın yazı tipini değiştirin.',
+    },
     value: 'San Fransisco',
     render: () => {
       const [font, setFont] = useSetting<Type>(id);
@@ -199,15 +217,21 @@ export namespace LanguageSetting {
   export const definition: SettingsItem<Type> = {
     id,
     category: 'appearance',
-    title: 'Language',
-    description: 'Change the display language of the app.',
+    title: {
+      en: 'Language',
+      tr: 'Dil',
+    },
+    description: {
+      en: 'Change the display language of the app.',
+      tr: 'Uygulamanın görüntü dilini değiştirin.',
+    },
     value: 'en',
     render: () => (
       <SelectAction
         id={id}
         data={[
           { value: 'en', label: 'English' },
-          { value: 'tr', label: 'Turkish' },
+          { value: 'tr', label: 'Türkçe' },
         ]}
         placeholder="Select Language"
       />
@@ -222,8 +246,14 @@ export namespace AnimationSetting {
   export const definition: SettingsItem<Type> = {
     id,
     category: 'behavior',
-    title: 'Animations',
-    description: 'Enable the animations througout the app.',
+    title: {
+      en: 'Animations',
+      tr: 'Animasyonlar',
+    },
+    description: {
+      en: 'Enable the animations througout the app.',
+      tr: 'Uygulama genelinde animasyonları etkinleştirin.',
+    },
     value: true,
     render: () => <BooleanAction id={id} />,
   };
@@ -236,21 +266,31 @@ export namespace LogLevelSetting {
   export const definition: SettingsItem<Type> = {
     id,
     category: 'behavior',
-    title: 'Log Level',
-    description: 'Change the log display behavior of the app. Success is recommended.',
+    title: {
+      en: 'Log Level',
+      tr: 'Uyarı Seviyesi',
+    },
+    description: {
+      en: 'Change the log display behavior of the app. Success is recommended.',
+      tr: 'Uygulamanın uyarı görüntüleme davranışını değiştirin. Başarı önerilir.',
+    },
     value: 'SUCCESS',
-    render: () => (
-      <SelectAction
-        id={id}
-        data={[
-          { value: 'LOG', label: 'Info' },
-          { value: 'SUCCESS', label: 'Success' },
-          { value: 'WARNING', label: 'Warning' },
-          { value: 'ERROR', label: 'Error' },
-        ]}
-        placeholder="Select Log Level"
-      />
-    ),
+    render: () => {
+      const { t } = useTranslation();
+
+      return (
+        <SelectAction
+          id={id}
+          data={[
+            { value: 'LOG', label: t('label.info') },
+            { value: 'SUCCESS', label: t('label.success') },
+            { value: 'WARNING', label: t('label.warning') },
+            { value: 'ERROR', label: t('label.error') },
+          ]}
+          placeholder="Select Log Level"
+        />
+      );
+    },
   };
 }
 
@@ -265,14 +305,26 @@ export const initialSettings: Array<SettingsItem<unknown>> = [
 export const initialCategories: Array<SettingCategory> = [
   {
     id: 'appearance',
-    title: 'Appearance',
-    description: 'Change the appearance of the app.',
+    title: {
+      en: 'Appearance',
+      tr: 'Görünüm',
+    },
+    description: {
+      en: 'Change the appearance of the app.',
+      tr: 'Uygulamanın görünümünü değiştirin.',
+    },
     color: 'orange',
   },
   {
     id: 'behavior',
-    title: 'Behavior',
-    description: 'Basic & advanced behaviour related settings.',
+    title: {
+      en: 'Behavior',
+      tr: 'Davranış',
+    },
+    description: {
+      en: 'Basic & advanced behaviour related settings.',
+      tr: 'Temel ve gelişmiş davranış ayarları.',
+    },
     color: 'cyan',
   },
 ];

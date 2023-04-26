@@ -1,1 +1,13 @@
-{}
+{
+  "title": {
+    "settings": "Ayarlar"
+  },
+  "label": {
+    "info": "Bilgi",
+    "success": "Başarı",
+    "warning": "Uyarı",
+    "error": "Hata",
+    "on": "Açık",
+    "off": "Kapalı"
+  }
+}

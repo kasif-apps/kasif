@@ -3,6 +3,7 @@ import { BaseManager } from '@kasif/managers/base';
 import { CommandManager } from '@kasif/managers/command';
 import { ContextMenuManager } from '@kasif/managers/contextmenu';
 import { DndManager } from '@kasif/managers/dnd';
+import { LocaleManager } from '@kasif/managers/i18n';
 import { NavbarManager } from '@kasif/managers/navbar';
 import { NetworkManager } from '@kasif/managers/network';
 import { NotificationManager } from '@kasif/managers/notification';
@@ -14,6 +15,7 @@ import { SettingsItem, SettingsManager } from '@kasif/managers/settings';
 import { ThemeManager } from '@kasif/managers/theme';
 import { ViewManager } from '@kasif/managers/view';
 import { useSlice } from '@kasif/util/cinq-react';
+import { environment } from '@kasif/util/environment';
 
 import { createRecordSlice } from '@kasif-apps/cinq';
 
@@ -47,6 +49,7 @@ export class App {
   contextMenuManager: ContextMenuManager;
   promptManager: PromptManager;
   pluginManager: PluginManager;
+  localeManager: LocaleManager;
 
   customManagers: Map<string, BaseManager> = new Map();
 
@@ -75,6 +78,7 @@ export class App {
     this.contextMenuManager = new ContextMenuManager(this, this.parent);
     this.dndManager = new DndManager(this, this.parent);
     this.networkManager = new NetworkManager(this, this.parent);
+    this.localeManager = new LocaleManager(this, this.parent);
     this.promptManager = new PromptManager(this, this.parent);
     this.pluginManager = new PluginManager(this, this.parent);
   }
@@ -88,15 +92,31 @@ export class App {
   }
 
   init() {
-    this.contextMenuManager.init();
-    this.permissionManager.init();
-    this.networkManager.init();
-    this.commandManager.init();
-    this.authManager.init();
-    this.pluginManager.init();
+    const init = () => {
+      this.localeManager.init();
+      this.contextMenuManager.init();
+      this.permissionManager.init();
+      this.networkManager.init();
+      this.commandManager.init();
+      this.authManager.init();
+      this.pluginManager.init();
 
-    for (const [, manager] of this.customManagers.entries()) {
-      manager.init();
+      for (const [, manager] of this.customManagers.entries()) {
+        manager.init();
+      }
+    };
+
+    if (environment.currentEnvironment === 'desktop') {
+      environment.getArgMatches().then(matches => {
+        this.flags.set({
+          debug: matches.args.debug.value as boolean,
+          plugins: matches.args.plugin.value as string[],
+        });
+
+        init();
+      });
+    } else {
+      init();
     }
   }
 

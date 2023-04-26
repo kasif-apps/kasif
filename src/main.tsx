@@ -10,11 +10,9 @@ import { SpotlightProvider } from '@mantine/spotlight';
 import { ActionComponent } from '@kasif/components/Overlay/Spotlight';
 import { app, kasif, useSetting } from '@kasif/config/app';
 import { DndProvider } from '@kasif/config/dnd';
-import '@kasif/config/i18n';
 import { ThemeSetting } from '@kasif/config/settings';
 import { Layout } from '@kasif/pages/Layout';
 import { useSlice } from '@kasif/util/cinq-react';
-import { environment } from '@kasif/util/environment';
 import { createGlobalStyles } from '@kasif/util/misc';
 import { DisplayRenderableNode } from '@kasif/util/node-renderer';
 import { createPaneStyles } from '@kasif/util/pane';
@@ -26,7 +24,7 @@ app.notificationManager.log(
   'Skeleton initialized'
 );
 
-function Wrapper() {
+function App() {
   const [ready, setReady] = useState(false);
   const [themeID, setThemeID] = useState('default-light');
   const { theme } = app.themeManager.getTheme(themeID);
@@ -61,18 +59,7 @@ function Wrapper() {
   }, [themeSetting.value, settingsReady, permissionsReady]);
 
   useEffect(() => {
-    if (environment.currentEnvironment === 'desktop') {
-      environment.getArgMatches().then(matches => {
-        app.flags.set({
-          debug: matches.args.debug.value as boolean,
-          plugins: matches.args.plugin.value as string[],
-        });
-
-        app.init();
-      });
-    } else {
-      app.init();
-    }
+    app.init();
 
     return () => {
       app.kill();
@@ -116,10 +103,6 @@ function Wrapper() {
       </MantineProvider>
     </div>
   );
-}
-
-function App() {
-  return <Wrapper />;
 }
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);

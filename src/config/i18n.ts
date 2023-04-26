@@ -1,28 +1,9 @@
-import { initReactI18next } from 'react-i18next';
+import en from '@kasif/locales/en/common.json';
+import tr from '@kasif/locales/tr/common.json';
 
-import en from '../locales/en/common.json';
-import tr from '../locales/tr/common.json';
+export type I18nString = Record<string, string> & { en: string; tr?: string };
 
-import * as i18n from 'i18next';
-import LanguageDetector from 'i18next-browser-languagedetector';
-
-i18n
-  .use(LanguageDetector)
-  .use(initReactI18next)
-  .init({
-    debug: import.meta.env.MODE === 'development',
-    fallbackLng: 'tr',
-    interpolation: {
-      escapeValue: false,
-    },
-    resources: {
-      en: {
-        translation: en,
-      },
-      tr: {
-        translation: tr,
-      },
-    },
-  });
-
-export default i18n;
+export const initialLocales = [
+  { key: 'en', translation: en },
+  { key: 'tr', translation: tr },
+];

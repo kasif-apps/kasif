@@ -1,4 +1,5 @@
 import { App } from '@kasif/config/app';
+import { I18nString } from '@kasif/config/i18n';
 import { initialCategories, initialSettings } from '@kasif/config/settings';
 import { BaseManager } from '@kasif/managers/base';
 import { authorized, trackable, tracker } from '@kasif/util/decorators';
@@ -9,16 +10,16 @@ import { RecordSlice, createRecordSlice, createSlice } from '@kasif-apps/cinq';
 
 export interface SettingCategory {
   id: string;
-  title: string;
-  description: string;
+  title: I18nString;
+  description: I18nString;
   color?: string;
 }
 
 export interface SettingsItem<T> {
   id: string;
   category: SettingCategory['id'];
-  title: string;
-  description: string;
+  title: I18nString;
+  description: I18nString;
   value: T;
   render: RenderableNode;
 }

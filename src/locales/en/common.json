@@ -1,1 +1,13 @@
-{}
+{
+  "title": {
+    "settings": "Settings"
+  },
+  "label": {
+    "info": "Info",
+    "success": "Success",
+    "warning": "Warning",
+    "error": "Error",
+    "on": "On",
+    "off": "Off"
+  }
+}

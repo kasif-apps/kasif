@@ -1,6 +1,7 @@
 import { MantineProviderProps, MantineTheme } from '@mantine/core';
 
 import { app } from '@kasif/config/app';
+import { I18nString } from '@kasif/config/i18n';
 import { BaseManager } from '@kasif/managers/base';
 import { trackable, tracker } from '@kasif/util/decorators';
 
@@ -8,8 +9,8 @@ import { Slice, createSlice } from '@kasif-apps/cinq';
 
 export interface ThemeOption {
   id: string;
-  title: string;
-  description: string;
+  title: I18nString;
+  description: I18nString;
   theme: {
     ui: Omit<MantineProviderProps['theme'], 'globalStyles'>;
   };
@@ -55,8 +56,14 @@ export class ThemeManager extends BaseManager {
   options: ThemeOption[] = [
     {
       id: 'default-light',
-      title: 'Default Light',
-      description: 'The default light theme.',
+      title: {
+        en: 'Default Light',
+        tr: 'Varsayılan Açık',
+      },
+      description: {
+        en: 'The default light theme.',
+        tr: 'Varsayılan açık tema',
+      },
       theme: {
         ui: {
           colorScheme: 'light',
@@ -66,8 +73,14 @@ export class ThemeManager extends BaseManager {
     },
     {
       id: 'default-dark',
-      title: 'Default Dark',
-      description: 'The default dark theme.',
+      title: {
+        en: 'Default Dark',
+        tr: 'Varsayılan Koyu',
+      },
+      description: {
+        en: 'The default dark theme.',
+        tr: 'Varsayılan koyu tema',
+      },
       theme: {
         ui: { colorScheme: 'dark', ...this.commonTheme },
       },

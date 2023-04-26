@@ -1,3 +1,5 @@
+import { useTranslation } from 'react-i18next';
+
 import { Box, Card, Group, Text, createStyles } from '@mantine/core';
 
 import { Transition } from '@kasif/components/Transition/TransitionWrapper';
@@ -50,6 +52,7 @@ const useStyles = createStyles(theme => ({
 
 export function SettingsPage() {
   const { classes } = useStyles();
+  const { t } = useTranslation();
 
   const categories = app.settingsManager.categories.map(category => {
     const items = app.settingsManager.controllers
@@ -60,9 +63,9 @@ export function SettingsPage() {
         return (
           <Group key={item.id} position="apart" className={classes.item} noWrap spacing="xl">
             <div>
-              <Text>{item.title}</Text>
+              <Text>{app.localeManager.getI18nValue(item.title)}</Text>
               <Text size="xs" color="dimmed">
-                {item.description}
+                {app.localeManager.getI18nValue(item.description)}
               </Text>
             </div>
             <DisplayRenderableNode node={item.render} />
@@ -84,10 +87,10 @@ export function SettingsPage() {
           className={classes.itemMeta}>
           <div>
             <Text size="md" className={classes.title} weight={600}>
-              {category.title}
+              {app.localeManager.getI18nValue(category.title)}
             </Text>
             <Text size="xs" color="dimmed" mt={3}>
-              {category.description}
+              {app.localeManager.getI18nValue(category.description)}
             </Text>
           </div>
         </Box>
@@ -101,7 +104,7 @@ export function SettingsPage() {
       <Box p="sm" sx={{ maxWidth: 1200, margin: 'auto' }}>
         <Card data-non-capture-source radius="md" p="xl" className={classes.card}>
           <Text size="xl" className={classes.title} weight={800}>
-            Settings
+            {t('title.settings')}
           </Text>
           {categories}
         </Card>
