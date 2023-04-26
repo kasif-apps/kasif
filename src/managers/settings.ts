@@ -6,7 +6,7 @@ import { authorized, trackable, tracker } from '@kasif/util/decorators';
 import { FSTransactor, environment } from '@kasif/util/environment';
 import { RenderableNode } from '@kasif/util/node-renderer';
 
-import { RecordSlice, createRecordSlice, createSlice } from '@kasif-apps/cinq';
+import { RecordSlice, StorageTransactor, createRecordSlice, createSlice } from '@kasif-apps/cinq';
 
 export interface SettingCategory {
   id: string;
@@ -63,18 +63,28 @@ export class SettingsManager extends BaseManager {
       }
     });
 
-    environment.path.appLocalDataDir().then(async dir => {
-      const path = await environment.path.join(dir, 'settings.json');
+    if (environment.currentEnvironment === 'desktop') {
+      environment.path.appLocalDataDir().then(async dir => {
+        const path = await environment.path.join(dir, 'settings.json');
 
-      const transactor = new FSTransactor({
+        const transactor = new FSTransactor({
+          key: 'settings',
+          slice: this.store,
+          path,
+        });
+
+        transactor.init();
+        this.ready.set(true);
+      });
+    } else {
+      const transactor = new StorageTransactor({
         key: 'settings',
         slice: this.store,
-        path,
       });
 
       transactor.init();
       this.ready.set(true);
-    });
+    }
   }
 
   @trackable

@@ -1,6 +1,6 @@
 import { environment } from '@kasif/util/environment';
 
-import PocketBase, { BaseAuthStore, Record } from 'pocketbase';
+import PocketBase, { BaseAuthStore, LocalAuthStore, Record } from 'pocketbase';
 
 export interface BackendError {
   response: {
@@ -10,7 +10,7 @@ export interface BackendError {
   };
 }
 
-export class CustomAuthStore extends BaseAuthStore {
+export class FsAuthStore extends BaseAuthStore {
   path?: string;
 
   constructor() {
@@ -49,4 +49,7 @@ export class CustomAuthStore extends BaseAuthStore {
   }
 }
 
-export const backend = new PocketBase(import.meta.env.VITE_REACT_API_URL, new CustomAuthStore());
+export const backend = new PocketBase(
+  import.meta.env.VITE_REACT_API_URL,
+  environment.currentEnvironment === 'desktop' ? new FsAuthStore() : new LocalAuthStore()
+);
