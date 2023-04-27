@@ -1,5 +1,10 @@
 {
+  "welcome": {
+    "title": "Kâşif the Explorer.",
+    "subtitle": "Modern, cross platform file manager"
+  },
   "title": {
+    "app": "Kâşif",
     "home": "Home",
     "settings": "Settings",
     "plugins": "Plugins",

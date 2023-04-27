@@ -1,7 +1,15 @@
 import { useEffect, useRef } from 'react';
 import { DraggableProvided } from 'react-beautiful-dnd';
 
-import { ActionIcon, Sx, Tooltip, UnstyledButton, createStyles, getStylesRef } from '@mantine/core';
+import {
+  ActionIcon,
+  Sx,
+  Tooltip,
+  UnstyledButton,
+  createStyles,
+  getStylesRef,
+  rem,
+} from '@mantine/core';
 import { useMergedRef } from '@mantine/hooks';
 
 import {
@@ -22,6 +30,7 @@ const useStyles = createStyles((theme, { dragging }: { dragging: boolean }) => (
     'height': '100%',
     'display': 'flex',
     'fontSize': 12,
+    'maxWidth': 200,
 
     '& .tab-icon': {
       display: 'flex',
@@ -38,16 +47,6 @@ const useStyles = createStyles((theme, { dragging }: { dragging: boolean }) => (
       display: dragging ? 'none' : 'inline-block',
       marginLeft: 4,
       backgroundColor: 'transparent',
-    },
-
-    '& .indicator': {
-      position: 'absolute',
-      backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[5] : theme.white,
-      borderRadius: theme.radius.sm,
-      width: '96%',
-      height: '100%',
-      zIndex: -1,
-      boxShadow: theme.colorScheme === 'dark' ? 'none' : theme.shadows.xs,
     },
 
     '& .content': {
@@ -68,6 +67,17 @@ const useStyles = createStyles((theme, { dragging }: { dragging: boolean }) => (
       'overflow': 'hidden',
       'textOverflow': 'ellipsis',
       'cursor': 'pointer',
+
+      '& .indicator': {
+        position: 'absolute',
+        backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[5] : theme.white,
+        borderRadius: theme.radius.sm,
+        width: '100%',
+        height: '100%',
+        marginLeft: `-${rem(theme.spacing.xs)}`,
+        zIndex: -1,
+        boxShadow: theme.colorScheme === 'dark' ? 'none' : theme.shadows.xs,
+      },
 
       '&.active': {
         ref: getStylesRef('active'),
@@ -116,9 +126,11 @@ export function TabItem(props: TabItemProps) {
   };
 
   useEffect(() => {
-    if (ref.current && active) {
-      ref.current.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
-    }
+    setTimeout(() => {
+      if (ref.current && active) {
+        ref.current.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
+      }
+    }, 200);
   }, [active]);
 
   const style: Sx = {
@@ -154,23 +166,23 @@ export function TabItem(props: TabItemProps) {
           <ActionIcon className="close-icon" onClick={handleClose} size="xs" radius="xl">
             <IconX size={12} />
           </ActionIcon>
+
+          {active &&
+            (animationsEnabled.value ? (
+              dragging ? (
+                <div className="indicator" />
+              ) : (
+                <motion.div
+                  className="indicator"
+                  layoutId="indicator"
+                  transition={{ type: 'spring', bounce: 0.2, duration: 0.6 }}
+                />
+              )
+            ) : (
+              <div className="indicator" />
+            ))}
         </div>
       </Tooltip>
-
-      {active &&
-        (animationsEnabled.value ? (
-          dragging ? (
-            <div className="indicator" />
-          ) : (
-            <motion.div
-              className="indicator"
-              layoutId="indicator"
-              transition={{ type: 'spring', bounce: 0.2, duration: 0.6 }}
-            />
-          )
-        ) : (
-          <div className="indicator" />
-        ))}
     </UnstyledButton>
   );
 

@@ -35,12 +35,14 @@ const useStyles = createStyles(theme => ({
     'width': 40,
     'height': 40,
     'borderRadius': theme.radius.md,
+    'color': environment.currentEnvironment === 'desktop' ? theme.white : 'inherit',
     'display': 'flex',
     'alignItems': 'center',
     'justifyContent': 'center',
 
     '&:hover': {
-      backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[5] : theme.colors.gray[0],
+      backgroundColor:
+        environment.currentEnvironment === 'desktop' ? theme.fn.rgba(theme.white, 0.2) : 'inherit',
     },
   },
 
@@ -59,7 +61,11 @@ function NavbarLink({ icon: Icon, label, onClick }: NavbarItem) {
       transition={{ type: 'spring', bounce: 0.5, duration: 0.6 }}
       whileTap={{ scale: 0.9 }}>
       <Tooltip withinPortal label={app.localeManager.getI18nValue(label)} position="right">
-        <UnstyledButton onClick={onClick} className={classes.link}>
+        <UnstyledButton
+          aria-label={app.localeManager.getI18nValue(label)}
+          name={app.localeManager.getI18nValue(label)}
+          onClick={onClick}
+          className={classes.link}>
           <DisplayRenderableNode node={Icon} />
         </UnstyledButton>
       </Tooltip>

@@ -10,7 +10,12 @@ export function ProfilePage() {
   const [user] = useSlice(app.authManager.getUserSlice());
   const [avatar] = useSlice(app.authManager.avatar);
 
-  if (!user) return <SignInLogin />;
+  if (!user)
+    return (
+      <PageSkeleton id="profile">
+        <SignInLogin />
+      </PageSkeleton>
+    );
 
   return (
     <PageSkeleton id="profile">

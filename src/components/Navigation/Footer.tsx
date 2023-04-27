@@ -57,6 +57,8 @@ export function KasifFooter() {
         <Group spacing="xs">
           <Tooltip label={t('label.licenses')}>
             <ActionIcon
+              aria-label={t('label.licenses')}
+              name={t('label.licenses')}
               variant="transparent"
               size="sm"
               sx={{ color: flags.debug ? 'white' : 'primary' }}>

@@ -1,5 +1,10 @@
 {
+  "welcome": {
+    "title": "Kâşif the Explorer.",
+    "subtitle": "Modern, platformlar arası dosya kaşifi"
+  },
   "title": {
+    "app": "Kâşif",
     "home": "Ana Sayfa",
     "settings": "Ayarlar",
     "plugins": "Eklentiler",

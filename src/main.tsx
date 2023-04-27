@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import ReactDOM from 'react-dom/client';
 import { useTranslation } from 'react-i18next';
 
-import { CSSObject, MantineProvider, MantineTheme } from '@mantine/core';
+import { CSSObject, MantineProvider, MantineTheme, createStyles } from '@mantine/core';
 import { useHotkeys } from '@mantine/hooks';
 import { ModalsProvider } from '@mantine/modals';
 import { Notifications } from '@mantine/notifications';
@@ -19,6 +19,64 @@ import { DisplayRenderableNode } from '@kasif/util/node-renderer';
 import { createPaneStyles } from '@kasif/util/pane';
 
 import { IconSearch } from '@tabler/icons';
+
+const useStyles = createStyles(theme => ({
+  spotlightContent: {
+    backgroundColor: 'transparent',
+  },
+  spotlightAction: {
+    'marginBottom': 2,
+
+    '&:hover, &.mantine-Spotlight-actionHovered': {
+      backgroundColor:
+        theme.colorScheme === 'dark'
+          ? theme.fn.rgba(theme.colors.dark[6], 0.4)
+          : theme.colors.gray[2],
+    },
+  },
+  spotlightActions: {
+    backdropFilter: 'blur(10px)',
+    backgroundColor:
+      theme.colorScheme === 'dark'
+        ? theme.fn.rgba(theme.colors.dark[8], 0.8)
+        : theme.colors.gray[0],
+  },
+}));
+
+function Spotlight({ ready }: { ready: boolean }) {
+  const { classes } = useStyles();
+  const [commands] = useSlice(app.commandManager.commands);
+
+  return (
+    <SpotlightProvider
+      classNames={{
+        content: classes.spotlightContent,
+        actions: classes.spotlightActions,
+        action: classes.spotlightAction,
+      }}
+      yOffset={10}
+      actions={commands.map(command => ({
+        ...command,
+        title: app.localeManager.getI18nValue(command.title),
+        icon: command.icon ? <DisplayRenderableNode node={command.icon} /> : undefined,
+      }))}
+      searchIcon={<IconSearch size={18} />}
+      searchPlaceholder="Jump..."
+      actionComponent={props => <ActionComponent {...props} />}
+      overlayProps={{
+        blur: 0,
+        opacity: 0,
+      }}
+      shortcut="mod+alt+p"
+      shadow="xl"
+      nothingFoundMessage="Nothing found...">
+      <ModalsProvider>
+        <Notifications target="#notifications" position="bottom-right" zIndex={9999} />
+        <DndProvider>{ready && <Layout />}</DndProvider>
+      </ModalsProvider>
+    </SpotlightProvider>
+  );
+}
 
 function App() {
   const [ready, setReady] = useState(false);
@@ -81,28 +139,7 @@ function App() {
             ...createPaneStyles(ui),
           })) as (theme: MantineTheme) => CSSObject,
         }}>
-        <SpotlightProvider
-          yOffset={10}
-          actions={commands.map(command => ({
-            ...command,
-            title: app.localeManager.getI18nValue(command.title),
-            icon: command.icon ? <DisplayRenderableNode node={command.icon} /> : undefined,
-          }))}
-          searchIcon={<IconSearch size={18} />}
-          searchPlaceholder="Jump..."
-          actionComponent={props => <ActionComponent {...props} />}
-          overlayProps={{
-            blur: 0,
-            opacity: 0,
-          }}
-          shortcut="mod+alt+p"
-          shadow="xl"
-          nothingFoundMessage="Nothing found...">
-          <ModalsProvider>
-            <Notifications target="#notifications" position="bottom-right" zIndex={9999} />
-            <DndProvider>{ready && <Layout />}</DndProvider>
-          </ModalsProvider>
-        </SpotlightProvider>
+        <Spotlight ready={ready} />
       </MantineProvider>
     </div>
   );

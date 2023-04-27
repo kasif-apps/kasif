@@ -149,9 +149,14 @@ export async function createGlobalStyles(): Promise<{ styles: CSSObject; kill: (
       backgroundColor: 'transparent',
     },
 
+    '#root > div': {
+      backgroundColor: 'transparent',
+    },
+
     'nav': {
       borderTopLeftRadius: 'var(--window-border-radius)',
       borderBottomLeftRadius: 'var(--window-border-radius)',
+      backgroundColor: 'transparent !important',
     },
 
     'footer': {

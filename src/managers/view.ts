@@ -1,12 +1,13 @@
 import { TransitionController } from '@kasif/components/Transition/TransitionWrapper';
 import { LocaleString } from '@kasif/config/i18n';
-import { getPrebuiltViews } from '@kasif/config/view';
+import { getInitialWelcomeSections, getPrebuiltViews } from '@kasif/config/view';
 import { BaseManager } from '@kasif/managers/base';
 import { WelcomePage } from '@kasif/pages/WelcomePage';
 import { authorized, trackable, tracker } from '@kasif/util/decorators';
 import { RenderableNode } from '@kasif/util/node-renderer';
 
 import { createRecordSlice } from '@kasif-apps/cinq';
+import { t } from 'i18next';
 
 export interface View {
   id: string;
@@ -25,6 +26,30 @@ export type ViewTransitionControllerStore = Record<
   { view?: TransitionController; handle?: TransitionController }
 >;
 
+export interface ActionCard {
+  type: 'action-card';
+  id: string;
+  title: LocaleString;
+  icon: RenderableNode;
+  onClick: (e: MouseEvent) => void;
+}
+
+export interface InfoCard {
+  type: 'info-card';
+  id: string;
+  title: LocaleString;
+  description: LocaleString;
+  icon: RenderableNode;
+}
+
+export interface WelcomeSection {
+  id: string;
+  title: LocaleString;
+  by: string;
+  items: Array<InfoCard | ActionCard>;
+  gridSize?: number;
+}
+
 @tracker('viewManager')
 export class ViewManager extends BaseManager {
   store = createRecordSlice<ViewStore>(
@@ -39,6 +64,10 @@ export class ViewManager extends BaseManager {
     {},
     { key: 'view-transition-controller-store' }
   );
+
+  welcomeSections = createRecordSlice<Record<string, WelcomeSection>>(getInitialWelcomeSections(), {
+    key: 'welcome-section-store',
+  });
 
   prebuiltViews = getPrebuiltViews(this.app);
 
@@ -128,5 +157,42 @@ export class ViewManager extends BaseManager {
     }
 
     return WelcomePage;
+  }
+
+  @trackable
+  pushWelcomeSection(id: string, section: Omit<WelcomeSection, 'by'>) {
+    const sections = this.welcomeSections.get();
+
+    if (sections[id]) {
+      this.app.notificationManager.error(`${t('label.debug')} ${id}`, t('label.debug')!);
+      return;
+    }
+
+    this.welcomeSections.upsert({ [id]: { ...section, by: this.app.name } });
+  }
+
+  @trackable
+  pushWelcomeCard(sectionId: string, card: ActionCard | InfoCard) {
+    const sections = this.welcomeSections.get();
+
+    if (!sections[sectionId]) {
+      this.app.notificationManager.error(
+        `${t('label.debug')} ${sectionId} ${card.id}`,
+        t('label.debug')!
+      );
+      return;
+    }
+
+    if (sections[sectionId].items.map(items => items.id).includes(card.id)) {
+      this.app.notificationManager.error(
+        `${t('label.debug')} ${sectionId} ${card.id}`,
+        t('label.debug')!
+      );
+      return;
+    }
+
+    this.welcomeSections.upsert({
+      [sectionId]: { ...sections[sectionId], items: [...sections[sectionId].items, card] },
+    });
   }
 }
