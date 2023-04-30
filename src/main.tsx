@@ -84,8 +84,7 @@ function App() {
   const { theme } = app.themeManager.getTheme(themeID);
   const [themeSetting] = useSetting<ThemeSetting.Type>('theme');
   const [commands] = useSlice(app.commandManager.commands);
-  const [settingsReady] = useSlice(app.settingsManager.ready);
-  const [permissionsReady] = useSlice(app.permissionManager.ready);
+  const [appReady, setAppReady] = useState(false);
   const [globalStyles, setGlobalStyles] = useState<CSSObject>({});
   const [font] = useSetting<string>('font');
   const killer = useRef<(() => void) | null>(null);
@@ -103,7 +102,7 @@ function App() {
       setGlobalStyles(styles);
       killer.current = kill;
 
-      if (settingsReady && permissionsReady) {
+      if (appReady) {
         setReady(true);
       }
     });
@@ -111,10 +110,14 @@ function App() {
     return () => {
       if (killer.current) killer.current();
     };
-  }, [themeSetting.value, settingsReady, permissionsReady]);
+  }, [themeSetting.value, appReady]);
 
   useEffect(() => {
+    app.start();
     app.init();
+
+    const appReadyEventListener = () => setAppReady(true);
+    app.addEventListener('ready', appReadyEventListener);
 
     app.notificationManager.log(
       `${t('notification.skeleton-initialized.description')} ${kasif.version}`,
@@ -123,6 +126,8 @@ function App() {
 
     return () => {
       app.kill();
+
+      app.removeEventListener('ready', appReadyEventListener);
     };
   }, []);
 

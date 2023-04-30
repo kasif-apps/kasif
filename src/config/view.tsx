@@ -200,7 +200,7 @@ export function getInitialWelcomeSections(): Record<string, WelcomeSection> {
         },
         {
           type: 'info-card',
-          id: 'file-info',
+          id: 'file-info-main.tsx',
           icon: () => <IconBrandTypescript stroke={1.5} size={32} />,
           title: {
             en: 'main.tsx',
@@ -238,7 +238,7 @@ export function getInitialWelcomeSections(): Record<string, WelcomeSection> {
         },
         {
           type: 'info-card',
-          id: 'file-info',
+          id: 'file-info-common.json',
           icon: () => <IconCode stroke={1.5} size={32} />,
           title: {
             en: 'common.json',

@@ -121,16 +121,16 @@ export function KasifNavbar() {
   const os = getOS();
   const [navbarStore] = useSlice(app.navbarManager.store);
   const topItems = navbarStore.topItems.map(link => (
-    <Transition delay={200} transition={animations.scale}>
+    <Transition key={link.id} delay={200} transition={animations.scale}>
       <span>
-        <NavbarLink {...link} key={app.localeManager.getI18nValue(link.label)} />
+        <NavbarLink {...link} />
       </span>
     </Transition>
   ));
   const bottomItems = navbarStore.bottomItems.map(link => (
-    <Transition delay={200} transition={animations.scale}>
+    <Transition key={link.id} delay={200} transition={animations.scale}>
       <span>
-        <NavbarLink {...link} key={app.localeManager.getI18nValue(link.label)} />
+        <NavbarLink {...link} />
       </span>
     </Transition>
   ));

@@ -54,6 +54,7 @@ export class LocaleManager extends BaseManager {
 
     const html = document.getElementsByTagName('html')[0];
     html.setAttribute('lang', instance.default.language);
+    this.dispatchEvent(new CustomEvent('ready'));
   }
 
   @trackable

@@ -30,7 +30,12 @@ export interface AppFlags {
   plugins: string[];
 }
 
-export class App {
+function log(...message: any) {
+  // eslint-disable-next-line no-console
+  console.log(...message);
+}
+
+export class App extends EventTarget {
   id: string;
   name: string;
   version: string;
@@ -51,6 +56,9 @@ export class App {
   pluginManager: PluginManager;
   localeManager: LocaleManager;
 
+  #managersToBeAwaited: BaseManager[];
+  #readyManagers: string[] = [];
+
   customManagers: Map<string, BaseManager> = new Map();
 
   flags = createRecordSlice<AppFlags>(
@@ -62,6 +70,7 @@ export class App {
   );
 
   constructor(public parent?: App, options?: typeof kasif) {
+    super();
     this.id = options?.id ?? kasif.id;
     this.name = options?.name ?? kasif.name;
     this.version = options?.version ?? kasif.version;
@@ -83,6 +92,8 @@ export class App {
     this.networkManager = new NetworkManager(this, this.parent);
     this.promptManager = new PromptManager(this, this.parent);
     this.pluginManager = new PluginManager(this, this.parent);
+
+    this.#managersToBeAwaited = [this.settingsManager, this.permissionManager];
   }
 
   defineCustomManager(id: string, manager: BaseManager) {
@@ -91,6 +102,35 @@ export class App {
 
   getCustomManager<T extends BaseManager>(id: string): T {
     return this.customManagers.get(id) as T;
+  }
+
+  #handleReady(e: CustomEvent<string | null>) {
+    if (e.detail) {
+      this.#readyManagers.push((e.target as BaseManager).constructor.name);
+    }
+
+    if (this.#readyManagers.length === this.#managersToBeAwaited.length) {
+      log('───────────────────────────────────────────────────');
+      log('App is ready');
+      log('───────────────────────────────────────────────────');
+      this.dispatchEvent(new CustomEvent('ready'));
+    } else {
+      log('───────────────────────────────────────────────────');
+      log('App is waiting for managers to be ready:');
+      const waitingArrays = this.#managersToBeAwaited.filter(
+        item => !this.#readyManagers.includes(item.constructor.name)
+      );
+      for (const manager of waitingArrays) {
+        log('\t', String(manager.constructor.name));
+      }
+      log('───────────────────────────────────────────────────');
+    }
+  }
+
+  start() {
+    for (const manager of this.#managersToBeAwaited) {
+      manager.addEventListener('ready', this.#handleReady.bind(this) as EventListener);
+    }
   }
 
   init() {
@@ -128,6 +168,14 @@ export class App {
     for (const [, manager] of this.customManagers.entries()) {
       manager.kill();
     }
+
+    for (const manager of this.#managersToBeAwaited) {
+      manager.removeEventListener('ready', this.#handleReady.bind(this) as EventListener);
+    }
+  }
+
+  setManagerToBeAwaited(manager: BaseManager) {
+    this.#managersToBeAwaited.push(manager);
   }
 }
 

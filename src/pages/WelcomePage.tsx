@@ -222,12 +222,7 @@ function WelcomeSectionDisplay(props: WelcomeSection) {
   return (
     <Stack spacing="xs">
       <Transition transition="fade">
-        <Text
-          // sx={{ mixBlendMode: 'color-dodge' }}
-          // color="red"
-          size="sm"
-          transform="uppercase"
-          fw="light">
+        <Text size="sm" transform="uppercase" fw="light">
           {app.localeManager.getI18nValue(props.title)}{' '}
           <Text size="xs" transform="lowercase" color="dimmed" component="span">
             by {props.by}
@@ -238,15 +233,15 @@ function WelcomeSectionDisplay(props: WelcomeSection) {
         {props.items.map(item => {
           if (item.type === 'action-card') {
             return (
-              <Grid.Col span={mobile ? 6 : tablet ? 3 : 2}>
-                <WelcomeActionCard {...item} key={item.id} />
+              <Grid.Col key={item.id} span={mobile ? 6 : tablet ? 3 : 2}>
+                <WelcomeActionCard {...item} />
               </Grid.Col>
             );
           }
 
           return (
-            <Grid.Col span={mobile ? 12 : tablet ? 6 : 4}>
-              <WelcomeInfoCard {...item} key={item.id} />
+            <Grid.Col key={item.id} span={mobile ? 12 : tablet ? 6 : 4}>
+              <WelcomeInfoCard {...item} />
             </Grid.Col>
           );
         })}

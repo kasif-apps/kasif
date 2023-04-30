@@ -9,7 +9,7 @@ import { BaseManager } from '@kasif/managers/base';
 import { authorized, trackable, tracker } from '@kasif/util/decorators';
 import { FSTransactor, environment } from '@kasif/util/environment';
 
-import { StorageTransactor, createRecordSlice, createSlice } from '@kasif-apps/cinq';
+import { StorageTransactor, createRecordSlice } from '@kasif-apps/cinq';
 
 @tracker('permissionManager')
 export class PermissionManager extends BaseManager {
@@ -17,7 +17,6 @@ export class PermissionManager extends BaseManager {
     { [kasif.id]: permissions as unknown as PermissionType[] },
     { key: 'permission-store' }
   );
-  ready = createSlice(false, { key: 'permissions-ready-state' });
 
   @trackable
   @authorized(['reinit_permission_manager'])
@@ -32,7 +31,7 @@ export class PermissionManager extends BaseManager {
           path,
         });
         transactor.init();
-        this.ready.set(true);
+        this.dispatchEvent(new CustomEvent('ready', { detail: 'permissionManager' }));
       });
     } else {
       const transactor = new StorageTransactor({
@@ -41,7 +40,7 @@ export class PermissionManager extends BaseManager {
       });
 
       transactor.init();
-      this.ready.set(true);
+      this.dispatchEvent(new CustomEvent('ready', { detail: 'permissionManager' }));
     }
   }
 

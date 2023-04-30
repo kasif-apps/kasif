@@ -6,7 +6,7 @@ import { authorized, trackable, tracker } from '@kasif/util/decorators';
 import { FSTransactor, environment } from '@kasif/util/environment';
 import { RenderableNode } from '@kasif/util/node-renderer';
 
-import { RecordSlice, StorageTransactor, createRecordSlice, createSlice } from '@kasif-apps/cinq';
+import { RecordSlice, StorageTransactor, createRecordSlice } from '@kasif-apps/cinq';
 import { t } from 'i18next';
 
 export interface SettingCategory {
@@ -42,7 +42,6 @@ export class SettingsManager extends BaseManager {
   controllers: SettingController<any>[] = [];
   categories: SettingCategory[] = [];
   store = createRecordSlice<Record<string, unknown>>({}, { key: 'settings' });
-  ready = createSlice(false, { key: 'settings-ready-state' });
 
   constructor(app: App, parent?: App) {
     super(app, parent);
@@ -75,7 +74,7 @@ export class SettingsManager extends BaseManager {
         });
 
         transactor.init();
-        this.ready.set(true);
+        this.dispatchEvent(new CustomEvent('ready', { detail: 'settingsManager' }));
       });
     } else {
       const transactor = new StorageTransactor({
@@ -84,7 +83,7 @@ export class SettingsManager extends BaseManager {
       });
 
       transactor.init();
-      this.ready.set(true);
+      this.dispatchEvent(new CustomEvent('ready', { detail: 'settingsManager' }));
     }
   }
 
