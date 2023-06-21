@@ -156,6 +156,15 @@ export class App extends EventTarget {
 
         init();
       });
+    } else if(environment.currentEnvironment === 'web') {
+      const url = new URL(window.location.href);
+
+      this.flags.set({
+        debug: url.searchParams.get('debug') === 'true',
+        plugins: url.searchParams.get('plugins')?.split(',') ?? [],
+      });
+
+      init();
     } else {
       init();
     }
@@ -180,6 +189,7 @@ export class App extends EventTarget {
 }
 
 export const app = new App();
+app.start();
 
 export function useSetting<T>(id: SettingsItem<T>['id']): [SettingsItem<T>, (value: T) => void] {
   const controller = app.settingsManager.getSettingController<T>(id)!;

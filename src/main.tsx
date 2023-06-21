@@ -113,7 +113,6 @@ function App() {
   }, [themeSetting.value, appReady]);
 
   useEffect(() => {
-    app.start();
     app.init();
 
     const appReadyEventListener = () => setAppReady(true);
