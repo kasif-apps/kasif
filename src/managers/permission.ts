@@ -45,12 +45,7 @@ export class PermissionManager extends BaseManager {
   }
 
   @trackable
-  // @authorized(['read_permission_data'])
   getMissingPermissions(required: Array<PermissionType>): Array<PermissionType> {
-    return this.#getMissingPermissions(required);
-  }
-
-  #getMissingPermissions(required: Array<PermissionType>): Array<PermissionType> {
     const allowedPermissions = this.store.get()[this.app.id];
 
     if (allowedPermissions) {
@@ -72,7 +67,7 @@ export class PermissionManager extends BaseManager {
   async prompt(required: Array<PermissionType>) {
     return new Promise<boolean>(resolve => {
       const allowedPermissions = this.store.get()[this.app.id];
-      const missingPermissions = this.#getMissingPermissions(required);
+      const missingPermissions = this.getMissingPermissions(required);
 
       if (!allowedPermissions) {
         this.store.setKey(this.app.id, []);

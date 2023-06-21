@@ -31,16 +31,8 @@ const useStyles = createStyles(theme => ({
     '&:hover': {
       background:
         theme.colorScheme === 'dark'
-          ? theme.fn.gradient({
-              from: theme.fn.rgba(theme.colors.dark[5], 0.4),
-              to: theme.fn.rgba(theme.colors.dark[8], 0.4),
-              deg: 45,
-            })
-          : theme.fn.gradient({
-              from: theme.fn.rgba(theme.colors.gray[1], 0.4),
-              to: theme.fn.rgba(theme.colors.gray[3], 0.4),
-              deg: 45,
-            }),
+          ? theme.fn.rgba(theme.colors.dark[5], 0.4)
+          : theme.fn.rgba(theme.colors.gray[1], 0.4),
     },
   },
 
@@ -55,9 +47,11 @@ const useStyles = createStyles(theme => ({
 
   dropdown: {
     'backgroundColor': 'transparent',
+    'border': 'none',
 
     '& .overlay': {
       width: '100%',
+      borderRadius: theme.radius.sm,
       height: '100%',
       position: 'absolute',
       zIndex: -1,

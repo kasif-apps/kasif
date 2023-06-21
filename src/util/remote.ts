@@ -1,198 +1,209 @@
-import { PluginImport } from '@kasif/managers/plugin';
+export type RemoteModuleFunction = (...args: unknown[]) => Promise<unknown>;
 
-interface ClientResponse {
+export interface Message {
   token: string;
-  action: ClientAction;
+  action: {
+    id: string;
+    type: Request['action']['type'] | Response['action']['type'];
+  };
 }
 
-type ClientAction = CallAction | ResponseAction;
+export interface AuthenticationRequest extends Message {
+  action: {
+    id: string;
+    type: 'authentication-request';
+    name: string;
+    passphrase: string;
+  };
+}
 
-interface CallAction {
-  id: string;
-  type: 'call';
+export interface AuthenticationResponse extends Message {
+  action: {
+    id: string;
+    type: 'authentication-response';
+    token: string;
+    module: string;
+    throws: string | undefined;
+  };
+}
+
+export interface FunctionCallRequest extends Message {
+  action: {
+    id: string;
+    type: 'function-call-request';
+    name: string;
+    arguments: unknown[];
+  };
+}
+
+export interface FunctionCallResponse extends Message {
+  action: {
+    id: string;
+    type: 'function-call-response';
+    returns: unknown;
+    throws: string | undefined;
+  };
+}
+
+export type Request = AuthenticationRequest | FunctionCallRequest;
+export type Response = AuthenticationResponse | FunctionCallResponse;
+
+export class Deferred<T, E extends Error> {
+  promise: Promise<T>;
+  resolve!: (value: T | PromiseLike<T>) => void;
+  reject!: (error: E) => void;
+
+  constructor() {
+    this.promise = new Promise<T>((resolve, reject) => {
+      this.resolve = resolve;
+      this.reject = reject;
+    });
+  }
+}
+
+export interface RPCOptions {
+  port: number;
   name: string;
-  arguments: unknown[];
+  passphrase: string;
 }
 
-interface ResponseAction {
-  id: string;
-  type: 'response';
-  error: string | null;
-  message: string;
-}
-
-type ClientMessage = CallResponse | ResponseResponse | ConnectResponse | RetrieveResponse;
-
-interface CallResponse {
-  type: 'call';
-  id: string;
-  error: string | null;
-  message: unknown;
-}
-
-interface ResponseResponse {
-  id: string;
-  type: 'response';
-  name: string;
-  arguments: unknown[];
-}
-
-interface ConnectResponse {
-  id: string;
-  type: 'connect';
-  error: string | null;
-  message: string;
-}
-
-interface RetrieveResponse {
-  type: 'retrieve';
-  id: string;
-  error: string | null;
-  message: unknown;
-}
-
-export class KasifRemote extends EventTarget {
+export class RPC extends EventTarget {
   #token = '';
   #socket: WebSocket;
+  #mod: Record<string, RemoteModuleFunction> | undefined;
+  #references = new Map<string, Deferred<unknown, Error>>();
+  url?: string;
 
-  #resolvers: Map<string, (value: unknown) => void> = new Map();
-  #mod: PluginImport['file'] | undefined;
-
-  constructor(public port: number, public name: string) {
+  constructor(public options: RPCOptions) {
     super();
-    this.#socket = new WebSocket(`ws://localhost:${this.port}`);
+    this.#socket = new WebSocket(`ws://localhost:${this.options.port}`);
 
-    this.#socket.addEventListener('message', event => this.handleMessage(event.data));
+    this.#socket.addEventListener('message', event => this.#handleMessage(JSON.parse(event.data)));
 
     this.#socket.addEventListener('open', () => {
-      const payload = {
+      const payload: AuthenticationRequest = {
         token: this.#token,
         action: {
-          id: 'connect',
-          type: 'connect',
-          name: this.name,
+          id: 'authentication-request',
+          type: 'authentication-request',
+          name: this.options.name,
+          passphrase: this.options.passphrase,
         },
       };
-      this.#socket.send(JSON.stringify(payload));
+      this.#send(payload);
     });
   }
 
-  handleMessage(data: string) {
-    const message: ClientMessage = JSON.parse(data);
+  call = new Proxy({} as Record<string, RemoteModuleFunction>, {
+    get:
+      (_target, key: string) =>
+      async (...args: unknown[]) => {
+        const id = crypto.randomUUID();
+        const deferred = new Deferred();
+        const payload: FunctionCallRequest = {
+          token: this.#token,
+          action: {
+            id,
+            type: 'function-call-request',
+            name: key,
+            arguments: args,
+          },
+        };
+        this.#references.set(id, deferred);
+        this.#send(payload);
 
-    switch (message.type) {
-      case 'connect':
-        // server responds with credentials
-        this.handleConnectAction(message);
+        return deferred.promise;
+      },
+  });
+
+  #handleMessage(message: Message) {
+    switch (message.action.type) {
+      case 'authentication-response':
+        this.#handleAuthenticationResponse(message as AuthenticationResponse);
         break;
-      case 'call':
-        // server responds with function return
-        this.handleCallAction(message);
+      case 'function-call-response':
+        this.#handleFunctionCallRespone(message as FunctionCallResponse);
         break;
-      case 'retrieve':
-        // server responds with constant value
+      case 'function-call-request': {
+        const result = this.#handleFunctionCallRequest(message as FunctionCallRequest);
+        const payload: FunctionCallResponse = {
+          token: this.#token,
+          action: {
+            id: message.action.id,
+            type: 'function-call-response',
+            ...result,
+          },
+        };
+        this.#send(payload);
         break;
-      case 'response':
-        // server requests a function's return value
-        this.handleResponseAction(message).then(response =>
-          this.#socket.send(JSON.stringify(response))
-        );
-        break;
-    }
-  }
-
-  setModule(mod: PluginImport['file'] | undefined) {
-    this.#mod = mod;
-  }
-
-  handleConnectAction(response: ConnectResponse) {
-    this.#token = response.message;
-    this.dispatchEvent(new CustomEvent('ready'));
-  }
-
-  handleCallAction(response: CallResponse) {
-    const resolver = this.#resolvers.get(response.id);
-
-    if (resolver) {
-      if (response.error) {
-        throw new Error(response.error);
       }
-
-      resolver(response.message);
     }
   }
 
-  async handleResponseAction(response: ResponseResponse): Promise<ClientResponse> {
+  #handleFunctionCallRequest(
+    message: FunctionCallRequest
+  ): Omit<Omit<FunctionCallResponse['action'], 'id'>, 'type'> {
     if (!this.#mod) {
-      return this.createErrorResponse({ id: response.id, type: 'response' }, 'no module found');
+      return {
+        returns: undefined,
+        throws: `module '${this.url}' has not beed loaded`,
+      };
     }
 
-    if (!this.#mod[response.name]) {
-      return this.createErrorResponse(
-        { id: response.id, type: 'response' },
-        `no function named ${response.name} found`
-      );
+    const func = this.#mod[message.action.name];
+
+    if (!func) {
+      return {
+        returns: undefined,
+        throws: `no function named '${message.action.name}' in module '${this.url}'`,
+      };
     }
 
     try {
-      const result = await this.#mod[response.name].call(window, response.arguments);
-      return this.createHealthyResponse({ id: response.id, type: 'response' }, result);
+      const result = func.call(window, message.action.arguments);
+
+      return {
+        returns: result,
+        throws: undefined,
+      };
     } catch (error) {
-      return this.createErrorResponse({ id: response.id, type: 'response' }, String(error));
+      return {
+        returns: undefined,
+        throws: String(error),
+      };
     }
   }
 
-  functions = new Proxy({} as Record<string, Function>, {
-    get:
-      (_, key: string) =>
-      (...args: unknown[]) =>
-        new Promise<unknown>(resolve => {
-          const payload = this.createCallPayload(key, args || []);
+  #handleFunctionCallRespone(response: FunctionCallResponse) {
+    if (response.action.throws) {
+      throw new Error(response.action.throws);
+    }
 
-          this.#resolvers.set(payload.action.id, resolve);
-          this.#socket.send(JSON.stringify(payload));
-        }),
-    set() {
-      throw new Error('cannot set function');
-    },
-  });
+    const deferred = this.#references.get(response.action.id);
 
-  createCallPayload(name: string, ...args: unknown[]): ClientResponse {
-    return {
-      token: this.#token,
-      action: {
-        type: 'call',
-        id: crypto.randomUUID(),
-        name,
-        arguments: args,
-      },
-    };
+    if (!deferred) {
+      return;
+    }
+
+    deferred.resolve(response.action.returns);
   }
 
-  createHealthyResponse(
-    action: Pick<ClientAction, 'id' | 'type'>,
-    message: unknown
-  ): ClientResponse {
-    return {
-      token: this.#token,
-      action: {
-        id: action.id,
-        type: action.type,
-        error: null,
-        message,
-      },
-    } as ClientResponse;
+  #handleAuthenticationResponse(response: AuthenticationResponse) {
+    if (response.action.throws) {
+      throw new Error(response.action.throws);
+    }
+
+    this.#token = response.action.token;
+
+    this.url = response.action.module;
+    import(response.action.module).then(mod => {
+      this.#mod = mod;
+
+      this.dispatchEvent(new CustomEvent('ready'));
+    });
   }
 
-  createErrorResponse(action: Pick<ClientAction, 'id' | 'type'>, error: string): ClientResponse {
-    return {
-      token: this.#token,
-      action: {
-        id: action.id,
-        type: action.type,
-        error,
-        message: error,
-      },
-    } as ClientResponse;
+  #send(message: unknown) {
+    this.#socket.send(JSON.stringify(message));
   }
 }

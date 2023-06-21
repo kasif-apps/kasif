@@ -10,7 +10,6 @@ use std::{
 
 use tauri::{Manager, WindowEvent};
 use tokio::process::Command;
-use window_vibrancy::{apply_blur, apply_vibrancy, NSVisualEffectMaterial};
 
 fn unzip(target: &str, dir: &Path) {
     let mut archive = zip::ZipArchive::new(fs::File::open(target).expect("failed to open target"))
@@ -178,13 +177,13 @@ async fn main() {
         .setup(move |app| {
             let window = app.get_window("main").expect("failed to get main window");
 
-            #[cfg(target_os = "macos")]
-            apply_vibrancy(&window, NSVisualEffectMaterial::HudWindow, None, Some(8.0))
-                .expect("Unsupported platform! 'apply_vibrancy' is only supported on macOS");
+            // #[cfg(target_os = "macos")]
+            // apply_vibrancy(&window, NSVisualEffectMaterial::HudWindow, None, Some(8.0))
+            //     .expect("Unsupported platform! 'apply_vibrancy' is only supported on macOS");
 
-            #[cfg(target_os = "windows")]
-            apply_blur(&window, Some((18, 18, 18, 125)))
-                .expect("Unsupported platform! 'apply_blur' is only supported on Windows");
+            // #[cfg(target_os = "windows")]
+            // apply_blur(&window, Some((18, 18, 18, 125)))
+            //     .expect("Unsupported platform! 'apply_blur' is only supported on Windows");
 
             let app_handle = app.app_handle();
             load_installed_plugins(&app_handle);

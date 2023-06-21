@@ -5,7 +5,7 @@ import { User } from '@kasif/managers/auth';
 import { BaseManager } from '@kasif/managers/base';
 import { authorized, trackable, tracker } from '@kasif/util/decorators';
 import { environment } from '@kasif/util/environment';
-import { KasifRemote } from '@kasif/util/remote';
+import { RPC } from '@kasif/util/remote';
 
 import { createVectorSlice } from '@kasif-apps/cinq';
 import { t } from 'i18next';
@@ -147,14 +147,17 @@ export class PluginManager extends BaseManager {
     const rawTokens = await environment.fs.readTextFile(tokensFile);
     const credentials = JSON.parse(rawTokens);
 
-    const remoteProcess = new KasifRemote(credentials.port, manifest.identifier);
+    const remoteProcess = new RPC({
+      port: credentials.port,
+      name: manifest.identifier,
+      passphrase: '123456',
+    });
     // @ts-expect-error
     window[manifest.identifier] = {
       remote: remoteProcess,
     };
 
     const plugin = await this.importModule(manifest, isWebBased);
-    remoteProcess.setModule(plugin?.file);
 
     remoteProcess.addEventListener('ready', async () => {
       if (plugin) {

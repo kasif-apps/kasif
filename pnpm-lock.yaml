@@ -8,7 +8,7 @@ specifiers:
   '@dnd-kit/sortable': ^7.0.1
   '@dnd-kit/utilities': ^3.2.1
   '@emotion/react': ^11.10.5
-  '@kasif-apps/cinq': ^0.1.3
+  '@kasif-apps/cinq': ^0.1.4
   '@mantine/core': ^6.0.6
   '@mantine/form': ^6.0.6
   '@mantine/hooks': ^6.0.6
@@ -60,7 +60,7 @@ dependencies:
   '@dnd-kit/sortable': 7.0.1_ighjjj6vulsdnb2lagbd2egmxy
   '@dnd-kit/utilities': 3.2.1_react@18.2.0
   '@emotion/react': 11.10.5_xl5my4wapvq2ctl7qwehtbgorq
-  '@kasif-apps/cinq': 0.1.3
+  '@kasif-apps/cinq': 0.1.4
   '@mantine/core': 6.0.6_kliruncnklisgqlx34w65pjddy
   '@mantine/form': 6.0.6_react@18.2.0
   '@mantine/hooks': 6.0.6_react@18.2.0
@@ -1025,8 +1025,8 @@ packages:
       '@jridgewell/sourcemap-codec': 1.4.14
     dev: true
 
-  /@kasif-apps/cinq/0.1.3:
-    resolution: {integrity: sha512-7qXe92jdI5mSCTCErmbuyZMWf9CmGXi1drDnuVSq9jJJzOPQifCt21QzO0oCfgr3+dORRn/0xIpId2Uda6SeEw==}
+  /@kasif-apps/cinq/0.1.4:
+    resolution: {integrity: sha512-ZPXGJdOnwb9WfPTqfgMq3pN+6TlnDQymHcsaMGWaYuezmBD9MvvdZntXh8JrVJlHigQcp1ta8Ru5sLd5+cJOnw==}
     dev: false
 
   /@mantine/core/6.0.6_kliruncnklisgqlx34w65pjddy:

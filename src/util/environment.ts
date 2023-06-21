@@ -3,7 +3,7 @@ import { app } from '@kasif/config/app';
 import { getOS } from './misc';
 
 import { Transactor } from '@kasif-apps/cinq';
-import { TransactorOptions } from '@kasif-apps/cinq/dist/src/lib/transactor/base/transactor';
+import { TransactorOptions } from '@kasif-apps/cinq/';
 import { invoke, fs as tauriFs, path as tauriPath } from '@tauri-apps/api';
 import { getMatches as getArgMatches } from '@tauri-apps/api/cli';
 import { OpenDialogOptions, open } from '@tauri-apps/api/dialog';
@@ -148,6 +148,7 @@ export class Environment {
 export const environment = new Environment();
 
 export interface FSTransactorOptions<T, K, L> extends TransactorOptions<T, K, L> {
+  key: string;
   path: string;
 }
 

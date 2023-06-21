@@ -318,21 +318,22 @@ export function Layout() {
       footer={<KasifFooter />}
       styles={() => ({
         main: {
-          backgroundColor: 'transparent',
+          backgroundColor:
+            theme.colorScheme === 'dark' ? theme.colors.dark[8] : theme.colors.gray[0],
           paddingTop: 'calc(var(--mantine-header-height, 0px) + var(--titlebar-height, 0px))',
           paddingBottom: 'calc(var(--mantine-footer-height, 0px))',
           paddingLeft: 'calc(var(--mantine-navbar-width, 0px))',
           paddingRight: 'calc(var(--mantine-aside-width, 0px))',
         },
       })}>
-      <div
+      {/* <div
         style={{
           backgroundColor:
             theme.colorScheme === 'dark' ? theme.colors.dark[8] : theme.colors.gray[0],
-        }}>
-        <ContextMenu />
-        <PaneView />
-      </div>
+        }}> */}
+      <ContextMenu />
+      <PaneView />
+      {/* </div> */}
     </AppShell>
   );
 }
