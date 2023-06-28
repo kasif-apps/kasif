@@ -128,7 +128,7 @@ function ValueComponent({
   );
 }
 export function PermissionsPage() {
-  const { classes } = useStyles();
+  const { classes, theme } = useStyles();
   const [plugins] = useSlice(app.pluginManager.plugins);
   const [appPermissions] = useSlice(app.permissionManager.store);
   const { t } = useTranslation();
@@ -142,7 +142,7 @@ export function PermissionsPage() {
   return (
     <PageSkeleton id="permissions">
       <Box p="sm" sx={{ maxWidth: 1200, margin: 'auto' }}>
-        <Card data-non-capture-source radius="md" p="xl" className={classes.card}>
+        <Card data-non-capture-source radius={theme.defaultRadius} p="xl" className={classes.card}>
           <Text size="xl" className={classes.title} weight={800}>
             {t('permissions.edit-permissions')}
           </Text>

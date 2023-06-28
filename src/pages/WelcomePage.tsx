@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import {
@@ -19,7 +19,7 @@ import { Transition } from '@kasif/components/Transition/TransitionWrapper';
 import { app } from '@kasif/config/app';
 import { ActionCard, InfoCard, WelcomeSection } from '@kasif/managers/view';
 import { useSlice } from '@kasif/util/cinq-react';
-import { animations } from '@kasif/util/misc';
+import { animations, useDefaultRadius, wordFlick } from '@kasif/util/misc';
 import { DisplayRenderableNode } from '@kasif/util/node-renderer';
 
 import { PageSkeleton } from './Layout';
@@ -49,7 +49,7 @@ const useStyles = createStyles(theme => ({
   },
 
   card: {
-    borderRadius: theme.radius.md,
+    borderRadius: useDefaultRadius(),
     backdropFilter: 'blur(10px)',
     cursor: 'pointer',
     position: 'relative',
@@ -64,7 +64,7 @@ const useStyles = createStyles(theme => ({
         : theme.fn.rgba(theme.colors.gray[0], 0.6),
     'width': '100%',
     'height': '100%',
-    'borderRadius': theme.radius.md,
+    'borderRadius': useDefaultRadius(),
     'border': '1px solid',
     'borderColor': 'rgba(255, 255, 255, 0.05)',
     'display': 'flex',
@@ -253,8 +253,15 @@ function WelcomeSectionDisplay(props: WelcomeSection) {
 export function WelcomePage() {
   const { classes } = useStyles();
   const [sections] = useSlice(app.viewManager.welcomeSections);
+  const [title, setTitle] = useState('');
   const { t } = useTranslation();
   const tablet = useMediaQuery('(max-width: 54em)');
+
+  useEffect(() => {
+    const cancel = wordFlick(['Explorer.', 'Editor.', 'Prowler.', 'Calculator.'], setTitle);
+
+    return () => cancel();
+  }, []);
 
   return (
     <PageSkeleton transition="fade" id="home">
@@ -267,7 +274,7 @@ export function WelcomePage() {
           <Stack spacing="xl">
             <Center>
               <div>
-                <Title className={classes.title}>{t('welcome.title')}</Title>
+                <Title className={classes.title}>Kâşif the {title}</Title>
                 <Title className={classes.subtitle}>{t('welcome.subtitle')}</Title>
               </div>
             </Center>

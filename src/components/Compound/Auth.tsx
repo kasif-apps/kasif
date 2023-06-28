@@ -20,6 +20,7 @@ import {
   Text,
   TextInput,
   createStyles,
+  useMantineTheme,
 } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { upperFirst, useToggle } from '@mantine/hooks';
@@ -53,6 +54,7 @@ const globalAuthMethods = {
 };
 
 export function SignInLogin(props: PaperProps) {
+  const theme = useMantineTheme();
   const [type, toggle] = useToggle(['login', 'register']);
   const form = useForm({
     initialValues: {
@@ -142,7 +144,7 @@ export function SignInLogin(props: PaperProps) {
       p="sm"
       pt={0}
       sx={{ maxWidth: 570, margin: 'auto', height: '100%', display: 'flex', alignItems: 'center' }}>
-      <Paper radius="md" p="xl" withBorder sx={{ width: '100%' }} {...props}>
+      <Paper radius={theme.defaultRadius} p="xl" withBorder sx={{ width: '100%' }} {...props}>
         <LoadingOverlay loaderProps={{ variant: 'dots' }} visible={loading} />
         <Text size="lg" weight={500}>
           {t('profile.welcome')}
@@ -175,7 +177,6 @@ export function SignInLogin(props: PaperProps) {
                 placeholder={t('profile.name')!}
                 value={form.values.name}
                 onChange={event => form.setFieldValue('name', event.currentTarget.value)}
-                radius="md"
               />
             )}
 
@@ -186,7 +187,6 @@ export function SignInLogin(props: PaperProps) {
               value={form.values.email}
               onChange={event => form.setFieldValue('email', event.currentTarget.value)}
               error={form.errors.email}
-              radius="md"
             />
 
             <PasswordInput
@@ -196,7 +196,6 @@ export function SignInLogin(props: PaperProps) {
               value={form.values.password}
               onChange={event => form.setFieldValue('password', event.currentTarget.value)}
               error={form.errors.password && 'Password should include at least 6 characters'}
-              radius="md"
             />
 
             {type === 'register' && (
@@ -258,7 +257,7 @@ export function UserCard({ avatar, name, title }: UserCardProps) {
   const { t } = useTranslation();
 
   return (
-    <Card radius="md" className={classes.card}>
+    <Card radius={theme.defaultRadius} className={classes.card}>
       <Card.Section
         sx={{
           backgroundImage: 'url(/splashes/splash_24.webp)',
@@ -289,7 +288,6 @@ export function UserCard({ avatar, name, title }: UserCardProps) {
             <Button
               sx={{ flex: 1 }}
               variant="light"
-              radius="md"
               mt="xl"
               size="sm"
               color={theme.colorScheme === 'dark' ? undefined : 'dark'}
@@ -298,7 +296,6 @@ export function UserCard({ avatar, name, title }: UserCardProps) {
             </Button>
             <Button
               sx={{ flex: 1 }}
-              radius="md"
               mt="xl"
               size="sm"
               color={theme.colorScheme === 'dark' ? undefined : 'dark'}>

@@ -14,7 +14,7 @@ import { app } from '@kasif/config/app';
 import { NavbarItem } from '@kasif/managers/navbar';
 import { useSlice } from '@kasif/util/cinq-react';
 import { environment } from '@kasif/util/environment';
-import { animations, getOS } from '@kasif/util/misc';
+import { animations, getOS, useDefaultRadius } from '@kasif/util/misc';
 import { DisplayRenderableNode } from '@kasif/util/node-renderer';
 
 import { motion } from 'framer-motion';
@@ -34,8 +34,7 @@ const useStyles = createStyles(theme => ({
   link: {
     'width': 40,
     'height': 40,
-    'borderRadius': theme.radius.md,
-    'color': environment.currentEnvironment === 'desktop' ? theme.white : 'inherit',
+    'borderRadius': useDefaultRadius(),
     'display': 'flex',
     'alignItems': 'center',
     'justifyContent': 'center',

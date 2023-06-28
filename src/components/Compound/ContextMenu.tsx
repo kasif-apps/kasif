@@ -9,7 +9,7 @@ import {
   useContextMenuItems,
 } from '@kasif/managers/contextmenu';
 import { useSlice } from '@kasif/util/cinq-react';
-import { createShortcutLabelFromString } from '@kasif/util/misc';
+import { createShortcutLabelFromString, useDefaultRadius } from '@kasif/util/misc';
 import { DisplayRenderableNode } from '@kasif/util/node-renderer';
 
 import { IconChevronRight } from '@tabler/icons';
@@ -51,7 +51,7 @@ const useStyles = createStyles(theme => ({
 
     '& .overlay': {
       width: '100%',
-      borderRadius: theme.radius.sm,
+      borderRadius: useDefaultRadius(),
       height: '100%',
       position: 'absolute',
       zIndex: -1,

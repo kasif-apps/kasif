@@ -1,0 +1,106 @@
+{
+  "welcome": {
+    "title": "Kâşif 探险家。",
+    "subtitle": "现代、跨平台的 UI 工具"
+  },
+  "title": {
+    "app": "Kâşif",
+    "home": "首页",
+    "settings": "设置",
+    "plugins": "插件",
+    "permissions": "权限",
+    "popular": "热门",
+    "discover": "发现",
+    "store": "商店",
+    "profile": "个人资料",
+    "logs": "日志"
+  },
+  "label": {
+    "info": "信息",
+    "success": "成功",
+    "warning": "警告",
+    "error": "错误",
+    "on": "开启",
+    "off": "关闭",
+    "install": "安装",
+    "uninstall": "卸载",
+    "downloads": "下载",
+    "licenses": "许可证",
+    "debug": "调试模式"
+  },
+  "profile": {
+    "login": "登录",
+    "logout": "登出",
+    "upload-app": "上传应用",
+    "welcome": "欢迎使用 Kâşif，请登录",
+    "or-continue-with-email": "或继续使用电子邮件登录",
+    "email-or-username": "电子邮件或用户名",
+    "email": "电子邮件",
+    "password": "密码",
+    "name": "姓名",
+    "dont-have-account": "还没有账号？注册",
+    "already-have-account": "已经有账号？登录",
+    "terms-and-conditions": "我接受条款和条件"
+  },
+  "settings": {
+    "appearance": {
+      "title": "外观",
+      "description": "更改应用的外观。"
+    },
+    "behavior": {
+      "title": "行为",
+      "description": "基本和高级行为相关的设置。"
+    },
+    "theme": {
+      "title": "主题",
+      "description": "更改应用的主题。"
+    },
+    "font": {
+      "title": "字体",
+      "description": "更改应用的字体。"
+    },
+    "language": {
+      "title": "语言",
+      "description": "更改应用的显示语言。"
+    },
+    "animations": {
+      "title": "动画",
+      "description": "启用应用中的动画效果。"
+    },
+    "log-level": {
+      "title": "日志级别",
+      "description": "更改应用的日志显示行为。建议选择“成功”。"
+    }
+  },
+  "permissions": {
+    "edit-permissions": "编辑权限",
+    "no-plugins": "您尚未安装任何插件",
+    "go-to-store": "前往商店"
+  },
+  "contextmenu": {
+    "category": {
+      "app": "应用",
+      "view": "视图",
+      "more": "更多",
+      "easter-egg": "彩蛋"
+    },
+    "item": {
+      "reload": "重新加载应用",
+      "close-this-pane": "关闭此窗格",
+      "close-this-view": "关闭此视图",
+      "close-all-views": "关闭所有视图",
+      "open-in-new-tab": "在新标签页中打开",
+      "open-in-new-window": "在新窗口中打开",
+      "add-to-favorites": "添加到收藏夹",
+      "remove-from-favorites": "从收藏夹中删除"
+    }
+  },
+  "logs": {
+    "title": "日志",
+    "all-logs": "所有日志",
+    "clear-logs": "清除日志",
+    "date": "日期",
+    "message": "消息",
+    "type": "类型"
+  }
+}

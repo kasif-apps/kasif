@@ -1,0 +1,110 @@
+{
+  "welcome": {
+    "title": "Kâşif l'Explorateur.",
+    "subtitle": "Outil de conception d'interface moderne et multiplateforme"
+  },
+  "title": {
+    "app": "Kâşif",
+    "home": "Accueil",
+    "settings": "Paramètres",
+    "plugins": "Plugins",
+    "permissions": "Permissions",
+    "popular": "Populaire",
+    "discover": "Découvrir",
+    "store": "Boutique",
+    "profile": "Profil",
+    "logs": "Logs"
+  },
+  "label": {
+    "info": "Info",
+    "success": "Succès",
+    "warning": "Avertissement",
+    "error": "Erreur",
+    "on": "Activé",
+    "off": "Désactivé",
+    "install": "Installer",
+    "uninstall": "Désinstaller",
+    "downloads": "Téléchargements",
+    "licenses": "Licences",
+    "debug": "Mode Débogage"
+  },
+  "profile": {
+    "login": "Connexion",
+    "logout": "Déconnexion",
+    "upload-app": "Uploader une Application",
+    "welcome": "Bienvenue sur Kâşif, connectez-vous avec",
+    "or-continue-with-email": "ou continuez avec votre e-mail",
+    "email-or-username": "E-mail ou Nom d'utilisateur",
+    "email": "E-mail",
+    "password": "Mot de passe",
+    "name": "Nom",
+    "dont-have-account": "Vous n'avez pas de compte ? Inscrivez-vous",
+    "already-have-account": "Vous avez déjà un compte ? Connectez-vous",
+    "terms-and-conditions": "J'accepte les termes et conditions"
+  },
+  "settings": {
+    "appearance": {
+      "title": "Apparence",
+      "description": "Modifier l'apparence de l'application."
+    },
+    "behavior": {
+      "title": "Comportement",
+      "description": "Paramètres de comportement basiques et avancés."
+    },
+    "theme": {
+      "title": "Thème",
+      "description": "Changer le thème de l'application."
+    },
+    "font": {
+      "title": "Police",
+      "description": "Changer la police de l'application."
+    },
+    "language": {
+      "title": "Langue",
+      "description": "Changer la langue d'affichage de l'application."
+    },
+    "animations": {
+      "title": "Animations",
+      "description": "Activer les animations dans toute l'application."
+    },
+    "log-level": {
+      "title": "Niveau de journalisation",
+      "description": "Changer le comportement d'affichage des journaux de l'application. Le niveau de succès est recommandé."
+    }
+  },
+  "permissions": {
+    "edit-permissions": "Modifier les Permissions",
+    "no-plugins": "Vous n'avez aucun plugin installé",
+    "go-to-store": "Accéder à la Boutique"
+  },
+  "contextmenu": {
+    "category": {
+      "app": "Application",
+      "view": "Vue",
+      "more": "Plus",
+      "easter-egg": "Easter Egg"
+    },
+    "item": {
+      "reload": "Recharger l'Application",
+      "close-this-pane": "Fermer ce Volet",
+      "close-other-panes": "Fermer les autres Volets",
+      "close-to-right": "Fermer à droite",
+      "close-all": "Fermer Tout",
+      "dev-tools": "Outils de Développement",
+      "about": "À Propos de Kâşif",
+      "check-for-updates": "Vérifier les Mises à Jour"
+    }
+  },
+  "logs": {
+    "title": "Logs",
+    "clear-all": "Tout Effacer",
+    "no-logs": "Aucun log disponible"
+  },
+  "common": {
+    "yes": "Oui",
+    "no": "Non",
+    "cancel": "Annuler",
+    "save": "Enregistrer",
+    "ok": "OK"
+  }
+}

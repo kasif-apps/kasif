@@ -1,7 +1,7 @@
 {
   "welcome": {
     "title": "Kâşif the Explorer.",
-    "subtitle": "Modern, cross platform file manager"
+    "subtitle": "Modern, cross platform UI tool"
   },
   "title": {
     "app": "Kâşif",
@@ -102,7 +102,7 @@
     "close-view": "Close View",
     "remove-all-panes": "Remove All Panes",
     "create-pane": "Create Pane From View",
-    "jump-to-next-view": "Just To Next View",
+    "jump-to-next-view": "Jump To Next View",
     "jump-to-previous-view": "Jump To Previous View"
   },
   "notification": {

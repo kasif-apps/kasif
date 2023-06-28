@@ -18,7 +18,7 @@ import {
 } from '@kasif/components/Transition/TransitionWrapper';
 import { app, useSetting } from '@kasif/config/app';
 import { LocaleString } from '@kasif/config/i18n';
-import { animations } from '@kasif/util/misc';
+import { animations, useDefaultRadius } from '@kasif/util/misc';
 import { DisplayRenderableNode, RenderableNode } from '@kasif/util/node-renderer';
 
 import { IconX } from '@tabler/icons';
@@ -56,7 +56,7 @@ const useStyles = createStyles((theme, { dragging }: { dragging: boolean }) => (
       'lineHeight': 1,
       'fontWeight': 500,
       'padding': `0 4px 0 ${theme.spacing.xs}`,
-      'borderRadius': theme.radius.sm,
+      'borderRadius': useDefaultRadius(),
       'transition': 'background-color 200ms ease',
       'backgroundColor': dragging
         ? theme.colorScheme === 'dark'
@@ -71,7 +71,7 @@ const useStyles = createStyles((theme, { dragging }: { dragging: boolean }) => (
       '& .indicator': {
         position: 'absolute',
         backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[5] : theme.white,
-        borderRadius: theme.radius.sm,
+        borderRadius: useDefaultRadius(),
         width: '100%',
         height: '100%',
         marginLeft: `-${rem(theme.spacing.xs)}`,

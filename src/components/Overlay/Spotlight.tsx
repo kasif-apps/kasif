@@ -3,6 +3,7 @@ import { SpotlightActionProps } from '@mantine/spotlight';
 
 import { app } from '@kasif/config/app';
 import { useSlice } from '@kasif/util/cinq-react';
+import { useDefaultRadius } from '@kasif/util/misc';
 
 const useStyles = createStyles(theme => ({
   action: {
@@ -10,7 +11,7 @@ const useStyles = createStyles(theme => ({
     display: 'block',
     width: '100%',
     padding: '4px 12px',
-    borderRadius: theme.radius.sm,
+    borderRadius: useDefaultRadius(),
   },
 
   actionHovered: {

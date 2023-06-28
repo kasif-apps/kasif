@@ -1,4 +1,4 @@
-import { CSSObject } from '@mantine/core';
+import { CSSObject, useMantineTheme } from '@mantine/core';
 import { OS } from '@mantine/hooks';
 
 import { app } from '@kasif/config/app';
@@ -375,4 +375,55 @@ export function snakeToPascal(input: string) {
     .split('-')
     .map(substr => substr.charAt(0).toUpperCase() + substr.slice(1))
     .join('');
+}
+
+export function useDefaultRadius() {
+  const theme = useMantineTheme();
+
+  return theme.radius[theme.defaultRadius as keyof typeof theme.radius];
+}
+
+export function wordFlick(words: string[], setter: (word: string) => void) {
+  let part;
+  let i = 0;
+  let offset = 0;
+  const len = words.length;
+  let forwards = true;
+  let skipCount = 0;
+  const skipDelay = 30;
+  const speed = 80;
+
+  const id = setInterval(() => {
+    if (forwards) {
+      if (offset >= words[i].length) {
+        // eslint-disable-next-line no-plusplus
+        ++skipCount;
+        if (skipCount === skipDelay) {
+          forwards = false;
+          skipCount = 0;
+        }
+      }
+    } else if (offset === 0) {
+      forwards = true;
+      i += 1;
+      offset = 0;
+
+      if (i >= len) {
+        i = 0;
+      }
+    }
+
+    part = words[i].substring(0, offset);
+    if (skipCount === 0) {
+      if (forwards) {
+        offset += 1;
+      } else {
+        offset -= 1;
+      }
+    }
+
+    setter(part);
+  }, speed);
+
+  return () => clearInterval(id);
 }

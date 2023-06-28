@@ -51,7 +51,7 @@ const useStyles = createStyles(theme => ({
 }));
 
 export function SettingsPage() {
-  const { classes } = useStyles();
+  const { classes, theme } = useStyles();
   const { t } = useTranslation();
 
   const categories = app.settingsManager.categories.map(category => {
@@ -80,8 +80,8 @@ export function SettingsPage() {
     return (
       <div key={category.id}>
         <Box
-          sx={theme => ({
-            '--setting-category-color': theme.colors[category.color || 'orange'][5],
+          sx={th => ({
+            '--setting-category-color': th.colors[category.color || 'orange'][5],
           })}
           mb="xl"
           className={classes.itemMeta}>
@@ -102,7 +102,7 @@ export function SettingsPage() {
   return (
     <PageSkeleton id="settings">
       <Box p="sm" sx={{ maxWidth: 1200, margin: 'auto' }}>
-        <Card data-non-capture-source radius="md" p="xl" className={classes.card}>
+        <Card data-non-capture-source radius={theme.defaultRadius} p="xl" className={classes.card}>
           <Text size="xl" className={classes.title} weight={800}>
             {t('title.settings')}
           </Text>

@@ -5,7 +5,7 @@ import { ActionIcon, Badge, Button, Card, Group, Image, Text, createStyles } fro
 
 import { Transition } from '@kasif/components/Transition/TransitionWrapper';
 import { app } from '@kasif/config/app';
-import { animations } from '@kasif/util/misc';
+import { animations, useDefaultRadius } from '@kasif/util/misc';
 
 import { IconHeart } from '@tabler/icons';
 
@@ -60,13 +60,13 @@ interface PluginCardProps {
 export function PluginCard(props: PluginCardProps) {
   const { image, title, description, category, author, url, installed } = props;
   const [loading, setLoading] = useState(false);
-  const { classes } = useStyles();
+  const { classes, theme } = useStyles();
   const { t } = useTranslation();
 
   return (
     <Transition transition="fade">
       <div>
-        <Card radius="md" p="md" className={classes.card}>
+        <Card radius={theme.defaultRadius} p="md" className={classes.card}>
           <Card.Section>
             <Image src={image} alt={title} height={180} />
           </Card.Section>
@@ -125,7 +125,7 @@ const useHeroStyles = createStyles(theme => ({
     display: 'flex',
     backgroundImage: `linear-gradient(-60deg, ${theme.colors.blue[4]} 0%, ${theme.colors.blue[7]} 100%)`,
     padding: `calc(${theme.spacing.xl} * 1.5)`,
-    borderRadius: theme.radius.md,
+    borderRadius: useDefaultRadius(),
 
     [theme.fn.smallerThan('sm')]: {
       flexDirection: 'column',
